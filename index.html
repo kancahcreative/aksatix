@@ -15,13 +15,10 @@ body{margin:0;background:#fff;color:var(--ink);font:400 14px/1.55 "Plus Jakarta 
 a{color:inherit;text-decoration:none}button{font:inherit;cursor:pointer;color:inherit;border:0;background:none}
 :focus-visible{outline:3px solid var(--ink);outline-offset:2px}
 .w{max-width:1360px;margin:0 auto;padding:0 32px}
-.top{background:var(--gl);padding:10px 0;font-size:12px;font-weight:600}
-.top .w{display:flex;justify-content:flex-end;gap:22px}
-.top a:hover{text-decoration:underline}
-header{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:#fff;padding:14px 0;box-shadow:0 1px 0 var(--line)}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:60;background:#fff;padding:10px 0;box-shadow:0 1px 0 var(--line)}
 header .w{display:flex;align-items:center;justify-content:space-between;gap:16px;position:relative}
 .logo{white-space:nowrap;font-weight:800;font-size:28px;letter-spacing:-.04em;display:flex;align-items:center;gap:8px}
-.logo img{height:34px;width:auto;display:block}
+.logo img{height:52px;width:auto;display:block}footer .logo img{height:60px}
 .pills{display:flex;flex-wrap:nowrap;white-space:nowrap;gap:4px;margin-right:auto;margin-left:32px}
 .pills a{flex:none;white-space:nowrap;padding:8px 16px;border-radius:99px;font-weight:600;font-size:14px;color:#3A4A44}
 .pills a{transition:color .15s}.pills a.on,.pills a:hover,.pills a:active{color:var(--gt)}
@@ -148,7 +145,7 @@ dialog h3{margin:0;font-size:20px;font-weight:800;letter-spacing:-.03em}.dm{colo
 .bdg{position:absolute;top:3px;right:1px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:var(--g);color:var(--ink);font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}.bdg[hidden]{display:none}
 #cdlg{width:min(92vw,420px)}#cl{margin:12px 0}
 .ci{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--line)}.ci span{flex:1;min-width:0;display:flex;flex-direction:column}.ci b{font-size:14px;font-weight:700}.ci small{color:var(--muted);font-size:12px}.ci em{font-style:normal;font-weight:800;font-size:13px;white-space:nowrap}.ci button{width:28px;height:28px;border-radius:50%;font-size:18px;line-height:1;color:var(--muted)}.ci button:hover{color:var(--ink)}
-@media (max-width:1023px){.top,.pills,.ib.sq{display:none}.bn{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(22,33,29,.07)}
+@media (max-width:1023px){.pills,.ib.sq{display:none}.bn{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid var(--line);padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(22,33,29,.07)}
 body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 .bn a,.bn button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--muted);padding:2px 0}
 .bn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
@@ -157,12 +154,11 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 #toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
 @media (max-width:900px){.mitra{padding:28px 20px}.mitra h2{font-size:24px}.og{flex-basis:78%}.help{padding:18px}}
 @media (max-width:900px){.w{padding:0 16px}.gr{display:flex;overflow-x:auto;gap:16px;scrollbar-width:none;padding:4px 2px 12px;cursor:grab;overscroll-behavior-x:contain}.gr::-webkit-scrollbar{display:none}.gr .ev{flex:0 0 calc((100% - 16px)/2)}.gr .none{flex:1 0 100%}.ev{flex-basis:70%}.bs{flex-basis:78%}.arw.sm{display:none}.slide div{max-width:64%}.fc{grid-template-columns:repeat(2,auto);gap:32px}.hero{padding-top:20px}.logo{font-size:24px}h2.t{font-size:20px}}
-@media (max-width:600px){.stage{border-radius:16px}.slide{padding:0 6%}.slide div{max-width:68%}.slide h2{font-size:clamp(13px,4.6vw,22px)}.slide p{display:none}.slide .cta{margin-top:7px;padding:5px 13px;font-size:10px}.stage .arw{width:28px;height:28px}.stage .arw.l{left:6px}.stage .arw.r{right:6px}.ev{flex-basis:78%;min-width:0}.bs{flex-basis:84%;aspect-ratio:auto;min-height:128px;padding:16px;border-radius:22px}.bs b{font-size:20px}.gr .ev{flex-basis:78%}.crow .arw.sm{top:30px}.cat{width:62px;gap:7px}.cat i{width:52px;height:52px;border-radius:17px}.cat span{font-size:11px}.cats{gap:10px;margin-right:-16px;padding-right:16px}.fc{grid-template-columns:1fr;gap:24px}.fg{gap:28px}footer{padding:44px 0 20px}.sh{flex-wrap:nowrap}.bl{padding:7px 14px}dialog{padding:20px}}
+@media (max-width:600px){.logo img{height:42px}footer .logo img{height:48px}.stage{border-radius:16px}.slide{padding:0 6%}.slide div{max-width:68%}.slide h2{font-size:clamp(13px,4.6vw,22px)}.slide p{display:none}.slide .cta{margin-top:7px;padding:5px 13px;font-size:10px}.stage .arw{width:28px;height:28px}.stage .arw.l{left:6px}.stage .arw.r{right:6px}.ev{flex-basis:78%;min-width:0}.bs{flex-basis:84%;aspect-ratio:auto;min-height:128px;padding:16px;border-radius:22px}.bs b{font-size:20px}.gr .ev{flex-basis:78%}.crow .arw.sm{top:30px}.cat{width:62px;gap:7px}.cat i{width:52px;height:52px;border-radius:17px}.cat span{font-size:11px}.cats{gap:10px;margin-right:-16px;padding-right:16px}.fc{grid-template-columns:1fr;gap:24px}.fg{gap:28px}footer{padding:44px 0 20px}.sh{flex-wrap:nowrap}.bl{padding:7px 14px}dialog{padding:20px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
 </head>
 <body>
-<div class="top"><div class="w"><a href="#">Tentang Aksatix</a><a href="#">Tarif Layanan</a><a href="#">Gelang Tiket</a><a href="#">Pusat Bantuan</a></div></div>
 <header><div class="w">
   <a href="#" class="logo" aria-label="Aksatix"><img src="assets/logo.png" alt=""></a>
   <nav class="pills"><a class="on" href="#">Beranda</a><a href="#terdekat">Temukan Acara</a><a href="#">Penyelenggara</a><a href="#bantuan">Bantuan</a></nav>
