@@ -31,7 +31,7 @@ header .w{display:flex;align-items:center;justify-content:space-between;gap:16px
 .menu{display:none}
 .hero{padding:28px 0 0;overflow:hidden}
 .stage{position:relative;aspect-ratio:16/5;overflow:hidden;border-radius:28px;touch-action:pan-y;user-select:none}
-.slide{position:absolute;inset:0;border-radius:0;overflow:hidden;color:#fff;display:flex;align-items:center;padding:0 6%;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .3s;cursor:pointer}
+.hero-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;background:#eef2f0;color:#5E6F68;font-weight:600}.slide{position:absolute;inset:0;border-radius:0;overflow:hidden;color:#fff;display:flex;align-items:center;padding:0 6%;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .3s;cursor:pointer}
 .slide svg,.slide img{position:absolute;inset:0;width:100%;height:100%}.slide img{object-fit:cover;-webkit-user-drag:none}.slide.im div{display:none}
 
 .slide div{position:relative;z-index:2;max-width:56%;transition:opacity .3s}
@@ -57,8 +57,8 @@ h2.t{font-size:22px;font-weight:800;letter-spacing:-.035em;margin:0}
 .dg{cursor:grabbing;user-select:none}.dg *{pointer-events:none}
 .ev{flex:0 0 calc((100% - 48px)/4);min-width:220px;background:#fff;border-radius:22px;padding:10px;box-shadow:var(--sh);display:flex;flex-direction:column;gap:7px;cursor:pointer;text-align:left;transition:box-shadow .2s,transform .2s}
 .ev:hover{box-shadow:0 0 0 2px var(--ink),0 8px 18px rgba(22,33,29,.15);transform:translateY(-2px)}
-.po{aspect-ratio:2.4/1;border-radius:16px;overflow:hidden;position:relative;color:#fff}
-.po svg{position:absolute;inset:0;width:100%;height:100%}
+.po{aspect-ratio:16/5;border-radius:16px;overflow:hidden;position:relative;color:#fff}
+.po img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.poster-empty{position:absolute;inset:0;background:#eef2f0}
 .po b{position:absolute;left:10px;right:10px;bottom:8px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:15px;font-weight:800;line-height:1.05;letter-spacing:-.04em;text-shadow:0 1px 8px rgba(0,0,0,.4)}
 .ev h3{margin:2px 6px 0;font-size:13px;font-weight:700;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;height:35px}
 .ev .d{margin:0 6px;color:var(--muted);font-size:11px;display:flex;align-items:center;gap:6px}
@@ -69,9 +69,9 @@ h2.t{font-size:22px;font-weight:800;letter-spacing:-.035em;margin:0}
 .cr .on{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .av{width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;flex:none}
 .arw.sm{top:46%;width:36px;height:36px;box-shadow:0 4px 14px rgba(22,33,29,.2)}.arw.sm.l{left:-14px}.arw.sm.r{right:-14px}
-.bs{flex:0 0 calc((100% - 32px)/3);aspect-ratio:2.2/1;border-radius:26px;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:18px;cursor:pointer;text-align:left;transition:transform .2s}
+.bs{flex:0 0 calc((100% - 32px)/3);aspect-ratio:16/5;border-radius:26px;position:relative;overflow:hidden;color:#fff;display:flex;flex-direction:column;justify-content:space-between;align-items:flex-start;padding:18px;cursor:pointer;text-align:left;transition:transform .2s}
 .bs:hover{transform:translateY(-3px)}
-.bs svg{position:absolute;inset:0;width:100%;height:100%}
+.bs img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.bs .poster-empty{position:absolute;inset:0;background:#eef2f0}
 .bs b{position:relative;font-size:clamp(18px,2.4vw,28px);font-weight:800;line-height:1.02;letter-spacing:-.045em;text-shadow:0 1px 8px rgba(0,0,0,.35)}
 .bs i{position:relative;font-style:normal;background:rgba(255,255,255,.92);color:var(--ink);border-radius:99px;padding:4px 12px;font-size:11px;font-weight:700}
 .cats{display:flex;gap:14px;justify-content:space-between;overflow-x:auto;scrollbar-width:none;padding:4px 2px 8px;cursor:grab;overscroll-behavior-x:contain}
@@ -204,63 +204,48 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 <dialog id="cdlg" onclick="if(event.target==this)this.close()"><h3>Keranjang</h3><div id="cl"></div><div class="tt"><span>Total</span><span id="ct"></span></div><div class="ac"><button class="bt g" onclick="$('cdlg').close()">Tutup</button><button class="bt" id="co">Checkout</button></div></dialog>
 <div id="toast" role="status"></div>
 
+<script src="./supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const $=i=>document.getElementById(i);
-const E=[
-{id:1,t:"Solo Night Run 10K",c:"Olahraga",d:"2026-10-25",p:150000,h:[215,240],s:"c",o:"Manahan Sport"},
-{id:2,t:"Pasar Malam Ngarsopuro",c:"Pameran",d:"2026-10-17",p:0,h:[28,350],s:"g",o:"Dinas Pariwisata Solo"},
-{id:3,t:"Jazz di Benteng Vastenburg",c:"Musik",d:"2026-10-31",p:125000,h:[265,320],s:"s",o:"Vasten Live"},
-{id:4,t:"Workshop Batik Tulis Laweyan",c:"Workshop",d:"2026-10-20",p:85000,h:[35,15],s:"g",o:"Rumah Batik Laweyan"},
-{id:5,t:"Sukoharjo Gowes Fest",c:"Olahraga",d:"2026-11-01",p:50000,h:[170,200],s:"c",o:"Komunitas Gowes Soho"},
-{id:6,t:"Kampus Berisik Vol. 7",c:"Musik",d:"2026-11-07",p:75000,h:[345,20],s:"s",o:"BEM UNS"},
-{id:7,t:"Talkshow Startup Jawa Tengah",c:"Talkshow",d:"2026-10-29",p:0,h:[225,255],s:"g",o:"Jateng Digital"},
-{id:8,t:"Ketoprak Pelajar Nusantara",c:"Teater",d:"2026-11-14",p:40000,h:[10,40],s:"c",o:"Sanggar Laras"},
-{id:9,t:"Pameran Kriya Karanganyar",c:"Pameran",d:"2026-11-20",p:20000,h:[150,190],s:"g",o:"Dekranasda"},
-{id:10,t:"Kompetisi Futsal Antar SMA",c:"Kompetisi",d:"2026-11-08",p:35000,h:[200,260],s:"c",o:"Liga Pelajar Soho"}];
+let E=[]
 const Cat=["Musik","Pameran","Teater","Olahraga","Wisata","Talkshow","Workshop","Kompetisi"];
 const Ic={Musik:'<path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/>',Pameran:'<rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M12 18v3"/>',Teater:'<path d="M4 4h10v8a5 5 0 0 1-10 0z"/><path d="M14 9h6v6a5 5 0 0 1-8 4"/>',Olahraga:'<circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/>',Wisata:'<path d="M12 21s7-6 7-12a7 7 0 0 0-14 0c0 6 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/>',Talkshow:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/>',Workshop:'<path d="M3 5h18v10H3zM8 21l4-6 4 6"/>',Kompetisi:'<path d="M7 4h10v5a5 5 0 0 1-10 0zM12 14v4M8 21h8M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3"/>'};
 const rp=n=>n?new Intl.NumberFormat("id-ID",{style:"currency",currency:"IDR",maximumFractionDigits:0}).format(n):"Gratis";
 const dt=s=>new Date(s+"T00:00").toLocaleDateString("id-ID",{day:"numeric",month:"long",year:"numeric"});
-function art(h,s,k){const[a,b]=h;let p="";
-if(s=="c")for(let i=0;i<7;i++)p+=`<circle cx="${14+i*16}" cy="${30+(i%3)*14}" r="${10+i*4}" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/>`;
-if(s=="s")for(let i=0;i<16;i++)p+=`<rect x="${i*8-10}" y="-5" width="3" height="120" fill="#fff" fill-opacity=".18" transform="skewX(-20)"/>`;
-if(s=="g")for(let i=0;i<9;i++)for(let j=0;j<6;j++)p+=`<rect x="${6+i*14}" y="${6+j*14}" width="8" height="8" rx="${(i+j)%2?4:0}" fill="#fff" fill-opacity=".2"/>`;
-return`<svg viewBox="0 0 120 68" preserveAspectRatio="xMidYMid slice"><defs><linearGradient id="g${k}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="hsl(${a} 70% 40%)"/><stop offset="1" stop-color="hsl(${b} 75% 28%)"/></linearGradient></defs><rect width="120" height="68" fill="url(#g${k})"/>${p}</svg>`}
+function art(h,s,k){return '<div class="poster-empty" aria-hidden="true"></div>'}
 const cal='<svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>';
 const ini=s=>s.split(" ").slice(0,2).map(w=>w[0]).join("").toUpperCase();
-const card=(e,k)=>`<article class="ev" tabindex="0" role="button" onclick="openD(${e.id})" onkeydown="if(event.key=='Enter')openD(${e.id})"><div class="po">${art(e.h,e.s,k+e.id)}<b>${e.t}</b></div><h3>${e.t}</h3><div class="d">${cal}${dt(e.d)}</div><hr><div class="cr"><span class="av">${ini(e.o)}</span><span class="on">${e.o}</span><b class="pr">${rp(e.p)}</b></div></article>`;
-/* hero coverflow */
-const B=[
-{h:"Punya Acara? Jual Tiketnya di Aksatix",p:"Halaman acara siap dalam 10 menit.",c:"Mulai Jual Tiket",a:[225,250],s:"c"},
-{h:"Konser Nasyid Nostalgia Yogyakarta",p:"20 Desember 2026",c:"Beli Tiket",a:[150,190],s:"g",img:"banner-nasyid.png"},
-{h:"Solo Night Run 10K",p:"25 Oktober 2026",c:"Beli Tiket",a:[215,240],s:"s",e:1},
-{h:"Jazz di Benteng Vastenburg",p:"31 Oktober 2026",c:"Beli Tiket",a:[265,320],s:"s",e:3},
-{h:"Check-in Cepat Pakai Gelang Tiket",p:"Antrean pintu masuk jadi lebih singkat.",c:"Lihat Caranya",a:[170,210],s:"g"},
-{h:"Kampus Berisik Vol. 7",p:"7 November 2026",c:"Beli Tiket",a:[345,20],s:"c",e:6},
-{h:"Workshop Batik Tulis Laweyan",p:"20 Oktober 2026",c:"Beli Tiket",a:[35,15],s:"g",e:4},
-{h:"Sukoharjo Gowes Fest",p:"1 November 2026",c:"Beli Tiket",a:[150,190],s:"c",e:5}];
-const st=$("stage"),n=B.length;let ci=0,pause=false;
-B.forEach((b,i)=>{const s=document.createElement("div");s.className="slide"+(b.img?" im":"");s.innerHTML=`${art(b.a,b.s,"h"+i)}${b.img?`<img src="${b.img}" alt="${b.h}" draggable="false" onerror="this.parentNode.classList.remove('im');this.remove()">`:""}<div><h2>${b.h}</h2><p>${b.p}</p><a class="cta" href="#" ${b.e?`onclick="openD(${b.e});return false"`:'onclick="return false"'}>${b.c}</a></div>`;s.onclick=()=>{if(i!=ci&&!moved)go(i)};st.appendChild(s)});
-const sl=[...st.querySelectorAll(".slide")];
-$("dots").innerHTML=B.map((_,i)=>`<button aria-label="Slide ${i+1}" data-i="${i}"></button>`).join("");
-function rel(i){let d=i-ci;if(d>n/2)d-=n;if(d<-n/2)d+=n;return d}
-function lay(){sl.forEach((s,i)=>{const d=rel(i);s.style.transform=`translateX(${d*100}%)`;s.style.opacity=Math.abs(d)>1?0:1;s.style.zIndex=d==0?10:1;s.style.pointerEvents=d==0?"auto":"none";s.classList.toggle("cur",d==0)});[...$("dots").children].forEach((x,i)=>x.classList.toggle("on",i==ci))}
-function go(i){ci=(i+n)%n;lay()}
-$("pv").onclick=()=>go(ci-1);$("nx").onclick=()=>go(ci+1);$("dots").onclick=e=>{if(e.target.dataset.i)go(+e.target.dataset.i)};
-let sx=null,moved=false;
-st.addEventListener("pointerdown",e=>{if(e.target.closest(".arw"))return;sx=e.clientX;moved=false});
-addEventListener("pointermove",e=>{if(sx===null)return;const dx=e.clientX-sx;if(Math.abs(dx)>8)moved=true;if(moved)sl.forEach((s,i)=>{const d=rel(i);if(Math.abs(d)<=1){s.style.transition="none";s.style.transform=`translateX(calc(${d*100}% + ${dx}px))`}})});
-addEventListener("pointercancel",()=>{if(sx!==null){sx=null;sl.forEach(s=>s.style.transition="");lay()}});
-addEventListener("pointerup",e=>{if(sx===null)return;const d=e.clientX-sx;sx=null;sl.forEach(s=>s.style.transition="");if(Math.abs(d)>50)go(ci+(d<0?1:-1));else lay();setTimeout(()=>moved=false,0)});
-st.addEventListener("click",e=>{if(moved){e.preventDefault();e.stopPropagation()}},true);
-st.parentNode.addEventListener("mouseenter",()=>pause=true);st.parentNode.addEventListener("mouseleave",()=>pause=false);
-addEventListener("resize",lay);lay();
-$("dots").addEventListener("animationend",e=>{if(e.animationName=="fill"&&!pause&&sx===null)go(ci+1)});
+const hx=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const card=(e,k)=>`<article class="ev" tabindex="0" role="button" onclick="openD(${e.id})" onkeydown="if(event.key=='Enter')openD(${e.id})"><div class="po">${e.image?`<img src="${hx(e.image)}" alt="Poster ${hx(e.t)}" loading="lazy">`:`<div class="poster-empty"></div>`}<b>${e.t}</b></div><h3>${e.t}</h3><div class="d">${cal}${dt(e.d)}</div><hr><div class="cr"><span class="av">${ini(e.o)}</span><span class="on">${e.o}</span><b class="pr">${rp(e.p)}</b></div></article>`;
+/* Hero banner: hanya mengambil poster event yang diunggah dari dashboard admin. */
+const st=$("stage");let B=[],ci=0,pause=false,sl=[];
+function setupHero(items){
+ B=items.filter(e=>e.image);ci=0;st.querySelectorAll('.slide').forEach(x=>x.remove());
+ $("dots").innerHTML='';
+ B.forEach((b,i)=>{const s=document.createElement('div');s.className='slide';s.innerHTML=`<img src="${hx(b.image)}" alt="Poster ${hx(b.t)}" draggable="false"><div><h2>${hx(b.t)}</h2><p>${dt(b.d)}</p><a class="cta" href="#" onclick="openD(${JSON.stringify(b.id)});return false">Beli Tiket</a></div>`;st.appendChild(s)});
+ $("dots").innerHTML=B.map((_,i)=>`<button aria-label="Slide ${i+1}" data-i="${i}"></button>`).join('');
+ sl=[...st.querySelectorAll('.slide')];
+ const enabled=B.length>1;$("pv").hidden=!enabled;$("nx").hidden=!enabled;$("dots").hidden=!enabled;
+ if(!B.length){st.insertAdjacentHTML('beforeend','<div class="hero-empty">Banner event akan tampil di sini setelah event dipublikasikan dan poster diunggah melalui admin.</div>');return}
+ function lay(){sl.forEach((s,i)=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;s.style.transform=`translateX(${d*100}%)`;s.style.opacity=Math.abs(d)>1?0:1;s.style.zIndex=d===0?10:1;s.style.pointerEvents=d===0?'auto':'none';s.classList.toggle('cur',d===0)});[...$("dots").children].forEach((x,i)=>x.classList.toggle('on',i===ci))}
+ function go(i){ci=(i+B.length)%B.length;lay()}
+ $("pv").onclick=()=>go(ci-1);$("nx").onclick=()=>go(ci+1);$("dots").onclick=e=>{if(e.target.dataset.i!==undefined)go(+e.target.dataset.i)};
+ let sx=null,moved=false;
+ st.onpointerdown=e=>{if(e.target.closest('.arw'))return;sx=e.clientX;moved=false};
+ window.onpointermove=e=>{if(sx===null)return;const dx=e.clientX-sx;if(Math.abs(dx)>8)moved=true;if(moved)sl.forEach((s,i)=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;if(Math.abs(d)<=1){s.style.transition='none';s.style.transform=`translateX(calc(${d*100}% + ${dx}px))`}})};
+ window.onpointercancel=()=>{if(sx!==null){sx=null;sl.forEach(s=>s.style.transition='');lay()}};
+ window.onpointerup=e=>{if(sx===null)return;const d=e.clientX-sx;sx=null;sl.forEach(s=>s.style.transition='');if(Math.abs(d)>50)go(ci+(d<0?1:-1));else lay();setTimeout(()=>moved=false,0)};
+ st.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation()}},true);
+ st.parentNode.onmouseenter=()=>pause=true;st.parentNode.onmouseleave=()=>pause=false;
+ window.onresize=lay;lay();
+ $("dots").onanimationend=e=>{if(e.animationName==='fill'&&!pause&&sx===null&&B.length>1)go(ci+1)};
+}
 /* sections */
-const srt=[...E].sort((a,b)=>a.d.localeCompare(b.d));
+let srt=[...E].sort((a,b)=>a.d.localeCompare(b.d));
 $("rec").innerHTML=E.slice(0,6).map(e=>card(e,"r")).join("");
-const L=[[3,"2.140"],[1,"1.875"],[6,"1.320"],[5,"960"]];
-$("best").innerHTML=L.map((l,i)=>{const e=E.find(x=>x.id==l[0]);return`<div class="bs" tabindex="0" role="button" onclick="openD(${e.id})">${art(e.h,e.s,"b"+i)}<b>${e.t}</b><i>${l[1]} tiket terjual</i></div>`}).join("");
+function renderBest(){const list=E.slice(0,4);$("best").innerHTML=list.map(e=>`<div class="bs" tabindex="0" role="button" onclick="openD(${JSON.stringify(e.id)})">${e.image?`<img src="${hx(e.image)}" alt="Poster ${hx(e.t)}" loading="lazy">`:`<div class="poster-empty"></div>`}<b>${hx(e.t)}</b><i>${hx(e.c)} · ${dt(e.d)}</i></div>`).join("")||'<div class="none">Event akan tampil setelah dipublikasikan melalui admin.</div>';}
+renderBest();
 const drag=r=>{let x0=0,s0=0,d=false,m=false;r.addEventListener("pointerdown",e=>{if(e.pointerType!="mouse"||e.button)return;x0=e.clientX;s0=r.scrollLeft;d=true;m=false});addEventListener("pointermove",e=>{if(!d)return;const dx=e.clientX-x0;if(!m&&Math.abs(dx)>5){m=true;r.classList.add("dg")}if(m)r.scrollLeft=s0-dx});addEventListener("pointerup",()=>{d=false;r.classList.remove("dg")});r.addEventListener("click",e=>{if(m){e.stopPropagation();e.preventDefault();m=false}},true);r.addEventListener("dragstart",e=>e.preventDefault())};
 const fx=r=>{const q=d=>document.querySelector(`[data-s="${r.id}"][data-d="${d}"]`),l=q(-1),n=q(1),u=()=>{const m=r.scrollWidth-r.clientWidth-2;l.disabled=r.scrollLeft<=2;n.disabled=r.scrollLeft>=m;l.hidden=n.hidden=m<=0};r.addEventListener("scroll",u,{passive:true});addEventListener("resize",u);[l,n].forEach(b=>b.onclick=()=>r.scrollBy({left:+b.dataset.d*r.clientWidth*.8,behavior:"smooth"}));u();drag(r)};
 fx($("rec"));fx($("best"));
@@ -297,7 +282,7 @@ const FQ=[["Pembelian Tiket","Bagaimana cara membeli tiket di Aksatix?","Pilih a
 ["Pembayaran","Pembayaran berhasil tetapi e-tiket belum masuk, apa yang harus dilakukan?","Tunggu beberapa menit dan cek folder spam. Jika belum masuk, hubungi layanan pelanggan dengan bukti pembayaran."],
 ["Penyelenggara Event","Bagaimana cara mendaftar dan menjual tiket acara di Aksatix?","Klik Kerja Sama Dengan Kami, isi data penyelenggara, lalu tim kami membantu menyiapkan halaman acara."],
 ["E-Tiket & Venue","Apakah e-tiket perlu dicetak?","Tidak perlu. Cukup tunjukkan e-tiket dari HP."]];
-let fc="Semua",fq="";const hx=t=>t.replace(/&/g,"&amp;");
+let fc="Semua",fq="";
 $("fch").innerHTML=["Semua",...new Set(FQ.map(f=>f[0]))].map(c=>`<button data-f="${hx(c)}">${hx(c)}</button>`).join("");
 function fr(){document.querySelectorAll("#fch button").forEach(b=>b.classList.toggle("on",b.dataset.f==fc));const l=FQ.filter(f=>(fc=="Semua"||f[0]==fc)&&(f[1]+f[2]).toLowerCase().includes(fq));$("fl").innerHTML=l.length?l.map(f=>`<details><summary>${hx(f[1])}</summary><p>${hx(f[2])}</p></details>`).join(""):'<div class="none">Pertanyaan tidak ditemukan. Coba kata kunci lain.</div>'}
 $("fch").onclick=e=>{if(e.target.dataset.f){fc=e.target.dataset.f;fr()}};$("fs").oninput=e=>{fq=e.target.value.trim().toLowerCase();fr()};fr();
@@ -311,6 +296,29 @@ const cr=()=>{const n=cart.reduce((a,c)=>a+c.q,0),b=$("cbd");b.textContent=n;b.h
 const oc=()=>{cr();$("cdlg").showModal()};
 $("co").onclick=()=>{if(!cart.length){tst("Keranjang masih kosong.");return}$("cdlg").close();tst("Lanjut ke pembayaran segera hadir.")};
 cr();drag($("gr"));
+
+// Load published events from the same Supabase records managed by the admin dashboard.
+(async function loadAksatixEvents(){
+ try {
+  if(!window.AKSATIX_SUPABASE_URL||window.AKSATIX_SUPABASE_URL.includes('PASTE_')||!window.AKSATIX_SUPABASE_ANON_KEY||window.AKSATIX_SUPABASE_ANON_KEY.includes('PASTE_'))return;
+  const client=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY);
+  const [{data:events,error:eErr},{data:tickets,error:tErr}]=await Promise.all([
+   client.from('aksatix_records').select('record_id,payload').eq('kind','events'),
+   client.from('aksatix_records').select('record_id,payload').eq('kind','tickets')
+  ]);
+  if(eErr)throw eErr;if(tErr)throw tErr;
+  const live=(events||[]).map(r=>r.payload||{}).filter(e=>e.status==='Published').map((e,i)=>{
+   const ts=(tickets||[]).map(t=>t.payload||{}).filter(t=>String(t.eventId)===String(e.id)&&t.status==='Active');
+   const prices=ts.map(t=>Number(t.price)||0);return {id:e.id,t:e.name||'Event',c:e.category||'Lainnya',d:e.date||new Date().toISOString().slice(0,10),p:prices.length?Math.min(...prices):0,image:e.image||'',o:e.organizer||'Penyelenggara'};
+  });
+  E=live;srt=[...E].sort((a,b)=>a.d.localeCompare(b.d));setupHero(E.filter(e=>e.image));renderBest();
+  $('rec').innerHTML=E.slice(0,6).map(e=>card(e,'r')).join('')||'<div class="none">Belum ada event yang dipublikasikan.</div>';
+  grid();fx($('rec'));fx($('gr'));
+  const orgs={};E.forEach(e=>{const o=orgs[e.o]=orgs[e.o]||{n:0,c:new Set()};o.n++;o.c.add(e.c)});
+  $('org').innerHTML=Object.entries(orgs).map(([k,v])=>`<div class="og"><span class="av">${ini(k)}</span><b>${k}</b><span class="ea">${v.n} Event Aktif</span><small>Penyelenggara ${[...v.c].join(', ').toLowerCase()}</small></div>`).join('')||'<div class="none">Penyelenggara akan muncul saat event dipublikasikan.</div>';drag($('org'));
+  if(typeof sr==='function')sr();
+ }catch(err){console.error('Gagal memuat event Supabase:',err)}
+})();
 </script>
 </body>
 </html>
