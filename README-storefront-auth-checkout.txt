@@ -1,18 +1,26 @@
-AKSATIX STOREFRONT MULTI-PAGE
+AKSATIX STOREFRONT + AUTH + CHECKOUT UPDATE
 
-Halaman yang dipisah:
-- index.html: beranda dan daftar event. Klik card atau tombol Daftar sekarang membuka detail-event.html?id=EVENT_ID.
-- detail-event.html: detail event dan pilihan tiket dari Supabase.
-- login.html: login/daftar melalui Google OAuth.
-- auth-callback.html: callback OAuth, lalu kembali ke halaman tujuan.
-- checkout.html: data pemesan, metode pembayaran, dan pembuatan order.
-- client-dashboard.html dan admin.html: dashboard sebelumnya.
+FILES
+- index.html: event listing, clickable event details, ticket selection, cart, Google login/register, checkout and order history.
+- admin.html: existing admin console.
+- client-dashboard.html: client/organizer dashboard.
+- supabase-config.js: existing Supabase project URL + anon key and optional QRIS image URL.
+- supabase-setup.sql: schema and RLS policies including customer-owned order insertion/read.
 
-Konfigurasi:
-1. Supabase URL dan anon key ada di supabase-config.js.
-2. Aktifkan Google provider di Supabase Authentication.
-3. Tambahkan URL callback produksi ke Supabase Auth > URL Configuration > Redirect URLs, misalnya https://domain-anda/auth-callback.html.
-4. Pastikan tabel aksatix_records dan policy RLS untuk membaca events/tickets published serta insert order milik user telah diaktifkan.
-5. Atur AKSATIX_QRIS_IMAGE_URL ke URL QRIS merchant resmi. Pesanan berbayar sengaja diblokir jika QRIS belum dikonfigurasi.
+IMPORTANT SETUP
+1. In Supabase SQL Editor, run the complete supabase-setup.sql. If your project already has the schema, run the policy section at the bottom too. Do not remove the existing admin policies.
+2. Supabase Dashboard > Authentication > Providers > Google: enable Google and configure Google OAuth Client ID/Secret.
+3. Authentication > URL Configuration: set Site URL to your real website URL and add the exact deployed URL(s) to Redirect URLs, including /index.html if applicable.
+4. Keep the existing URL and anon key in supabase-config.js. Never put a service_role key in browser files.
+5. Configure the merchant's real static QRIS image by setting window.AKSATIX_QRIS_IMAGE_URL in supabase-config.js to a public image URL. Do not use a personal QR or an unverified QR. Until this is configured, paid checkout shows a clear setup warning; no real payment is captured automatically.
+6. Deploy the full package together so index.html, admin.html, client-dashboard.html, assets/, and supabase-config.js are on the same origin.
+7. Test: event card -> event details -> select ticket -> free checkout / paid QRIS checkout -> order appears in admin. Test with a non-admin customer account and separately with an admin account.
 
-Catatan: checkout menulis order ke aksatix_records (kind=orders). Integrasi pembayaran otomatis/webhook dan penerbitan QR e-ticket masih perlu backend tepercaya sebelum produksi. Jangan gunakan status order dari browser sebagai bukti pembayaran lunas.
+BEHAVIOR
+- Free tickets create a Confirmed order without payment.
+- Paid tickets create a Pending Payment order with QRIS as the selected method. This is not automatic payment verification; configure the official QRIS image and implement a secure payment confirmation/reconciliation process before accepting real funds.
+- Other methods (bank transfer / virtual account / e-wallet) are marked Segera hadir.
+- Google sign-in uses the same Supabase Auth project as the admin/client dashboards; organizer dashboard now also has a Google sign-in button. Dashboard permissions still depend on their own role/authorization policies; signing in does not grant admin privileges.
+
+SECURITY NOTE
+The order RLS policy allows authenticated users to insert an order only when payload.userId matches auth.uid(), and read only their own orders. Organizer RLS policies allow CRUD only for records whose payload.organizer_id matches auth.uid(); order visibility is limited to the buyer or organizer attached to the event. The admin policy remains the authority for admin access. Review all organizer/client RLS policies before production, as this existing project uses a shared aksatix_records JSON table.
