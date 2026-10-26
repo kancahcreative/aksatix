@@ -30,12 +30,12 @@ create policy "admins full access records" on public.aksatix_records
 drop policy if exists "public read published events" on public.aksatix_records;
 create policy "public read published events" on public.aksatix_records
   for select to anon, authenticated
-  using (kind = 'events' and payload->>'status' = 'Published');
+  using (kind = 'events' and lower(trim(coalesce(payload->>'status',''))) = 'published');
 
 drop policy if exists "public read active tickets" on public.aksatix_records;
 create policy "public read active tickets" on public.aksatix_records
   for select to anon, authenticated
-  using (kind = 'tickets' and payload->>'status' = 'Active');
+  using (kind = 'tickets' and lower(trim(coalesce(payload->>'status',''))) = 'active');
 
 grant select on public.aksatix_admins to authenticated;
 grant select, insert, update, delete on public.aksatix_records to authenticated;

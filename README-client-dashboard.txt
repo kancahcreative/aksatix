@@ -26,3 +26,13 @@ IMPORTANT LIMITATIONS — NOT PAYMENT-PRODUCTION READY
 - This connects the organizer dashboard to the existing Supabase backend once the SQL migrations are applied. The current environment cannot apply migrations or verify live login/read/write, so deployment is not claimed as tested.
 - Payment gateway, trusted server-side webhook verification, atomic ticket inventory reservation, refund processing, e-ticket/QR issuance, secure check-in writes, and real payout ledger are not implemented by these static dashboard files. Do not accept real payments or treat estimated payout figures as actual funds until those backend functions are built and tested.
 - The existing generic aksatix_records schema is retained for compatibility with the current admin/public website. A normalized schema with database constraints and Edge Functions is recommended before scaling ticket sales.
+
+DATABASE CONNECTION FIX (IMPORTANT)
+1. Open Supabase Dashboard > SQL Editor for project mfbcnlukdthxswzlfkcu.
+2. Run supabase-setup.sql first, then supabase-client-setup.sql, then supabase-fix-connection.sql.
+3. In Authentication > Users, copy the UUID of the intended admin account. In SQL Editor run:
+   insert into public.aksatix_admins (user_id) values ('YOUR-AUTH-USER-UUID') on conflict do nothing;
+4. In Table Editor > aksatix_records, confirm event records use kind='events', payload.status='Published', and tickets use kind='tickets', payload.status='Active'.
+5. Keep supabase-config.js beside index.html, admin.html, login.html, and client-dashboard.html on the same deployed origin. Do not open pages using file://.
+6. The client dashboard now waits for Supabase write success before showing a successful CRUD message. If a write is denied, it shows the database error and reloads persisted records.
+7. Never put a service_role key in a browser file. Only use the public anon/publishable key.
