@@ -398,7 +398,7 @@ cr();drag($('gr'));
   $('rec').innerHTML=(top.length?top:E.slice(0,6)).map(e=>card(e,'r')).join('')||'<div class="none">Belum ada event yang dipublikasikan.</div>';
   grid();fx($('rec'));fx($('gr'));fx($('free'));
   if(typeof sr==='function')sr();
- }catch(err){console.error('Gagal memuat event Supabase:',err);const msg='Event belum dapat dimuat dari database. Periksa konfigurasi Supabase, tabel aksatix_records, dan RLS.';const rec=document.getElementById('rec');if(rec)rec.innerHTML='<div class="none">'+msg+'</div>';}
+ }catch(err){console.error('Gagal memuat event Supabase:',err);const msg='Event belum dapat dimuat dari database. Periksa konfigurasi Supabase, tabel aksatix_records, dan RLS.';const rec=document.getElementById('rec');if(rec)rec.innerHTML='<div class="none">'+msg+'<br><small style="opacity:.7">Detail: '+hx(err&&(err.message||err.code||String(err)))+'</small></div>';}
 })();
 
 // Shared customer authentication session. Google OAuth is shared with Supabase Auth used by admin/client.
