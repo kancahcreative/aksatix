@@ -67,3 +67,53 @@ create policy "Admins can update event banners" on storage.objects
 drop policy if exists "Admins can delete event banners" on storage.objects;
 create policy "Admins can delete event banners" on storage.objects
   for delete to authenticated using (bucket_id = 'event-banners' and exists (select 1 from public.aksatix_admins a where a.user_id = (select auth.uid())));
+
+
+-- Customer order access: customers may create and read only their own orders.
+-- Existing admins retain full access through "admins full access records".
+drop policy if exists "customers create own orders" on public.aksatix_records;
+create policy "customers create own orders" on public.aksatix_records
+  for insert to authenticated
+  with check (
+    kind = 'orders'
+    and payload->>'userId' = (select auth.uid())::text
+  );
+drop policy if exists "customers read own orders" on public.aksatix_records;
+create policy "customers read own orders" on public.aksatix_records
+  for select to authenticated
+  using (
+    kind = 'orders'
+    and payload->>'userId' = (select auth.uid())::text
+  );
+grant insert on public.aksatix_records to authenticated;
+
+
+-- Organizer/client workspace policies. Organizer ownership is stored in payload.organizer_id.
+drop policy if exists "organizers read own records" on public.aksatix_records;
+create policy "organizers read own records" on public.aksatix_records
+  for select to authenticated using (
+    (kind in ('events','tickets','promos') and payload->>'organizer_id' = (select auth.uid())::text)
+    or (kind = 'settings' and (record_id = 'client:' || (select auth.uid())::text or payload->>'organizer_id' = (select auth.uid())::text))
+    or (kind = 'orders' and (payload->>'userId' = (select auth.uid())::text or payload->>'organizer_id' = (select auth.uid())::text))
+  );
+drop policy if exists "organizers insert own records" on public.aksatix_records;
+create policy "organizers insert own records" on public.aksatix_records
+  for insert to authenticated with check (
+    (kind in ('events','tickets','promos') and payload->>'organizer_id' = (select auth.uid())::text)
+    or (kind = 'settings' and (record_id = 'client:' || (select auth.uid())::text) and payload->>'organizer_id' = (select auth.uid())::text)
+  );
+drop policy if exists "organizers update own records" on public.aksatix_records;
+create policy "organizers update own records" on public.aksatix_records
+  for update to authenticated using (
+    (kind in ('events','tickets','promos') and payload->>'organizer_id' = (select auth.uid())::text)
+    or (kind = 'settings' and record_id = 'client:' || (select auth.uid())::text)
+  ) with check (
+    (kind in ('events','tickets','promos') and payload->>'organizer_id' = (select auth.uid())::text)
+    or (kind = 'settings' and record_id = 'client:' || (select auth.uid())::text and payload->>'organizer_id' = (select auth.uid())::text)
+  );
+drop policy if exists "organizers delete own records" on public.aksatix_records;
+create policy "organizers delete own records" on public.aksatix_records
+  for delete to authenticated using (
+    (kind in ('events','tickets','promos') and payload->>'organizer_id' = (select auth.uid())::text)
+    or (kind = 'settings' and record_id = 'client:' || (select auth.uid())::text)
+  );
