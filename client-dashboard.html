@@ -20,7 +20,7 @@
 <div class="modalback" id="modalback" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modalhead"><h2 id="modaltitle">Buat event</h2><button class="close" onclick="closeModal()">×</button></div><div id="modalbody"></div></div></div><div class="toast" id="toastbox"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="supabase-config.js"></script><script>
 const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
-const sb=(window.supabase&&window.AKSATIX_SUPABASE_URL&&window.AKSATIX_SUPABASE_ANON_KEY)?window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY):null;
+const sb=(window.supabase&&window.AKSATIX_SUPABASE_URL&&window.AKSATIX_SUPABASE_ANON_KEY)?window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY,{auth:{storageKey:'aksatix-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}}):null;
 let currentUser=null,authMode='login',remoteReady=false,remoteSnapshot=new Map(),orgSettings={},bankSettings={};
 const money=n=>'Rp'+Number(n||0).toLocaleString('id-ID');
 let events=[],tickets=[],orders=[],promos=[];
