@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head><script>try{if(/^https?:/.test(location.protocol)&&/\.html$/i.test(location.pathname)){history.replaceState(null,"",location.pathname.replace(/\/index\.html$/i,"/").replace(/\.html$/i,"")+location.search+location.hash)}}catch(e){}</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Aksatix | Tiket acara Solo Raya dan sekitarnya</title>
@@ -218,7 +218,7 @@ footer#bantuan .fg>div{min-width:0;max-width:100%}footer#bantuan .nl{width:100%}
 <body>
 <header><div class="w">
   <a href="#" class="logo" aria-label="Aksatix"><img src="assets/logo.png" alt=""></a>
-  <nav class="pills"><a class="on" href="#">Beranda</a><a href="#terdekat">Temukan Acara</a><a href="#bantuan">Bantuan</a></nav>
+  <nav class="pills" id="mainPills"><a class="on" data-sp="home" href="/">Beranda</a><a data-sp="find" href="#terdekat">Temukan Acara</a><a data-sp="help" href="#bantuan">Bantuan</a></nav>
   <div class="hr"><button class="ib c" aria-label="Cari" onclick="so()"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></button><button class="ib c" aria-label="Keranjang" onclick="oc()"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.5"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg><span class="bdg" id="cbd" hidden>0</span></button><button class="ib c" aria-label="Profil" onclick="openProfile()"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button></div>
 </div></header>
 
@@ -409,5 +409,5 @@ cr();drag($('gr'));
 // Shared customer authentication session. Google OAuth is shared with Supabase Auth used by admin/client.
 (async function initAksatixAuth(){try{if(!window.AKSATIX_SUPABASE_URL||!window.AKSATIX_SUPABASE_ANON_KEY||!window.supabase)return;SB=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY);const {data:{session},error}=await SB.auth.getSession();if(error)throw error;SBSESSION=session;updateAuthButton();SB.auth.onAuthStateChange((_event,session)=>{SBSESSION=session;updateAuthButton();if(session&&window.__checkoutAfterLogin){window.__checkoutAfterLogin=false;startCheckout()}});if(session&&sessionStorage.getItem('aksatix_after_login_checkout')==='1'){try{cart=JSON.parse(sessionStorage.getItem('aksatix_pending_cart')||'[]');cr();sessionStorage.removeItem('aksatix_pending_cart');sessionStorage.removeItem('aksatix_after_login_checkout')}catch(_){}setTimeout(()=>startCheckout(),250)}if(new URLSearchParams(location.search).get('event')){setTimeout(()=>openD(new URLSearchParams(location.search).get('event')),500)}}catch(err){console.warn('Auth Aksatix:',err)}})();
 </script>
-</body>
+<script>(function(){var nav=document.getElementById('mainPills');if(!nav)return;var L={home:nav.querySelector('[data-sp=home]'),find:nav.querySelector('[data-sp=find]'),help:nav.querySelector('[data-sp=help]')};function set(k){for(var x in L)L[x].classList.toggle('on',x===k)}function pick(){var t=document.getElementById('terdekat'),f=document.getElementById('bantuan'),h=120,vh=innerHeight,k='home';if(f&&f.getBoundingClientRect().top<vh*.55||innerHeight+scrollY>=document.documentElement.scrollHeight-4)k='help';else if(t&&t.getBoundingClientRect().top<=h+40)k='find';set(k)}var tick=0;addEventListener('scroll',function(){if(tick)return;tick=requestAnimationFrame(function(){tick=0;pick()})},{passive:true});addEventListener('resize',pick);nav.addEventListener('click',function(e){var a=e.target.closest('a');if(a)set(a.dataset.sp)});addEventListener('hashchange',function(){setTimeout(pick,60)});pick();setTimeout(pick,400)})();</script></body>
 </html>
