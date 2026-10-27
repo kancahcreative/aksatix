@@ -202,8 +202,26 @@ begin
     c2 := substr(compact,1,3) || '-' || substr(compact,4,4) || '-' || substr(compact,8,4) || '-' || substr(compact,12,4);
   end if;
 
+  -- Prioritas kode e-tiket; fallback mendukung ID/nomor pesanan seperti AKS-ZH48-QXFQ-X4ZG.
   select payload into a from public.aksatix_records
-   where kind = 'attendees' and upper(payload->>'code') in (c1, c2) limit 1;
+   where kind = 'attendees'
+     and upper(regexp_replace(coalesce(payload->>'code',''), '\s', '', 'g')) in (c1, c2, compact)
+   limit 1;
+  if a is null then
+    select jsonb_build_object(
+      'orderId', record_id,
+      'orderNumber', coalesce(payload->>'orderNumber', payload->>'id', record_id),
+      'eventId', payload->>'eventId',
+      'ticketName', coalesce(payload->>'ticketName','Tiket'),
+      'name', coalesce(payload->>'buyerName', payload->>'buyer',''),
+      'status', case when coalesce(payload->>'status','') in ('Cancelled','Refunded','Void') then 'Void' else 'Valid' end,
+      'checkedIn', false
+    ) into a
+    from public.aksatix_records
+    where kind = 'orders'
+      and upper(regexp_replace(coalesce(payload->>'orderNumber', payload->>'id', record_id), '[^A-Z0-9]', '', 'g')) = compact
+    limit 1;
+  end if;
   if a is null then return jsonb_build_object('found', false); end if;
 
   select payload into e from public.aksatix_records

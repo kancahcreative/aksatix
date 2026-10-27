@@ -31,7 +31,7 @@ footer#bantuan .bt{display:inline-block;padding:0 18px;white-space:nowrap;border
 </style><style id="vcss">.vf{margin:0}.vl{display:block;font-weight:700;margin-bottom:8px}.vrow{display:flex;gap:10px;flex-wrap:wrap}.vrow input{flex:1;min-width:220px;height:50px;border:2px solid var(--line);border-radius:999px;padding:0 20px;font:700 17px/1 ui-monospace,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;outline:0;color:var(--ink);background:#fff}.vrow input:focus{border-color:var(--ink)}.vrow .btn{border:0;height:50px;cursor:pointer;font-size:15px}.vrow .btn[disabled]{opacity:.6;cursor:wait}
 .vcard{margin-top:22px;border-radius:18px;padding:22px;border:2px solid}.vcard h3{margin:0 0 4px;font-size:22px}.vcard dl{display:grid;grid-template-columns:110px 1fr;gap:6px 14px;margin:16px 0 0}.vcard dt{color:var(--muted);font-size:13px}.vcard dd{margin:0;font-weight:700}
 .vcard.ok{background:#EAFFF4;border-color:#00CC78}.vcard.warn{background:#FFF8DF;border-color:#F0DF9B}.vcard.bad{background:#FFF0F0;border-color:#F2B8B8}</style></head><body><header><div class="w"><a class="logo" href="/" aria-label="Aksatix">aksatix</a><nav class="nav"><a href="/">Beranda</a><a href="/#terdekat">Temukan Acara</a><a href="/pusat-bantuan">Bantuan</a></nav><button class="mobile" onclick="location.href='/pusat-bantuan'">Bantuan ↗</button></div></header><main><section class="hero"><div class="w"><span class="tag">AKSATIX · CEK KEASLIAN TIKET</span><h1>Pastikan tiketmu asli.</h1><p>Masukkan kode tiket yang tertera di email atau WhatsApp dari Aksatix. Kami cocokkan langsung dengan database tiket resmi.</p></div></section>
-<section class="content"><div class="w grid"><div><span class="kicker">Verifikasi</span><h2>Masukkan kode tiket</h2><p class="lead">Format kode: <b>AKS-XXXX-XXXX-XXXX</b>. Huruf besar/kecil dan spasi tidak masalah.</p></div>
+<section class="content"><div class="w grid"><div><span class="kicker">Verifikasi</span><h2>Masukkan kode tiket</h2><p class="lead">Masukkan kode tiket atau ID pesanan (contoh: <b>AKS-ZH48-QXFQ-X4ZG</b>). Huruf besar/kecil dan spasi tidak masalah.</p></div>
 <div><form id="vf" class="vf" autocomplete="off"><label for="kode" class="vl">Kode tiket</label><div class="vrow"><input id="kode" name="kode" placeholder="AKS-XXXX-XXXX-XXXX" maxlength="40" spellcheck="false" autocapitalize="characters" required><button id="vb" class="btn" type="submit">Cek tiket</button></div></form>
 <div id="vres" aria-live="polite"></div>
 <div class="notice"><b>Tips keamanan</b><p>Jangan bagikan kode atau QR tiket ke publik. Halaman ini hanya menampilkan data minimal (nama disamarkan) dan tidak mengubah status tiket. Check-in di venue tetap dilakukan petugas resmi.</p></div></div></div></section>
@@ -50,13 +50,14 @@ function show(cls,title,msg,r){let rows='';if(r)rows='<dl><dt>Event</dt><dd>'+es
 async function check(code){
   const b=$('vb');b.disabled=true;b.textContent='Memeriksa…';
   try{
-    const {data,error}=await sb.rpc('aksatix_verify_ticket',{p_code:code});
+    const normalized=String(code||'').trim().toUpperCase();
+    const {data,error}=await sb.rpc('aksatix_verify_ticket',{p_code:normalized});
     if(error)throw error;
     if(!data||!data.found)return show('bad','Kode tidak ditemukan','Kode ini tidak terdaftar di sistem Aksatix. Periksa kembali penulisan kode, atau hubungi <a href="/pusat-bantuan"><u>Pusat Bantuan</u></a> jika kamu membeli lewat Aksatix.');
     if(data.status==='valid')return show('ok','✓ Tiket asli &amp; valid','Tiket terdaftar resmi dan belum digunakan.',data);
     if(data.status==='used')return show('warn','Tiket asli, tetapi sudah digunakan','Tiket ini sudah melalui check-in. Jika bukan kamu yang menggunakannya, segera hubungi kami.',data);
     return show('bad','Tiket tidak berlaku','Tiket ini telah dibatalkan atau dikembalikan dananya.',data);
-  }catch(e){show('warn','Gagal memeriksa','Terjadi gangguan saat menghubungi server. Coba lagi beberapa saat lagi.')}
+  }catch(e){show('warn','Gagal memeriksa',e?.message?('Server belum siap memverifikasi kode ini. Detail: '+esc(e.message)):'Server belum siap memverifikasi kode ini. Pastikan migrasi supabase-tickets.sql sudah dijalankan.')}
   finally{b.disabled=false;b.textContent='Cek tiket'}
 }
 $('vf').addEventListener('submit',e=>{e.preventDefault();const v=$('kode').value.trim();if(v)check(v)});
