@@ -30,3 +30,11 @@ CLEAN EVENT URL (aksatix.kancah.com/<slug>)
 - 404.html adalah salinan detail-event.html: hosting statis (GitHub Pages / Cloudflare Pages) menyajikannya untuk path /<slug> yang tidak punya file. Jika detail-event.html diubah, salin ulang ke 404.html.
 - Link lama detail-event.html?slug=... / ?id=... tetap jalan dan otomatis diganti ke URL bersih.
 - Nama slug yang sama dengan nama halaman (login, admin, checkout, dll) dihindari otomatis.
+
+SHARED STOREFRONT SHELL (header + bottom navbar mobile + menu)
+- storefront-shell.js memasang header, bottom navbar (<1024px) dan sheet Menu yang identik dengan index.html di semua halaman publik: detail-event, 404, checkout, about-aksatix, jual-tiket, tarif-layanan, hubungi-kami, pusat-bantuan, syarat-ketentuan, kebijakan-privasi, gelang-tiket, cek-keaslian-tiket.
+- Ubah tampilan/menu navigasi cukup di storefront-shell.js. Jika mengubah header/nav/menu di index.html, samakan juga di file ini.
+- Deploy storefront-shell.js bersama file lain (satu folder root).
+
+HERO BANNER (index.html)
+- Hero bisa digeser manual (sentuh di HP, drag dengan mouse di desktop), tombol panah tetap ada. Sudut membulat ikut slide saat digeser; ada jarak 10px antar slide.

@@ -30,7 +30,7 @@ header .w{display:flex;align-items:center;justify-content:space-between;gap:16px
 .ib.c{padding:0;width:42px}
 .menu{display:none}
 .hero{padding:28px 0 0;overflow:hidden}
-.stage{position:relative;aspect-ratio:4/1;overflow:hidden;border-radius:28px;touch-action:pan-y;user-select:none}
+.stage{--r:28px;position:relative;aspect-ratio:4/1;overflow:hidden;border-radius:var(--r);clip-path:inset(0 round var(--r));isolation:isolate;touch-action:pan-y;user-select:none;-webkit-user-select:none}.stage .slide{border-radius:var(--r);-webkit-user-drag:none;-webkit-tap-highlight-color:transparent}
 .hero-empty{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:24px;background:#eef2f0;color:#5E6F68;font-weight:600}.slide{position:absolute;inset:0;border-radius:0;overflow:hidden;color:#fff;display:block;padding:0;transition:transform .55s cubic-bezier(.4,0,.2,1),opacity .3s;cursor:default}
 .slide svg,.slide img{position:absolute;inset:0;width:100%;height:100%}.slide img{object-fit:cover;-webkit-user-drag:none}.slide.im div{display:none}
 
@@ -198,7 +198,7 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 #toast{bottom:calc(92px + env(safe-area-inset-bottom,0px))}}
 @media (max-width:900px){.mitra{padding:28px 20px}.mitra h2{font-size:24px}.og{flex-basis:78%}.help{padding:18px}}
 @media (max-width:900px){.w{padding:0 16px}.gr{display:flex;overflow-x:auto;gap:16px;scrollbar-width:none;padding:4px 2px 12px;cursor:grab;overscroll-behavior-x:contain}.gr::-webkit-scrollbar{display:none}.gr .ev{flex:0 0 calc((100% - 16px)/2)}.gr .none{flex:1 0 100%}.ev{flex-basis:58%}.bs{flex-basis:78%}.arw.sm{display:none}.slide div{max-width:64%}.fc{grid-template-columns:repeat(2,auto);gap:32px}.hero{padding-top:20px}.logo{font-size:24px}h2.t{font-size:20px}}
-@media (max-width:600px){.latest-card h3{font-size:20px!important;line-height:1.25;min-height:0;height:auto}.logo img{height:42px}footer .logo img{height:48px}.stage{border-radius:16px}.slide{padding:0 6%}.slide div{max-width:68%}.slide h2{font-size:clamp(13px,4.6vw,22px)}.slide p{display:none}.slide .cta{margin-top:7px;padding:5px 13px;font-size:10px}.stage .arw{width:28px;height:28px}.stage .arw.l{left:6px}.stage .arw.r{right:6px}.ev{flex-basis:58%;min-width:0}.bs{flex-basis:84%;min-width:0;border-radius:22px}.bs b{font-size:15px}.bs-body{padding:11px 7px 8px}.bs-media{aspect-ratio:16/9}.bs .bs-open{width:29px;height:29px}.gr .ev{flex-basis:58%}.crow .arw.sm{top:30px}.cat{width:62px;gap:7px}.cat i{width:52px;height:52px;border-radius:17px}.cat span{font-size:11px}.cats{gap:10px;margin-right:-16px;padding-right:16px}.fc{grid-template-columns:1fr;gap:24px}.fg{gap:28px}footer{padding:44px 0 20px}.sh{flex-wrap:nowrap}.bl{padding:7px 14px}dialog{padding:20px}}
+@media (max-width:600px){.latest-card h3{font-size:20px!important;line-height:1.25;min-height:0;height:auto}.logo img{height:42px}footer .logo img{height:48px}.stage{--r:16px;border-radius:16px}.slide{padding:0 6%}.slide div{max-width:68%}.slide h2{font-size:clamp(13px,4.6vw,22px)}.slide p{display:none}.slide .cta{margin-top:7px;padding:5px 13px;font-size:10px}.stage .arw{width:28px;height:28px}.stage .arw.l{left:6px}.stage .arw.r{right:6px}.ev{flex-basis:58%;min-width:0}.bs{flex-basis:84%;min-width:0;border-radius:22px}.bs b{font-size:15px}.bs-body{padding:11px 7px 8px}.bs-media{aspect-ratio:16/9}.bs .bs-open{width:29px;height:29px}.gr .ev{flex-basis:58%}.crow .arw.sm{top:30px}.cat{width:62px;gap:7px}.cat i{width:52px;height:52px;border-radius:17px}.cat span{font-size:11px}.cats{gap:10px;margin-right:-16px;padding-right:16px}.fc{grid-template-columns:1fr;gap:24px}.fg{gap:28px}footer{padding:44px 0 20px}.sh{flex-wrap:nowrap}.bl{padding:7px 14px}dialog{padding:20px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* Event detail, authentication and checkout */
@@ -212,6 +212,7 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 .detail-hero{display:grid;grid-template-columns:minmax(0, .9fr) minmax(0,1.1fr);gap:22px;margin:16px 0}.detail-poster{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:16px;background:#eff8f3}.detail-poster-empty{width:100%;aspect-ratio:4/3;border-radius:16px;background:linear-gradient(135deg,#eafff5,#f6fbf8);display:grid;place-items:center;color:#00834d;font-size:14px;font-weight:800}.detail-info h2{font-size:clamp(24px,4vw,34px);letter-spacing:-1.2px;line-height:1.1;margin:4px 0 12px}.detail-meta{display:grid;gap:10px;color:var(--muted);font-size:14px;margin:14px 0}.detail-meta span{display:flex;gap:9px;align-items:flex-start}.detail-desc{white-space:pre-line;line-height:1.7;color:#46534d;font-size:14px;margin:18px 0}.ticket-options{display:grid;gap:10px;margin:14px 0}.ticket-option{display:flex;gap:12px;align-items:center;justify-content:space-between;padding:14px;border:1px solid var(--line);border-radius:14px;cursor:pointer}.ticket-option:has(input:checked){border-color:#00a967;background:#f0fff7}.ticket-option small{display:block;color:var(--muted);margin-top:4px}.ticket-option input{accent-color:#00b96e}.detail-actions{display:flex;gap:10px;margin-top:16px}.detail-actions>*{flex:1}.pay-methods{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}.pay-method{padding:13px;border:1px solid var(--line);border-radius:12px;display:flex;align-items:center;gap:9px;font-size:13px;font-weight:750}.pay-method.active{border-color:#00a967;background:#effff7}.pay-method.disabled{color:#9ba49f;background:#f7f8f7}.pay-method small{display:block;font-weight:500;color:var(--muted)}.pay-note{background:#f1fff7;border:1px solid #d4f6e4;border-radius:12px;padding:14px;font-size:13px;line-height:1.6;margin:14px 0}.order-total{display:flex;justify-content:space-between;gap:12px;font-weight:850;font-size:18px;padding:16px 0;border-top:1px solid var(--line);margin-top:12px}.history-list{display:grid;gap:10px}.history-row{border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;justify-content:space-between;gap:12px}.status-pill{font-size:11px;font-weight:800;background:#fff5d8;padding:5px 8px;border-radius:99px;white-space:nowrap}
 @media(max-width:600px){#authdlg,#detaildlg,#checkoutdlg,#profiledlg{padding:18px}.detail-hero{grid-template-columns:1fr;gap:14px}.detail-poster,.detail-poster-empty{aspect-ratio:16/9}.detail-actions{flex-direction:column}.pay-methods{grid-template-columns:1fr 1fr}}
 
+footer#bantuan .fg>div{min-width:0;max-width:100%}footer#bantuan .nl{width:100%}footer#bantuan .nl input{width:100%;min-width:0}
 </style>
 </head>
 <body>
@@ -239,9 +240,9 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 
 <footer id="bantuan"><div class="w">
   <div class="fg"><div><div class="logo"><img src="assets/logo.png" alt=""></div><p>Tiket acara dari Solo Raya untuk semua orang.</p><form class="nl" id="nl"><b>Tetap Terupdate</b><small>Berlangganan newsletter untuk acara dan update terbaru.</small><span><input type="email" required placeholder="Email Anda" aria-label="Email"><button class="bt">Berlangganan</button></span></form></div>
-  <div class="fc"><div><b>Aksatix</b><a href="#">Tentang Aksatix</a><a href="#">Jual Tiket</a><a href="#">Tarif Layanan</a><a href="#">Hubungi Kami</a></div>
-  <div><b>Bantuan &amp; Legal</b><a href="#">Pusat Bantuan</a><a href="#">Syarat &amp; Ketentuan</a><a href="#">Kebijakan Privasi</a><a href="#">Gelang Tiket</a><a href="#">Cek Keaslian Tiket</a></div>
-  <div><b>Kategori</b><a href="#">Musik</a><a href="#">Pameran</a><a href="#">Olahraga</a><a href="#">Workshop</a><a href="#">Semua Kategori</a></div></div></div>
+  <div class="fc"><div><b>Aksatix</b><a href="about-aksatix.html">Tentang Aksatix</a><a href="jual-tiket.html">Jual Tiket</a><a href="tarif-layanan.html">Tarif Layanan</a><a href="hubungi-kami.html">Hubungi Kami</a></div>
+  <div><b>Bantuan &amp; Legal</b><a href="pusat-bantuan.html">Pusat Bantuan</a><a href="syarat-ketentuan.html">Syarat &amp; Ketentuan</a><a href="kebijakan-privasi.html">Kebijakan Privasi</a><a href="gelang-tiket.html">Gelang Tiket</a><a href="cek-keaslian-tiket.html">Cek Keaslian Tiket</a></div>
+  <div><b>Kategori</b><a href="#terdekat">Musik</a><a href="#terdekat">Pameran</a><a href="#terdekat">Olahraga</a><a href="#terdekat">Workshop</a><a href="#terdekat">Semua Kategori</a></div></div></div>
   <div class="fb"><span>Copyright © 2026 Aksatix. Developed by <a href="https://kancah.com/" target="_blank" rel="noopener" style="text-decoration:underline">Kancah</a></span></div>
 </div></footer>
 
@@ -255,7 +256,7 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 <a class="fab" href="https://wa.me/" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24"><path d="M12 4a8 8 0 0 0-7 12l-1 4 4-1a8 8 0 1 0 4-15z"/></svg></i>Tanya Aksatix</a>
 <button data-n="buy"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12" stroke-dasharray="2 2"/></svg>Pembelian</button>
 <button data-n="menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button></nav>
-<dialog id="mnu" onclick="if(event.target==this)this.close()"><h3>Menu</h3><nav class="ml" onclick="$('mnu').close()"><a href="#">Tentang Aksatix</a><a href="#">Jual Tiket</a><a href="#">Tarif Layanan</a><a href="#">Gelang Tiket</a><a href="#bantuan">Pusat Bantuan</a><a href="#faq">FAQ</a></nav></dialog>
+<dialog id="mnu" onclick="if(event.target==this)this.close()"><h3>Menu</h3><nav class="ml" onclick="$('mnu').close()"><a href="about-aksatix.html">Tentang Aksatix</a><a href="jual-tiket.html">Jual Tiket</a><a href="tarif-layanan.html">Tarif Layanan</a><a href="gelang-tiket.html">Gelang Tiket</a><a href="pusat-bantuan.html">Pusat Bantuan</a><a href="#faq">FAQ</a></nav></dialog>
 <dialog id="sdlg" onclick="if(event.target==this)this.close()"><div class="sb"><input id="sq" type="search" placeholder="Cari nama acara atau kategori" aria-label="Cari acara"><button class="bt g" id="sx">Tutup</button></div><div id="sr"></div></dialog>
 <dialog id="cdlg" onclick="if(event.target==this)this.close()"><h3>Keranjang</h3><div id="cl"></div><div class="tt"><span>Total</span><span id="ct"></span></div><div class="ac"><button class="bt g" onclick="$('cdlg').close()">Tutup</button><button class="bt" id="co">Checkout</button></div></dialog>
 <div id="toast" role="status"></div>
@@ -290,14 +291,17 @@ function setupHero(items){
  sl=[...st.querySelectorAll('.slide')];
  const enabled=B.length>1;$("pv").hidden=!enabled;$("nx").hidden=!enabled;$("dots").hidden=!enabled;
  if(!B.length){st.insertAdjacentHTML('beforeend','<div class="hero-empty">Banner event akan tampil di sini setelah event dipublikasikan dan poster diunggah melalui admin.</div>');return}
- function lay(){sl.forEach((s,i)=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;s.style.transform=`translateX(${d*100}%)`;s.style.opacity=Math.abs(d)>1?0:1;s.style.zIndex=d===0?10:1;s.style.pointerEvents=d===0?'auto':'none';s.classList.toggle('cur',d===0)});[...$("dots").children].forEach((x,i)=>x.classList.toggle('on',i===ci))}
+ const GAP=10;
+ function lay(){sl.forEach((s,i)=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;s.style.transform=`translateX(calc(${d*100}% + ${d*GAP}px))`;s.style.opacity=Math.abs(d)>1?0:1;s.style.zIndex=d===0?10:1;s.style.pointerEvents=d===0?'auto':'none';s.classList.toggle('cur',d===0)});[...$("dots").children].forEach((x,i)=>x.classList.toggle('on',i===ci))}
  function go(i){ci=(i+B.length)%B.length;lay()}
  $("pv").onclick=()=>go(ci-1);$("nx").onclick=()=>go(ci+1);$("dots").onclick=e=>{if(e.target.dataset.i!==undefined)go(+e.target.dataset.i)};
- let sx=null,moved=false;
- st.onpointerdown=e=>{if(e.target.closest('.arw'))return;sx=e.clientX;moved=false};
- window.onpointermove=e=>{if(sx===null)return;const dx=e.clientX-sx;if(Math.abs(dx)>8)moved=true;if(moved)sl.forEach((s,i)=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;if(Math.abs(d)<=1){s.style.transition='none';s.style.transform=`translateX(calc(${d*100}% + ${dx}px))`}})};
- window.onpointercancel=()=>{if(sx!==null){sx=null;sl.forEach(s=>s.style.transition='');lay()}};
- window.onpointerup=e=>{if(sx===null)return;const d=e.clientX-sx;sx=null;sl.forEach(s=>s.style.transition='');if(Math.abs(d)>50)go(ci+(d<0?1:-1));else lay();setTimeout(()=>moved=false,0)};
+ let sx=null,moved=false,pid=null,sw=1;
+ const rel=i=>{let d=i-ci;if(d>B.length/2)d-=B.length;if(d<-B.length/2)d+=B.length;return d};
+ st.onpointerdown=e=>{if(B.length<2||e.target.closest('.arw')||(e.pointerType==='mouse'&&e.button))return;sx=e.clientX;moved=false;pid=e.pointerId;sw=st.clientWidth||1};
+ window.onpointermove=e=>{if(sx===null||e.pointerId!==pid)return;let dx=e.clientX-sx;if(!moved&&Math.abs(dx)>8){moved=true;try{st.setPointerCapture(pid)}catch(_){}}if(!moved)return;dx=Math.max(-sw,Math.min(sw,dx));sl.forEach((s,i)=>{const d=rel(i);if(Math.abs(d)<=1){s.style.transition='none';s.style.transform=`translateX(calc(${d*100}% + ${d*GAP}px + ${dx}px))`}})};
+ const endDrag=(e,cancel)=>{if(sx===null||(e&&e.pointerId!==pid))return;const dx=e&&!cancel?e.clientX-sx:0;sx=null;sl.forEach(s=>s.style.transition='');try{st.releasePointerCapture(pid)}catch(_){}if(Math.abs(dx)>Math.max(40,sw*.12))go(ci+(dx<0?1:-1));else lay();setTimeout(()=>moved=false,0)};
+ window.onpointerup=e=>endDrag(e);window.onpointercancel=e=>endDrag(e,true);
+ st.ondragstart=e=>e.preventDefault();
  st.addEventListener('click',e=>{if(moved){e.preventDefault();e.stopPropagation()}},true);
  st.parentNode.onmouseenter=()=>pause=true;st.parentNode.onmouseleave=()=>pause=false;
  window.onresize=lay;lay();
