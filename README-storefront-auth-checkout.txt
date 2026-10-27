@@ -38,3 +38,10 @@ SHARED STOREFRONT SHELL (header + bottom navbar mobile + menu)
 
 HERO BANNER (index.html)
 - Hero bisa digeser manual (sentuh di HP, drag dengan mouse di desktop), tombol panah tetap ada. Sudut membulat ikut slide saat digeser; ada jarak 10px antar slide.
+
+Pembaruan fitur (Oktober 2026)
+- Sesi pelanggan memakai storage key Supabase yang sama pada halaman login, callback OAuth, beranda, detail event, dan checkout. Sesi tetap tersimpan selama pengguna tidak memilih Logout atau mencabut sesi.
+- Menu akun di beranda menampilkan nama/email, Tiket Saya, Riwayat Transaksi, dan Logout.
+- Setiap e-tiket yang sudah diterbitkan menampilkan QR berdasarkan kode unik tiket di menu Tiket Saya.
+- Dashboard admin > Peserta & Check-in memiliki scanner QR berbasis kamera dan input kode manual. Scanner kamera membutuhkan HTTPS (atau localhost) dan izin kamera. Check-in disimpan ke data admin yang terhubung ke Supabase.
+- QR hanya diterbitkan setelah tiket muncul sebagai peserta/e-tiket. Pesanan berbayar yang masih Pending belum memiliki e-tiket aktif.

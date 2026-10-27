@@ -83,6 +83,7 @@ const sb = window.supabase.createClient(
   {
     auth: {
       flowType: 'pkce',
+      storageKey: 'aksatix-auth-v1',
       detectSessionInUrl: true,
       persistSession: true,
       autoRefreshToken: true
@@ -92,7 +93,9 @@ const sb = window.supabase.createClient(
 
 const params = new URLSearchParams(location.search);
 let next = params.get('next') || '/';
-// ... (kode validasi next route Anda tetap sama) ...
+// Pertahankan sesi yang sudah aktif: jangan meminta login ulang saat pengguna membeli tiket.
+if (!next.startsWith('/') || next.startsWith('//') || next.includes('\\')) next = '/';
+(async()=>{try{const {data:{session}}=await sb.auth.getSession();if(session){location.replace(next);return;}sb.auth.onAuthStateChange((_event,session)=>{if(session && !location.pathname.endsWith('auth-callback.html')) location.replace(next);});}catch(e){console.warn('Pemeriksaan sesi:',e)}})();
 
 document.getElementById('googleBtn').onclick = async () => {
   const b = document.getElementById('googleBtn');
@@ -106,7 +109,7 @@ document.getElementById('googleBtn').onclick = async () => {
       provider: 'google',
       options: {
         redirectTo: location.origin + '/auth-callback.html',
-        queryParams: { prompt: 'select_account' }
+        queryParams: {}
       }
     });
     
