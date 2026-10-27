@@ -21,7 +21,7 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-hr{display:flex;gap:10px;align-items:center}
 .sx-ib{height:42px;width:42px;min-width:42px;border-radius:99px;background:none;color:#16211D;display:flex;align-items:center;justify-content:center;padding:0;border:0;cursor:pointer;transition:background .15s}
 .sx-ib:hover{color:#008F55}.sx-ib:hover svg{stroke:#008F55}
-.sx-ib svg{width:20px;height:20px;fill:none;stroke:#16211D;stroke-width:2;stroke-linecap:round}
+.sx-account{position:relative}.sx-account-menu{position:absolute;right:0;top:calc(100% + 10px);width:min(340px,calc(100vw - 24px));padding:10px;background:#fff;border:1px solid #E2EBE7;border-radius:18px;box-shadow:0 16px 44px rgba(22,33,29,.16);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;z-index:100}.sx-account-menu[hidden]{display:none}.sx-account-head{padding:12px 12px 14px;border-bottom:1px solid #edf1ef;margin-bottom:5px}.sx-account-head b{display:block;font-size:15px}.sx-account-head span{display:block;overflow-wrap:anywhere;color:#64746d;font-size:12px;margin-top:4px}.sx-account-menu a,.sx-account-menu button{display:flex;width:100%;align-items:center;gap:12px;padding:12px;border:0;border-radius:10px;background:#fff;color:#16211D;text-decoration:none;font:600 14px "Plus Jakarta Sans",system-ui,sans-serif;text-align:left;cursor:pointer}.sx-account-menu a:hover,.sx-account-menu button:hover{background:#f2fbf6}.sx-account-menu .sx-logout{color:#e11d48}.sx-account-menu .sx-logout:hover{background:#fff1f2}.sx-ib svg{width:20px;height:20px;fill:none;stroke:#16211D;stroke-width:2;stroke-linecap:round}
 .sx-bn{display:none}
 dialog#sxmnu{border:0;border-radius:28px;background:#fff;color:#16211D;padding:24px;width:min(92vw,400px);box-shadow:0 20px 60px rgba(22,33,29,.35);font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:14px;line-height:1.55}
 dialog#sxmnu::backdrop{background:rgba(13,25,20,.58);backdrop-filter:blur(3px)}
@@ -50,7 +50,7 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
   <div class="sx-hr">
     <a class="sx-ib" href="/#terdekat" aria-label="Cari acara" title="Cari acara"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></a>
     <a class="sx-ib" href="/login?next=/checkout" aria-label="Keranjang" title="Keranjang"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.5"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a>
-    <a class="sx-ib" href="/login?next=/" aria-label="Profil" title="Masuk / Daftar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
+    <div class="sx-account"><button class="sx-ib" id="sxAccountTrigger" type="button" aria-label="Profil" aria-expanded="false" title="Akun"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></button><div class="sx-account-menu" id="sxAccountMenu" hidden><div class="sx-account-head"><b id="sxAccountName">Akun Aksatix</b><span id="sxAccountEmail">Masuk untuk mengelola tiket</span></div><a href="/client-dashboard">Tiket Saya <span style="margin-left:auto;color:#64746d;font-size:12px">E-Voucher &amp; QR</span></a><a href="/client-dashboard?view=history">Riwayat Transaksi</a><a href="/login?next=/" id="sxLoginLink">Masuk / Daftar</a><button class="sx-logout" id="sxLogout" hidden>Keluar dari akun</button></div></div>
   </div>
 </div>`;
 
@@ -97,6 +97,20 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
     document.body.appendChild(dlg);
 
     nav.querySelector('[data-n="menu"]').addEventListener('click', function () { dlg.showModal(); });
+
+    // Shared account menu: reads the same persisted Supabase session as index/detail/checkout.
+    var accountTrigger=h.querySelector('#sxAccountTrigger'), accountMenu=h.querySelector('#sxAccountMenu');
+    function refreshAccount(){
+      var session=null;try{var raw=localStorage.getItem('aksatix-auth-v1');if(raw){var parsed=JSON.parse(raw);session=parsed.currentSession||parsed;}}catch(_){}
+      var user=session&&session.user;var nm=user&&((user.user_metadata&&(user.user_metadata.full_name||user.user_metadata.name))||user.email&&user.email.split('@')[0]);
+      h.querySelector('#sxAccountName').textContent=nm||'Akun Aksatix';h.querySelector('#sxAccountEmail').textContent=(user&&user.email)||'Masuk untuk mengelola tiket';
+      h.querySelector('#sxLoginLink').hidden=!!user;h.querySelector('#sxLogout').hidden=!user;
+    }
+    if(accountTrigger&&accountMenu){refreshAccount();accountTrigger.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();var open=accountMenu.hidden;accountMenu.hidden=!open;accountTrigger.setAttribute('aria-expanded',String(open));});
+      document.addEventListener('click',function(e){if(!e.target.closest('.sx-account')){accountMenu.hidden=true;accountTrigger.setAttribute('aria-expanded','false');}});
+      h.querySelector('#sxLogout').addEventListener('click',async function(){try{if(window.supabase&&window.AKSATIX_SUPABASE_URL&&window.AKSATIX_SUPABASE_ANON_KEY){var client=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY,{auth:{storageKey:'aksatix-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});await client.auth.signOut({scope:'local'});} }catch(err){console.warn('Logout Aksatix:',err)}accountMenu.hidden=true;refreshAccount();location.reload();});
+      window.addEventListener('storage',refreshAccount);
+    }
 
     var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
     var active = { 'index': 'home', 'checkout': 'buy' }[page] || (/^(about-aksatix|jual-tiket|tarif-layanan|gelang-tiket|pusat-bantuan|hubungi-kami|syarat-ketentuan|kebijakan-privasi|cek-keaslian-tiket)$/.test(page) ? 'menu' : 'jdw');
