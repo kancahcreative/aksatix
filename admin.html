@@ -162,7 +162,7 @@ function closeModal(){$('modal').classList.remove('open')}
 $('modal').addEventListener('click',e=>{if(e.target===$('modal'))closeModal()});
 const eventOptions=()=>db.events.map(e=>({value:e.id,label:e.name}));
 function makeSlug(v){return String(v||'event').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().trim().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'event'}
-function uniqueEventSlug(name,id){let base=makeSlug(name),slug=base,n=2;while(db.events.some(x=>x.id!==id&&(x.slug||makeSlug(x.name))===slug))slug=base+'-'+n++;return slug}
+function uniqueEventSlug(name,id){let base=makeSlug(name),slug=base,n=2;while(db.events.some(x=>x.id!==id&&(x.slug||makeSlug(x.name))===slug)||(window.AKSATIX_RESERVED_SLUGS||[]).includes(slug))slug=base+'-'+n++;return slug}
 function openEvent(id){let e=id?eventBy(id):null;openModal(e?'Edit event':'Buat event baru','Detail ini akan disimpan pada dashboard browser.',[
 {name:'name',label:'Nama event',value:e?.name||'',required:true,full:true},{name:'slug',label:'Slug URL event',value:e?.slug||makeSlug(e?.name||''),full:true,help:'URL rapi, otomatis dibuat dari nama event dan bisa disunting.'},{name:'category',label:'Kategori',value:e?.category||'Musik',required:true,options:['Musik','Pameran','Teater','Olahraga','Wisata','Talkshow','Workshop','Kompetisi','Lainnya'].map(x=>({value:x,label:x}))},
 {name:'organizer',label:'Penyelenggara',value:e?.organizer||'',options:[{value:'',label:'Pilih penyelenggara'},...db.organizers.map(o=>({value:o.name,label:o.name}))]},

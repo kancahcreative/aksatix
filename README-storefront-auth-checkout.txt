@@ -24,3 +24,9 @@ BEHAVIOR
 
 SECURITY NOTE
 The order RLS policy allows authenticated users to insert an order only when payload.userId matches auth.uid(), and read only their own orders. Organizer RLS policies allow CRUD only for records whose payload.organizer_id matches auth.uid(); order visibility is limited to the buyer or organizer attached to the event. The admin policy remains the authority for admin access. Review all organizer/client RLS policies before production, as this existing project uses a shared aksatix_records JSON table.
+
+CLEAN EVENT URL (aksatix.kancah.com/<slug>)
+- Link event sekarang https://aksatix.kancah.com/<slug>. Slug diambil dari field "Slug URL event" di admin, atau otomatis dari nama event jika kosong.
+- 404.html adalah salinan detail-event.html: hosting statis (GitHub Pages / Cloudflare Pages) menyajikannya untuk path /<slug> yang tidak punya file. Jika detail-event.html diubah, salin ulang ke 404.html.
+- Link lama detail-event.html?slug=... / ?id=... tetap jalan dan otomatis diganti ke URL bersih.
+- Nama slug yang sama dengan nama halaman (login, admin, checkout, dll) dihindari otomatis.
