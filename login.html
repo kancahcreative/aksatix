@@ -73,20 +73,19 @@
   </form>
   <p class="switch-copy signup-only" id="switchCopy">Belum punya akun? <button id="switchMode" type="button">Daftar gratis</button></p>
 </div></section></div>
-<script src="./supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<!-- Di bagian script login.html -->
 <script src="./supabase-config.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// Tambahkan konfigurasi flowType: 'implicit' agar stabil di localhost
+// Gunakan PKCE secara konsisten dengan halaman callback.
 const sb = window.supabase.createClient(
   window.AKSATIX_SUPABASE_URL,
   window.AKSATIX_SUPABASE_ANON_KEY,
   {
     auth: {
-      flowType: 'implicit',
+      flowType: 'pkce',
       detectSessionInUrl: true,
-      persistSession: true
+      persistSession: true,
+      autoRefreshToken: true
     }
   }
 );

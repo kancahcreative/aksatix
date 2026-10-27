@@ -293,42 +293,54 @@
     </main>
     <script src="./supabase-config.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-   <script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const sb = window.supabase.createClient(window.AKSATIX_SUPABASE_URL, window.AKSATIX_SUPABASE_ANON_KEY);
+    <script>
+    // Callback memakai konfigurasi PKCE yang sama dengan login.html.
+    // Pertukaran authorization code dilakukan tepat satu kali secara manual.
+    const sb = window.supabase.createClient(
+      window.AKSATIX_SUPABASE_URL,
+      window.AKSATIX_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          flowType: 'pkce',
+          detectSessionInUrl: false,
+          persistSession: true,
+          autoRefreshToken: true
+        }
+      }
+    );
 
-(async () => {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+    (async function handleOAuthCallback() {
+      const status = document.querySelector('.panel p');
+      try {
+        const params = new URLSearchParams(window.location.search);
+        const oauthError = params.get('error_description') || params.get('error');
+        if (oauthError) throw new Error(oauthError.replace(/\+/g, ' '));
 
-    // 1. Jika ada parameter 'code' dari Google/Supabase, tukar dulu dengan sesi
-    if (code) {
-      const { error: exchangeError } = await sb.auth.exchangeCodeForSession(code);
-      if (exchangeError) throw exchangeError;
-    }
+        const code = params.get('code');
+        if (code) {
+          const { data, error } = await sb.auth.exchangeCodeForSession(code);
+          if (error) throw error;
+          if (!data.session) throw new Error('Sesi login tidak berhasil dibuat.');
+        }
 
-    // 2. Ambil sesi yang aktif
-    const { data: { session }, error } = await sb.auth.getSession();
-    if (error) throw error;
+        const { data: { session }, error: sessionError } = await sb.auth.getSession();
+        if (sessionError) throw sessionError;
+        if (!session) {
+          throw new Error('Sesi tidak ditemukan. Silakan kembali ke halaman login dan coba sekali lagi.');
+        }
 
-    if (session) {
-      const next = sessionStorage.getItem('aksatix_auth_next') || '/';
-      sessionStorage.removeItem('aksatix_auth_next');
-      
-      const pending = sessionStorage.getItem('aksatix_after_login_checkout') === '1';
-      location.replace(pending ? '/checkout' : next);
-    } else {
-      document.querySelector('p').textContent = 'Menunggu sesi masuk...';
-    }
-  } catch (e) {
-    document.querySelector('p').textContent = 'Login belum berhasil: ' + e.message + ' — kembali ke beranda.';
-  }
-})();
-</script>
+        const nextRaw = sessionStorage.getItem('aksatix_auth_next') || '/';
+        sessionStorage.removeItem('aksatix_auth_next');
+        const pendingCheckout = sessionStorage.getItem('aksatix_after_login_checkout') === '1';
+        const next = nextRaw.startsWith('/') && !nextRaw.startsWith('//') ? nextRaw : '/';
+        sessionStorage.removeItem('aksatix_after_login_checkout');
+        location.replace(pendingCheckout ? '/checkout' : next);
+      } catch (error) {
+        console.error('AKSATIX OAuth callback gagal:', error);
+        if (status) status.textContent = 'Login belum berhasil: ' + (error?.message || 'Terjadi kesalahan autentikasi.') + ' Silakan kembali ke halaman login dan coba lagi.';
+      }
+    })();
+    </script>
 </body>
 
 </html>

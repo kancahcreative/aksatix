@@ -1,0 +1,50 @@
+AKSATIX - MENJALANKAN LOKAL DAN GOOGLE OAUTH
+============================================
+
+1. Ekstrak ZIP ke folder yang mudah ditemukan.
+2. Pastikan Python 3 terpasang di Windows.
+3. Klik dua kali JALANKAN-LOKAL.bat.
+4. Buka http://localhost:3000 di browser.
+5. Mulai login dari http://localhost:3000/login.html.
+
+PERBAIKAN DALAM PAKET INI
+-------------------------
+- Login dan callback memakai Supabase Auth PKCE secara konsisten.
+- Tag script Supabase yang sebelumnya berulang pada halaman login/callback dirapikan.
+- Callback menukar authorization code hanya satu kali dan menampilkan pesan error yang lebih jelas.
+- Disertakan launcher untuk server HTTP lokal pada port 3000.
+
+KONFIGURASI DASHBOARD YANG TETAP HARUS BENAR
+--------------------------------------------
+A. Supabase Dashboard > Authentication > URL Configuration:
+   Site URL:
+     http://localhost:3000
+   Redirect URLs (tambahkan persis):
+     http://localhost:3000/auth-callback.html
+     http://127.0.0.1:3000/auth-callback.html  (hanya jika memang memakai 127.0.0.1)
+
+B. Supabase Dashboard > Authentication > Providers > Google:
+   - Google provider harus aktif.
+   - Client ID dan Client Secret harus berasal dari pasangan OAuth client yang sama di Google Cloud.
+
+C. Google Cloud Console > APIs & Services > Credentials > OAuth 2.0 Client ID:
+   Authorized redirect URI harus memakai callback Supabase, bukan callback lokal:
+     https://mfbcnlukdthxswzlfkcu.supabase.co/auth/v1/callback
+   Authorized JavaScript origins dapat memuat:
+     http://localhost:3000
+
+PENTING TENTANG ERROR bad_oauth_state
+-------------------------------------
+HTTP 303 di log Supabase adalah redirect dan tidak otomatis berarti login gagal.
+Error "OAuth state not found or expired" dapat terjadi sebelum aplikasi lokal menerima callback, misalnya jika proses login dimulai berulang, cookie/state OAuth tidak tersedia, atau konfigurasi provider/redirect tidak cocok. Kode lokal yang diperbaiki tidak dapat memperbaiki Client ID/Secret atau state yang hilang di sisi server.
+
+Jika error tetap muncul:
+1. Tutup tab login lama.
+2. Buka http://localhost:3000/login.html sekali saja.
+3. Klik tombol Google sekali dan jangan refresh saat redirect.
+4. Periksa URL Configuration dan Google provider seperti di atas.
+5. Lihat log Supabase pada waktu percobaan terbaru. Jangan membagikan authorization code, access token, refresh token, Client Secret, atau service_role key.
+
+CATATAN
+-------
+Paket ini menggunakan konfigurasi URL dan anon key publik yang sudah ada di supabase-config.js. Jangan menaruh service_role key di file frontend.
