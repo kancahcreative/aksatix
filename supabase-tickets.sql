@@ -133,6 +133,7 @@ begin
         'orderId',     new.record_id,
         'orderNumber', coalesce(p->>'orderNumber', new.record_id),
         'eventId',     p->>'eventId',
+        'eventName',   coalesce(p->>'eventName', p->>'event_name', 'Event'),
         'ticketId',    p->>'ticketId',
         'ticketName',  coalesce(p->>'ticketName', 'Tiket'),
         'name',        coalesce(nullif(p->>'buyerName',''), p->>'buyer', ''),

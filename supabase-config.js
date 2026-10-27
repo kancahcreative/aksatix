@@ -6,7 +6,7 @@ window.AKSATIX_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3M
 window.AKSATIX_QRIS_IMAGE_URL = '';
 
 // Clean event URLs: aksatix.kancah.com/<slug>
-window.AKSATIX_RESERVED_SLUGS = ['index','login','checkout','admin','client-dashboard','auth-callback','about-aksatix','gelang-tiket','jual-tiket','tarif-layanan','hubungi-kami','pusat-bantuan','syarat-ketentuan','kebijakan-privasi','cek-keaslian-tiket','detail-event','solo-speak-up','solo-speak-up-admin','assets','404'];
+window.AKSATIX_RESERVED_SLUGS = ['index','login','checkout','tiket-saya','riwayat-transaksi','admin','client-dashboard','auth-callback','about-aksatix','gelang-tiket','jual-tiket','tarif-layanan','hubungi-kami','pusat-bantuan','syarat-ketentuan','kebijakan-privasi','cek-keaslian-tiket','detail-event','solo-speak-up','solo-speak-up-admin','assets','404'];
 window.aksatixMakeSlug = function (v) {
   return String(v || 'event').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'event';
 };
