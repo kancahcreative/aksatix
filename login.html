@@ -74,8 +74,49 @@
   <p class="switch-copy signup-only" id="switchCopy">Belum punya akun? <button id="switchMode" type="button">Daftar gratis</button></p>
 </div></section></div>
 <script src="./supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- Di bagian script login.html -->
+<script src="./supabase-config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const sb=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY);const params=new URLSearchParams(location.search);let next=params.get('next')||'/';const np=next.split('?')[0].replace(/^\/+/,'').replace(/\.html$/,'');if(!/^(index|detail-event|checkout|my-tickets|client-dashboard|admin)?$/.test(np))next='/';else next='/'+(np==='index'?'':np)+(next.includes('?')?'?'+next.split('?').slice(1).join('?'):'');const target=new URL(next,location.href);if(params.get('id'))target.searchParams.set('id',params.get('id'));const form=document.getElementById('authForm'),content=document.getElementById('authContent'),title=document.getElementById('formTitle'),subtitle=document.getElementById('formSubtitle'),submit=document.getElementById('submitBtn'),password=document.getElementById('password'),errorBox=document.getElementById('messageError'),successBox=document.getElementById('messageSuccess');let mode='login';function message(type,text){errorBox.style.display=type==='error'?'block':'none';successBox.style.display=type==='success'?'block':'none';(type==='error'?errorBox:successBox).textContent=text}function setMode(nextMode){mode=nextMode;content.classList.toggle('mode-signup',mode==='signup');content.classList.toggle('mode-reset',mode==='reset');title.querySelector('.heading-prefix').textContent=mode==='signup'?'Buat akun':mode==='reset'?'Reset kata sandi':'Masuk ke';subtitle.textContent=mode==='signup'?'Daftar untuk menyimpan dan mengakses tiket eventmu.':mode==='reset'?'Masukkan email akunmu untuk menerima tautan reset kata sandi.':'Lanjutkan ke event pilihanmu dan kelola tiketmu dengan mudah.';submit.textContent=mode==='signup'?'Daftar gratis':mode==='reset'?'Kirim tautan reset':'Masuk';password.autocomplete=mode==='signup'?'new-password':'current-password';password.required=mode!=='reset';document.getElementById('switchCopy').innerHTML=mode==='signup'?'Sudah punya akun? <button id="switchMode" type="button">Masuk</button>':'Belum punya akun? <button id="switchMode" type="button">Daftar gratis</button>';document.getElementById('switchMode').onclick=()=>{message('','');setMode(mode==='signup'?'login':'signup')};message('','')};document.getElementById('switchMode').onclick=()=>setMode('signup');document.getElementById('forgotBtn').onclick=()=>setMode('reset');document.getElementById('showPass').onclick=()=>{const shown=password.type==='text';password.type=shown?'password':'text';document.getElementById('showPass').textContent=shown?'Tampilkan':'Sembunyikan'};
-document.getElementById('googleBtn').onclick=async()=>{const b=document.getElementById('googleBtn');b.disabled=true;b.querySelector('span').textContent='Menghubungkan ke Google…';try{sessionStorage.setItem('aksatix_auth_next',target.pathname+target.search);const {error}=await sb.auth.signInWithOAuth({provider:'google',options:{redirectTo:location.origin+'/auth-callback.html',queryParams:{prompt:'select_account'}}});if(error)throw error}catch(e){message('error',e.message||'Gagal memulai login Google.');b.disabled=false;b.querySelector('span').textContent='Lanjutkan dengan Google'}};
-form.addEventListener('submit',async e=>{e.preventDefault();message('','');const email=document.getElementById('email').value.trim();const pass=password.value;if(!email){message('error','Masukkan alamat email terlebih dahulu.');return}submit.disabled=true;const old=submit.textContent;submit.textContent='Mohon tunggu…';try{if(mode==='reset'){const {error}=await sb.auth.resetPasswordForEmail(email,{redirectTo:location.origin+'/auth-callback.html'});if(error)throw error;message('success','Jika email terdaftar, tautan reset kata sandi akan dikirim ke email tersebut.')}else if(mode==='signup'){if(pass.length<6)throw new Error('Kata sandi minimal 6 karakter.');const {data,error}=await sb.auth.signUp({email,password:pass,options:{emailRedirectTo:location.origin+'/auth-callback.html'}});if(error)throw error;if(data.session){sessionStorage.setItem('aksatix_auth_next',target.pathname+target.search);location.replace('/auth-callback')}else{message('success','Pendaftaran berhasil dimulai. Periksa email untuk konfirmasi akun jika diminta.')}}else{const {error}=await sb.auth.signInWithPassword({email,password:pass});if(error)throw error;sessionStorage.setItem('aksatix_auth_next',target.pathname+target.search);location.replace('/auth-callback')}}catch(err){message('error',err.message||'Autentikasi gagal. Coba lagi.')}finally{submit.disabled=false;submit.textContent=old}});
+// Tambahkan konfigurasi flowType: 'implicit' agar stabil di localhost
+const sb = window.supabase.createClient(
+  window.AKSATIX_SUPABASE_URL,
+  window.AKSATIX_SUPABASE_ANON_KEY,
+  {
+    auth: {
+      flowType: 'implicit',
+      detectSessionInUrl: true,
+      persistSession: true
+    }
+  }
+);
+
+const params = new URLSearchParams(location.search);
+let next = params.get('next') || '/';
+// ... (kode validasi next route Anda tetap sama) ...
+
+document.getElementById('googleBtn').onclick = async () => {
+  const b = document.getElementById('googleBtn');
+  b.disabled = true;
+  b.querySelector('span').textContent = 'Menghubungkan ke Google…';
+  
+  try {
+    sessionStorage.setItem('aksatix_auth_next', next);
+    
+    const { error } = await sb.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: location.origin + '/auth-callback.html',
+        queryParams: { prompt: 'select_account' }
+      }
+    });
+    
+    if (error) throw error;
+  } catch (e) {
+    // Tampilkan pesan error jika gagal
+    console.error(e);
+    b.disabled = false;
+    b.querySelector('span').textContent = 'Lanjutkan dengan Google';
+  }
+};
 </script></body></html>

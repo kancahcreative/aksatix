@@ -1,334 +1,66 @@
 <!doctype html>
 <html lang="id">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-    <title>Menghubungkan akun | Aksatix</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
-    <style>
-        :root {
-            --g: #00FF96;
-            --gd: #00CC78;
-            --gt: #008F55;
-            --ink: #16211D;
-            --muted: #5E6F68;
-            --line: #E2EBE7;
-            --soft: #F5F9F7;
-            box-sizing: border-box
-        }
-
-        * {
-            box-sizing: border-box
-        }
-
-        body {
-            margin: 0;
-            background: #fff;
-            color: var(--ink);
-            font: 14px/1.6 'Plus Jakarta Sans', system-ui, sans-serif
-        }
-
-        a {
-            color: inherit;
-            text-decoration: none
-        }
-
-        button,
-        input {
-            font: inherit
-        }
-
-        button {
-            cursor: pointer;
-            border: 0
-        }
-
-        .wrap {
-            max-width: 1120px;
-            margin: auto;
-            padding: 0 24px
-        }
-
-        header {
-            border-bottom: 1px solid var(--line);
-            padding: 14px 0;
-            background: white
-        }
-
-        .nav {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 18px
-        }
-
-        .logo {
-            font-weight: 800;
-            font-size: 28px;
-            letter-spacing: -1px;
-            display: flex;
-            align-items: center
-        }
-
-        .logo img {
-            height: 42px;
-            width: auto
-        }
-
-        .navlinks {
-            display: flex;
-            gap: 10px;
-            align-items: center
-        }
-
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            border-radius: 999px;
-            padding: 12px 18px;
-            font-weight: 800;
-            background: var(--g);
-            color: var(--ink)
-        }
-
-        .btn.outline {
-            background: #fff;
-            border: 1px solid var(--line)
-        }
-
-        .crumb {
-            margin: 24px 0;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        .panel {
-            border: 1px solid var(--line);
-            border-radius: 22px;
-            padding: 24px;
-            background: #fff
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: minmax(0, 1.2fr) minmax(300px, .8fr);
-            gap: 24px
-        }
-
-        .poster {
-            width: 100%;
-            aspect-ratio: 16/10;
-            object-fit: cover;
-            border-radius: 16px;
-            background: var(--soft)
-        }
-
-        .tag {
-            display: inline-flex;
-            border-radius: 99px;
-            background: #E0FFF1;
-            color: var(--gt);
-            font-size: 12px;
-            font-weight: 800;
-            padding: 6px 10px
-        }
-
-        .muted {
-            color: var(--muted)
-        }
-
-        h1 {
-            font-size: clamp(28px, 4vw, 42px);
-            line-height: 1.12;
-            letter-spacing: -1.5px;
-            margin: 12px 0
-        }
-
-        h2 {
-            font-size: 22px;
-            letter-spacing: -.5px;
-            margin: 0 0 14px
-        }
-
-        .meta {
-            display: grid;
-            gap: 10px;
-            margin: 18px 0
-        }
-
-        .ticket {
-            border: 1px solid var(--line);
-            border-radius: 14px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            margin: 10px 0
-        }
-
-        .ticket input {
-            accent-color: var(--gd)
-        }
-
-        .ticket small {
-            display: block;
-            color: var(--muted);
-            margin-top: 4px
-        }
-
-        .price {
-            font-weight: 800;
-            font-size: 18px
-        }
-
-        .field {
-            display: grid;
-            gap: 6px;
-            margin: 14px 0
-        }
-
-        .field input {
-            width: 100%;
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 13px
-        }
-
-        .paygrid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px
-        }
-
-        .pay {
-            border: 1px solid var(--line);
-            border-radius: 12px;
-            padding: 12px;
-            font-weight: 800
-        }
-
-        .pay small {
-            display: block;
-            color: var(--muted);
-            font-weight: 500
-        }
-
-        .pay.active {
-            border-color: var(--gd);
-            background: #F0FFF8
-        }
-
-        .pay.disabled {
-            opacity: .55
-        }
-
-        .notice {
-            background: #F0FFF8;
-            border-radius: 12px;
-            padding: 12px;
-            margin: 12px 0;
-            color: #285A45
-        }
-
-        .error {
-            background: #FFF0EF;
-            color: #B42318;
-            padding: 12px;
-            border-radius: 10px;
-            margin: 12px 0;
-            display: none
-        }
-
-        .full {
-            width: 100%
-        }
-
-        footer {
-            margin-top: 54px;
-            padding: 24px 0;
-            border-top: 1px solid var(--line);
-            color: var(--muted)
-        }
-
-        @media(max-width:760px) {
-            .wrap {
-                padding: 0 16px
-            }
-
-            .grid {
-                grid-template-columns: 1fr
-            }
-
-            .panel {
-                padding: 18px
-            }
-
-            .navlinks .hide-mobile {
-                display: none
-            }
-
-            .logo img {
-                height: 36px
-            }
-
-            .paygrid {
-                grid-template-columns: 1fr 1fr
-            }
-        }
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Menghubungkan akun | Aksatix</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root { --g: #00FF96; --gd: #00CC78; --gt: #008F55; --ink: #16211D; --muted: #5E6F68; --line: #E2EBE7; --soft: #F5F9F7; box-sizing: border-box; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #fff; color: var(--ink); font: 14px/1.6 'Plus Jakarta Sans', system-ui, sans-serif; display: flex; align-items: center; justify-content: center; height: 100vh; }
+    .panel { border: 1px solid var(--line); border-radius: 22px; padding: 32px; background: #fff; text-align: center; max-width: 400px; width: 100%; box-shadow: 0 4px 20px rgba(0,0,0,0.05); }
+    .muted { color: var(--muted); margin-top: 8px; }
+    h1 { font-size: 24px; letter-spacing: -0.5px; margin: 16px 0 0; }
+  </style>
 </head>
-
 <body>
-    <main class="wrap" style="max-width:520px;padding-top:80px">
-        <div class="panel" style="text-align:center"><img src="assets/logo.png" alt="Aksatix" style="height:46px">
-            <h1>Login berhasil</h1>
-            <p class="muted">Menghubungkan akun dan membuka halaman berikutnya…</p>
-        </div>
-    </main>
-    <script src="./supabase-config.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-   <script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="./supabase-config.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script>
-const sb = window.supabase.createClient(window.AKSATIX_SUPABASE_URL, window.AKSATIX_SUPABASE_ANON_KEY);
+  <main class="panel">
+    <h1>Login berhasil</h1>
+    <p class="muted">Menghubungkan akun dan membuka halaman berikutnya…</p>
+  </main>
 
-(async () => {
-  try {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
+  <script src="./supabase-config.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    // Inisialisasi dengan implicit flow agar otomatis menangkap token dari hash URL (#access_token=...)
+    const sb = window.supabase.createClient(
+      window.AKSATIX_SUPABASE_URL,
+      window.AKSATIX_SUPABASE_ANON_KEY,
+      {
+        auth: {
+          flowType: 'implicit',
+          detectSessionInUrl: true,
+          persistSession: true
+        }
+      }
+    );
 
-    // 1. Jika ada parameter 'code' dari Google/Supabase, tukar dulu dengan sesi
-    if (code) {
-      const { error: exchangeError } = await sb.auth.exchangeCodeForSession(code);
-      if (exchangeError) throw exchangeError;
-    }
+    (async () => {
+      try {
+        // Berikan sedikit jeda agar Supabase JS client sempat membaca token dari URL hash
+        setTimeout(async () => {
+          const { data: { session }, error } = await sb.auth.getSession();
+          
+          if (error) throw error;
 
-    // 2. Ambil sesi yang aktif
-    const { data: { session }, error } = await sb.auth.getSession();
-    if (error) throw error;
+          if (session) {
+            const next = sessionStorage.getItem('aksatix_auth_next') || '/';
+            sessionStorage.removeItem('aksatix_auth_next');
+            
+            const pending = sessionStorage.getItem('aksatix_after_login_checkout') === '1';
+            location.replace(pending ? '/checkout.html' : next);
+          } else {
+            document.querySelector('.muted').textContent = 'Menunggu sesi masuk... silakan coba lagi.';
+          }
+        }, 500);
 
-    if (session) {
-      const next = sessionStorage.getItem('aksatix_auth_next') || '/';
-      sessionStorage.removeItem('aksatix_auth_next');
-      
-      const pending = sessionStorage.getItem('aksatix_after_login_checkout') === '1';
-      location.replace(pending ? '/checkout' : next);
-    } else {
-      document.querySelector('p').textContent = 'Menunggu sesi masuk...';
-    }
-  } catch (e) {
-    document.querySelector('p').textContent = 'Login belum berhasil: ' + e.message + ' — kembali ke beranda.';
-  }
-})();
-</script>
+      } catch (e) {
+        document.querySelector('h1').textContent = 'Gagal Masuk';
+        document.querySelector('.muted').textContent = 'Error: ' + e.message;
+      }
+    })();
+  </script>
 </body>
-
 </html>
