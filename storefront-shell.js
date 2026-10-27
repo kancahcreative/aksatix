@@ -45,23 +45,23 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
 
   var HEADER = `
 <div class="sx-w">
-  <a href="index.html" class="sx-logo" aria-label="Aksatix"><img src="assets/logo.png" alt=""></a>
-  <nav class="sx-pills" aria-label="Navigasi utama"><a data-p="home" href="index.html">Beranda</a><a href="index.html#terdekat">Temukan Acara</a><a href="index.html#bantuan">Bantuan</a></nav>
+  <a href="/" class="sx-logo" aria-label="Aksatix"><img src="assets/logo.png" alt=""></a>
+  <nav class="sx-pills" aria-label="Navigasi utama"><a data-p="home" href="/">Beranda</a><a href="/#terdekat">Temukan Acara</a><a href="/#bantuan">Bantuan</a></nav>
   <div class="sx-hr">
-    <a class="sx-ib" href="index.html#terdekat" aria-label="Cari acara" title="Cari acara"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></a>
-    <a class="sx-ib" href="login.html?next=checkout.html" aria-label="Keranjang" title="Keranjang"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.5"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a>
-    <a class="sx-ib" href="login.html?next=index.html" aria-label="Profil" title="Masuk / Daftar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
+    <a class="sx-ib" href="/#terdekat" aria-label="Cari acara" title="Cari acara"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></a>
+    <a class="sx-ib" href="/login?next=/checkout" aria-label="Keranjang" title="Keranjang"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.5"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a>
+    <a class="sx-ib" href="/login?next=/" aria-label="Profil" title="Masuk / Daftar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a>
   </div>
 </div>`;
 
   var NAV = `
-<a data-n="home" href="index.html"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Home</a>
-<a data-n="jdw" href="index.html#terdekat"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Jadwal</a>
+<a data-n="home" href="/"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9a1 1 0 0 1-1 1h-4v-6H9v6H5a1 1 0 0 1-1-1z"/></svg>Home</a>
+<a data-n="jdw" href="/#terdekat"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>Jadwal</a>
 <a class="fab" href="https://wa.me/" target="_blank" rel="noopener"><i><svg viewBox="0 0 24 24"><path d="M12 4a8 8 0 0 0-7 12l-1 4 4-1a8 8 0 1 0 4-15z"/></svg></i>Tanya Aksatix</a>
-<a data-n="buy" href="login.html?next=checkout.html"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12" stroke-dasharray="2 2"/></svg>Pembelian</a>
+<a data-n="buy" href="/login?next=/checkout"><svg viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-2a2 2 0 0 0 0-4z"/><path d="M13 6v12" stroke-dasharray="2 2"/></svg>Pembelian</a>
 <button type="button" data-n="menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>`;
 
-  var MENU = `<h3>Menu</h3><nav class="sx-ml"><a href="about-aksatix.html">Tentang Aksatix</a><a href="jual-tiket.html">Jual Tiket</a><a href="tarif-layanan.html">Tarif Layanan</a><a href="gelang-tiket.html">Gelang Tiket</a><a href="pusat-bantuan.html">Pusat Bantuan</a><a href="index.html#faq">FAQ</a></nav>`;
+  var MENU = `<h3>Menu</h3><nav class="sx-ml"><a href="/about-aksatix">Tentang Aksatix</a><a href="/jual-tiket">Jual Tiket</a><a href="/tarif-layanan">Tarif Layanan</a><a href="/gelang-tiket">Gelang Tiket</a><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/#faq">FAQ</a></nav>`;
 
   function mount() {
     var st = document.createElement('style');
