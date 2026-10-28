@@ -200,7 +200,7 @@ async function setupPay(){
   payAvail.Cash=paid.length>0&&evs.every((e,i)=>e&&e.payCash==='on'&&(exps[i]===null||exps[i]>now)&&lineQty(paid[i])<=Math.min(10,Math.max(1,Number(e.cashMaxQty)||4)));
   if(payAvail.Cash){const v=exps.filter(x=>x!==null);cashInfo.exp=v.length?Math.min(...v):null;cashInfo.notes=[...new Set(evs.map(e=>String(e.cashNote||'').trim()).filter(Boolean))]}
   $('payGrid').innerHTML=[['Transfer','Transfer / QRIS',payAvail.Transfer?'Upload bukti bayar':'Belum tersedia'],['Cash','Bayar di lokasi (Cash)',payAvail.Cash?'Bayar tunai saat tiba':'Tidak tersedia untuk pesanan ini']].map(([id,t,sub])=>'<div class="pay'+(payAvail[id]?'':' disabled')+'" role="radio" tabindex="0" data-m="'+id+'"><b>'+t+'</b><small>'+sub+'</small></div>').join('');
-  payMethod=payAvail.Transfer?'Transfer':payAvail.Cash?'Cash':'';
+  payMethod=''; // Jangan memilih metode otomatis; pembeli memilih Cash atau Transfer secara eksplisit.
   $('payGrid').querySelectorAll('.pay').forEach(el=>{const pick=()=>{if(!payAvail[el.dataset.m])return;payMethod=el.dataset.m;renderPay()};el.onclick=pick;el.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();pick()}}});
   $('proofFile').onchange=()=>{const f=$('proofFile').files[0],p=$('proofPrev');p.innerHTML='';if(f&&/^image\//.test(f.type)){const i=document.createElement('img');i.src=URL.createObjectURL(f);p.appendChild(i)}else if(f)p.textContent=f.name};
   renderPay();
@@ -295,6 +295,7 @@ $('submit').onclick=async()=>{
   if(!session){location.href='/login?next=/checkout';return}
   const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();for(const input of document.querySelectorAll('.custom-amount')){const c=cart[Number(input.dataset.index)],min=Number(c?.minimumPrice??c?.price)||0,v=Number(input.value);if(!Number.isFinite(v)||v<min){input.focus();showError('Nominal tiket harus minimal '+money(min)+'.');return}if(c)c.customAmount=Math.round(v)}
   if(!name||!email){showError('Nama dan email wajib diisi.');return}
+  if(cartTotal()>0&&!payMethod){showError('Pilih salah satu metode pembayaran: Transfer / QRIS atau Cash.');return}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('Format email belum benar.');return}
   for(const it of formInst){if(!it.ctl.validate()){showError('Lengkapi form pendaftaran terlebih dahulu.');return}}
   const btn=$('submit');btn.disabled=true;btn.textContent='Menyimpan pesanan…';
@@ -348,7 +349,7 @@ $('submit').onclick=async()=>{
     // QR nomor pesanan langsung tersedia setelah submit. Untuk cash, admin scan QR ini
     // lalu mengonfirmasi penerimaan uang. Untuk transfer, QR tampil setelah bukti berhasil
     // diunggah dan pesanan tersimpan; admin scan untuk membuka verifikasi bukti.
-    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><div class="qr-holder" data-code="'+esc(orderNo)+'" style="width:176px;min-width:176px;min-height:176px;margin:12px auto" aria-label="QR nomor pesanan"></div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">QR pesanan · tunjukkan ke admin untuk verifikasi</small>';
+    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><div class="qr-holder" data-code="'+esc(orderNo)+'" style="width:176px;min-width:176px;min-height:176px;margin:12px auto" aria-label="QR nomor pesanan"></div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">QR pesanan · satu QR untuk verifikasi pesanan; status pembayaran menentukan langkah berikutnya</small>';
     renderQRs($('okOrder'));
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
