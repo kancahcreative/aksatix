@@ -124,7 +124,7 @@ const tKeys=t=>[t._recordId,t.id,t.ticketId,t.ticket_id].map(norm).filter(Boolea
 const tEventRefs=t=>[t.eventId,t.event_id,t.event_id_ref,t.eventRecordId,t.event_record_id,t.event].map(norm).filter(Boolean);
 const eKeys=e=>[e._recordId,e.id,e.eventId,e.event_id,e.slug].map(norm).filter(Boolean);
 const lineQty=c=>Math.max(1,Math.min(10,Number(c.q)||1));
-const unitAmount=c=>String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(Number(c.minimumPrice??c.price)||0,Number(c.customAmount??c.price)||0):(Number(c.price)||0); const cartTotal=()=>cart.reduce((a,c)=>a+unitAmount(c)*lineQty(c),0);
+const unitAmount=c=>String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum'?Math.max(Number(c.minimumPrice??c.price)||0,Number(c.customAmount??c.price)||0):(Number(c.price)||0); const cartTotal=()=>cart.reduce((a,c)=>a+unitAmount(c)*lineQty(c),0);
 
 async function loadCatalog(){
   if(catalog)return catalog;
@@ -183,9 +183,9 @@ function renderPay(){
   if(payMethod==='Cash'){
     box.hidden=true;
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
-    const minimum=cart.some(c=>String(c.priceMode||'fixed').toLowerCase()==='minimum');
-    const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
-    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>'+(minimum?'Bayar minimal <b>'+money(minimumTotal)+'</b> tunai ke petugas.':'Bayar <b>'+money(total)+'</b> tunai ke petugas.')+' E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
+    const minimum=cart.some(c=>String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum');
+    const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
+    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
     box.hidden=false;
     const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
@@ -253,7 +253,7 @@ async function setupForms(){
       if(ev0){const slugs=window.aksatixSlugs?window.aksatixSlugs(cat.events):[];const i=cat.events.indexOf(ev0);$('backEvent').href='/'+encodeURIComponent(ev0.slug||slugs[i]||ev0.id);$('backEvent').textContent=ev0.name||ev0.title||'Event'}
     }catch(e){console.warn('[Aksatix] katalog belum termuat',e)}
     const total=cartTotal();
-    $('items').innerHTML=cart.map((c,i)=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket${String(c.priceMode||'fixed').toLowerCase()==='minimum'?' · Bayar sesuai kemampuan':''}</small>${String(c.priceMode||'fixed').toLowerCase()==='minimum'?`<label class="field" style="margin:8px 0 0"><span>Nominal per tiket (minimal ${money(c.minimumPrice??c.price)})</span><input class="custom-amount" data-index="${i}" type="number" min="${Number(c.minimumPrice??c.price)||0}" step="1000" value="${Number(c.customAmount??c.price)||0}" style="max-width:220px;border:1px solid var(--line);border-radius:10px;padding:10px"></label>`:''}</span><b>${money((Number(c.customAmount??c.price)||0)*lineQty(c))}</b></div>`).join('');
+    $('items').innerHTML=cart.map((c,i)=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket${String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum'?' · Bayar sesuai kemampuan':''}</small>${String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum'?`<label class="field" style="margin:8px 0 0"><span>Nominal per tiket (minimal ${money(c.minimumPrice??c.price)})</span><input class="custom-amount" data-index="${i}" type="number" min="${Number(c.minimumPrice??c.price)||0}" step="1000" value="${Number(c.customAmount??c.price)||0}" style="max-width:220px;border:1px solid var(--line);border-radius:10px;padding:10px"></label>`:''}</span><b>${money((Number(c.customAmount??c.price)||0)*lineQty(c))}</b></div>`).join('');
     $('sumLines').innerHTML=cart.map(c=>`<div class="sum-line"><span>${esc(c.ticketName||'Tiket')} × ${lineQty(c)}</span><b>${money(unitAmount(c)*lineQty(c))}</b></div>`).join('');
     $('total').textContent=money(total);
     $('payStep').hidden=total===0;
@@ -310,7 +310,7 @@ $('submit').onclick=async()=>{
     resolved.forEach(({c,ticket,event})=>{
       c.ticketId=ticket._recordId||ticket.id;
       c.ticketName=ticket.name||ticket.ticketName||ticket.type||c.ticketName||'Tiket';
-      c.price=Number(ticket.price??c.price)||0;c.priceMode=String(ticket.priceMode??c.priceMode??'fixed').toLowerCase()==='minimum'?'minimum':'fixed';c.minimumPrice=Number(ticket.minimumPrice??ticket.price??c.minimumPrice??c.price)||0;if(c.priceMode==='minimum'){const chosen=Number(c.customAmount??c.price);c.customAmount=Number.isFinite(chosen)&&chosen>=c.minimumPrice?chosen:c.minimumPrice;}else{c.customAmount=c.price;}
+      c.price=Number(ticket.price??c.price)||0;c.priceMode=String(ticket.priceMode||ticket.price_mode||ticket.pricingMode||'fixed').toLowerCase()==='minimum'?'minimum':'fixed';c.minimumPrice=Number(ticket.minimumPrice??ticket.minimum_price??ticket.price)||0;if(c.priceMode==='minimum'){const chosen=Number(c.customAmount);c.customAmount=Number.isFinite(chosen)&&chosen>=c.minimumPrice?chosen:c.minimumPrice;}else{c.customAmount=c.price;}
       c.eventName=c.eventName&&c.eventName!=='Event'?c.eventName:(event&&(event.name||event.title))||'Event';
       c.organizer_id=c.organizer_id||ticket.organizer_id||(event&&(event.organizer_id||event.organizerId))||'';
       c.eventKey=event?(event.id||event._recordId):(c.eventId||c.id);
