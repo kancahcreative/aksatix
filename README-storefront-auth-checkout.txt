@@ -57,3 +57,7 @@ Pembaruan lanjutan
 - Checkout v2: langkah 1 Tiket, 2 Data pemesan, 3 Pembayaran + ringkasan & tombol di samping; setelah sukses tampil layar sukses terpisah.
 - Tiket Saya: klik tiket -> detail (QR besar, data pemesan, event, status check-in, salin kode, simpan QR).
 - Kuota: tampilan = quota - sold, tiket habis dinonaktifkan, qty dibatasi sisa. Jalankan supabase-quota-patch.sql (cek kuota juga untuk tiket berbayar di server).
+
+Perbaikan 28 Okt 2026 (v6)
+- "Sisa kuota: N tiket" tidak lagi tampil di index.html & detail event (404.html disalin ulang). Hanya tersisa label "Habis terjual"; angka kuota tetap ada di admin & client dashboard.
+- Menu profil di semua halaman (storefront-shell.js?v=12) disamakan dengan index: saat login hanya tombol "Keluar dari akun" yang tampil, saat belum login hanya "Masuk / Daftar" (sebelumnya keduanya tampil karena aturan [hidden] tertimpa CSS). Logout kini juga jalan di halaman statis tanpa Supabase.
