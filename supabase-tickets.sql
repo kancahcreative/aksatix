@@ -84,6 +84,12 @@ begin
   price := coalesce(nullif(t->>'price','')::numeric, 0);
   line  := price * q;
 
+  -- tiket berbayar: tolak kalau kuota sudah habis (sold bertambah saat order dilunasi admin)
+  if line > 0 and coalesce(nullif(t->>'quota','')::int, 2147483647)
+       < coalesce(nullif(t->>'sold','')::int, 0) + q then
+    raise exception 'Kuota tiket tidak mencukupi';
+  end if;
+
   if line = 0 then
     -- tiket gratis: kunci baris tiket & cek kuota secara atomik
     update public.aksatix_records

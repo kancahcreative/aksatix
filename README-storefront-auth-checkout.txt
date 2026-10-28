@@ -52,3 +52,8 @@ Perbaikan 28 Okt 2026 (auth-checkout-profile fix)
 - Setelah pesanan dibuat (tiket gratis), kode QR per tiket langsung tampil di halaman checkout. Butuh supabase-tickets.sql sudah dijalankan.
 - Menu profil di index.html disamakan dengan storefront-shell.js (detail event dll).
 - 404.html disalin ulang dari detail-event.html. storefront-shell.js?v=11.
+
+Pembaruan lanjutan
+- Checkout v2: langkah 1 Tiket, 2 Data pemesan, 3 Pembayaran + ringkasan & tombol di samping; setelah sukses tampil layar sukses terpisah.
+- Tiket Saya: klik tiket -> detail (QR besar, data pemesan, event, status check-in, salin kode, simpan QR).
+- Kuota: tampilan = quota - sold, tiket habis dinonaktifkan, qty dibatasi sisa. Jalankan supabase-quota-patch.sql (cek kuota juga untuk tiket berbayar di server).
