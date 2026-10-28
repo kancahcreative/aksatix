@@ -124,7 +124,7 @@ const tKeys=t=>[t._recordId,t.id,t.ticketId,t.ticket_id].map(norm).filter(Boolea
 const tEventRefs=t=>[t.eventId,t.event_id,t.event_id_ref,t.eventRecordId,t.event_record_id,t.event].map(norm).filter(Boolean);
 const eKeys=e=>[e._recordId,e.id,e.eventId,e.event_id,e.slug].map(norm).filter(Boolean);
 const lineQty=c=>Math.max(1,Math.min(10,Number(c.q)||1));
-const cartTotal=()=>cart.reduce((a,c)=>a+(Number(c.price)||0)*lineQty(c),0);
+const unitAmount=c=>String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(Number(c.minimumPrice??c.price)||0,Number(c.customAmount??c.price)||0):(Number(c.price)||0); const cartTotal=()=>cart.reduce((a,c)=>a+unitAmount(c)*lineQty(c),0);
 
 async function loadCatalog(){
   if(catalog)return catalog;
@@ -248,8 +248,8 @@ async function setupForms(){
       if(ev0){const slugs=window.aksatixSlugs?window.aksatixSlugs(cat.events):[];const i=cat.events.indexOf(ev0);$('backEvent').href='/'+encodeURIComponent(ev0.slug||slugs[i]||ev0.id);$('backEvent').textContent=ev0.name||ev0.title||'Event'}
     }catch(e){console.warn('[Aksatix] katalog belum termuat',e)}
     const total=cartTotal();
-    $('items').innerHTML=cart.map(c=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket</small></span><b>${money((Number(c.price)||0)*lineQty(c))}</b></div>`).join('');
-    $('sumLines').innerHTML=cart.map(c=>`<div class="sum-line"><span>${esc(c.ticketName||'Tiket')} × ${lineQty(c)}</span><b>${money((Number(c.price)||0)*lineQty(c))}</b></div>`).join('');
+    $('items').innerHTML=cart.map((c,i)=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket${String(c.priceMode||'fixed').toLowerCase()==='minimum'?' · Bayar sesuai kemampuan':''}</small>${String(c.priceMode||'fixed').toLowerCase()==='minimum'?`<label class="field" style="margin:8px 0 0"><span>Nominal per tiket (minimal ${money(c.minimumPrice??c.price)})</span><input class="custom-amount" data-index="${i}" type="number" min="${Number(c.minimumPrice??c.price)||0}" step="1000" value="${Number(c.customAmount??c.price)||0}" style="max-width:220px;border:1px solid var(--line);border-radius:10px;padding:10px"></label>`:''}</span><b>${money((Number(c.customAmount??c.price)||0)*lineQty(c))}</b></div>`).join('');
+    $('sumLines').innerHTML=cart.map(c=>`<div class="sum-line"><span>${esc(c.ticketName||'Tiket')} × ${lineQty(c)}</span><b>${money(unitAmount(c)*lineQty(c))}</b></div>`).join('');
     $('total').textContent=money(total);
     $('payStep').hidden=total===0;
     $('pgSub').textContent=total===0?'Tiket gratis: cukup lengkapi data pemesan, tanpa pembayaran.':'Selesaikan 3 langkah singkat untuk mendapatkan e-tiket.';
@@ -289,10 +289,11 @@ function ticketCards(list){
   }).join('')+'</div>';
 }
 
+document.addEventListener('input',e=>{const input=e.target.closest('.custom-amount');if(!input)return;const i=Number(input.dataset.index),c=cart[i];if(!c)return;const min=Number(c.minimumPrice??c.price)||0;let v=Number(input.value);if(!Number.isFinite(v)||v<min){input.setCustomValidity('Nominal minimal '+money(min));input.reportValidity();return}input.setCustomValidity('');c.customAmount=Math.round(v);const catLines=$('items').querySelectorAll('.ticket');if(catLines[i]){const b=catLines[i].querySelector('b:last-child');if(b)b.textContent=money(c.customAmount*lineQty(c))}$('sumLines').innerHTML=cart.map(c=>`<div class=\"sum-line\"><span>${esc(c.ticketName||'Tiket')} × ${lineQty(c)}</span><b>${money(unitAmount(c)*lineQty(c))}</b></div>`).join('');$('total').textContent=money(cartTotal());});
 $('submit').onclick=async()=>{
   clearError();
   if(!session){location.href='/login?next=/checkout';return}
-  const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();
+  const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();for(const input of document.querySelectorAll('.custom-amount')){const c=cart[Number(input.dataset.index)],min=Number(c?.minimumPrice??c?.price)||0,v=Number(input.value);if(!Number.isFinite(v)||v<min){input.focus();showError('Nominal tiket harus minimal '+money(min)+'.');return}if(c)c.customAmount=Math.round(v)}
   if(!name||!email){showError('Nama dan email wajib diisi.');return}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('Format email belum benar.');return}
   for(const it of formInst){if(!it.ctl.validate()){showError('Lengkapi form pendaftaran terlebih dahulu.');return}}
@@ -303,7 +304,7 @@ $('submit').onclick=async()=>{
     resolved.forEach(({c,ticket,event})=>{
       c.ticketId=ticket._recordId||ticket.id;
       c.ticketName=ticket.name||ticket.ticketName||ticket.type||c.ticketName||'Tiket';
-      c.price=Number(ticket.price??c.price)||0;
+      c.price=Number(ticket.price??c.price)||0;c.priceMode=String(ticket.priceMode||'fixed').toLowerCase()==='minimum'?'minimum':'fixed';c.minimumPrice=c.price;if(c.priceMode==='minimum'){const chosen=Number(c.customAmount);c.customAmount=Number.isFinite(chosen)&&chosen>=c.minimumPrice?chosen:c.minimumPrice;}else{c.customAmount=c.price;}
       c.eventName=c.eventName&&c.eventName!=='Event'?c.eventName:(event&&(event.name||event.title))||'Event';
       c.organizer_id=c.organizer_id||ticket.organizer_id||(event&&(event.organizer_id||event.organizerId))||'';
       c.eventKey=event?(event.id||event._recordId):(c.eventId||c.id);
@@ -334,8 +335,8 @@ $('submit').onclick=async()=>{
     }
     btn.textContent='Menyimpan pesanan…';
     const rows=cart.map((c,i)=>{
-      const qty=lineQty(c),line=qty*(Number(c.price)||0),id=orderNo+'-'+(i+1);
-      return {kind:'orders',record_id:id,updated_at:now,payload:{id,orderNumber:orderNo,userId:session.user.id,organizer_id:c.organizer_id||'',buyer:name,email,phone,buyerName:name,buyerEmail:email,buyerPhone:phone,eventId:c.eventKey,eventName:c.eventName||'Event',ticketId:c.ticketId,ticketName:c.ticketName||'Tiket',qty,total:line,date:now.slice(0,10),status:total===0?'Paid':'Pending',paymentMethod:total===0?'Free':payMethod,...(proof?{paymentProof:proof}:{}),createdAt:now,...(respByRow[i].length?{formResponses:respByRow[i]}:{})}};
+      const qty=lineQty(c),unit=unitAmount(c),line=qty*unit,id=orderNo+'-'+(i+1);
+      return {kind:'orders',record_id:id,updated_at:now,payload:{id,orderNumber:orderNo,userId:session.user.id,organizer_id:c.organizer_id||'',buyer:name,email,phone,buyerName:name,buyerEmail:email,buyerPhone:phone,eventId:c.eventKey,eventName:c.eventName||'Event',ticketId:c.ticketId,ticketName:c.ticketName||'Tiket',qty,customAmount:unit,total:line,date:now.slice(0,10),status:total===0?'Paid':'Pending',paymentMethod:total===0?'Free':payMethod,...(proof?{paymentProof:proof}:{}),createdAt:now,...(respByRow[i].length?{formResponses:respByRow[i]}:{})}};
     });
     const {error}=await sb.from('aksatix_records').insert(rows);
     if(error)throw error;
@@ -343,8 +344,12 @@ $('submit').onclick=async()=>{
     const free=total===0,n=cart.reduce((x,c)=>x+lineQty(c),0);
     $('checkoutView').hidden=true;
     $('okTitle').textContent=free?'Pembelian tiket berhasil!':payMethod==='Cash'?'Pesanan cash berhasil dibuat!':'Bukti pembayaran terkirim!';
-    $('okText').textContent=free?'Silakan cek tiket Anda di menu Tiket Saya.':(payMethod==='Cash'?'Tunjukkan nomor pesanan ini ke petugas di lokasi dan bayar tunai'+(cashInfo.exp?' sebelum '+new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'')+'. E-tiket terbit setelah uang diterima.':'Admin akan memverifikasi bukti pembayaranmu (maks. 1×24 jam). E-tiket muncul di Tiket Saya setelah disetujui.');
-    $('okOrder').innerHTML='Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket';
+    $('okText').textContent=free?'Silakan cek tiket Anda di menu Tiket Saya.':(payMethod==='Cash'?'Tunjukkan QR pesanan ini ke petugas di lokasi, lalu bayar tunai'+(cashInfo.exp?' sebelum '+new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'')+'. E-tiket terbit setelah uang diterima.':'QR pesanan sudah tersedia. Admin akan memverifikasi bukti transfer (maks. 1×24 jam). Barcode e-tiket untuk check-in muncul di Tiket Saya setelah pembayaran disetujui.');
+    // QR nomor pesanan langsung tersedia setelah submit. Untuk cash, admin scan QR ini
+    // lalu mengonfirmasi penerimaan uang. Untuk transfer, QR tampil setelah bukti berhasil
+    // diunggah dan pesanan tersimpan; admin scan untuk membuka verifikasi bukti.
+    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><div class="qr-holder" data-code="'+esc(orderNo)+'" style="width:176px;min-width:176px;min-height:176px;margin:12px auto" aria-label="QR nomor pesanan"></div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">QR pesanan · tunjukkan ke admin untuk verifikasi</small>';
+    renderQRs($('okOrder'));
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };

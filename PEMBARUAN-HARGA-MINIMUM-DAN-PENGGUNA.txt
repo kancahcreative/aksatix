@@ -1,0 +1,20 @@
+PEMBARUAN AKSATIX
+
+1. Harga tiket minimum / bayar sesuai kemampuan
+   - Admin dan dashboard penyelenggara: Jenis Tiket > tambah/edit > Skema harga.
+   - Pilih Harga tetap atau Bayar sesuai kemampuan (minimal). Kolom Harga menjadi nominal minimum untuk opsi kedua.
+   - Pembeli dapat memasukkan nominal per tiket saat checkout. Server menolak nominal di bawah batas minimum.
+
+2. Metode pembayaran
+   - Metode transfer/QRIS tetap menggunakan upload bukti pembayaran dan status Pending sampai diverifikasi.
+   - Cash tetap dibayar langsung di lokasi; status menjadi Paid dan e-tiket diterbitkan setelah admin/penyelenggara memverifikasi penerimaan uang melalui dashboard.
+
+3. Direktori pengguna admin
+   - Jalankan supabase-user-directory.sql di Supabase SQL Editor.
+   - Buka Admin > Pengguna untuk mencari dan mengekspor akun yang terdaftar, email, nama, kontak/metadata, waktu pendaftaran, login terakhir yang tercatat, dan UUID.
+   - Informasi ini dibatasi dengan RLS untuk admin. Data autentikasi sensitif seperti password tidak dapat dan tidak akan ditampilkan.
+
+Catatan penerapan
+- Backup database sebelum menjalankan migrasi.
+- Jalankan ulang supabase-payments.sql untuk menerapkan validasi harga minimum pada guard pesanan.
+- Fitur direktori pengguna membutuhkan izin admin yang sudah tercatat di public.aksatix_admins.

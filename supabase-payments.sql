@@ -19,7 +19,7 @@ as $$
 declare
   uid_ uuid := auth.uid();
   t jsonb; ev jsonb; tid text; evid text; price numeric; q int; line numeric;
-  m text; extra jsonb := '{}'::jsonb; hrs numeric; maxq int; cnt int; start_ts timestamptz; exp_ts timestamptz;
+  m text; extra jsonb := '{}'::jsonb; custom_amount numeric; hrs numeric; maxq int; cnt int; start_ts timestamptz; exp_ts timestamptz;
 begin
   -- SQL editor / service_role / cron: lewati. Admin: lewati.
   if uid_ is null then return new; end if;
@@ -30,6 +30,7 @@ begin
     if new.payload->>'status'        is distinct from old.payload->>'status'
        or new.payload->>'total'      is distinct from old.payload->>'total'
        or new.payload->>'qty'        is distinct from old.payload->>'qty'
+       or new.payload->>'customAmount' is distinct from old.payload->>'customAmount'
        or new.payload->>'ticketId'   is distinct from old.payload->>'ticketId'
        or new.payload->>'paymentMethod' is distinct from old.payload->>'paymentMethod'
        or new.payload->'paymentProof'   is distinct from old.payload->'paymentProof'
@@ -51,7 +52,14 @@ begin
 
   q     := greatest(1, least(coalesce(nullif(new.payload->>'qty','')::int, 1), 10));
   price := coalesce(nullif(t->>'price','')::numeric, 0);
-  line  := price * q;
+  if coalesce(t->>'priceMode','fixed') = 'minimum' then
+    custom_amount := coalesce(nullif(new.payload->>'customAmount','')::numeric, price);
+    if custom_amount < price then raise exception 'Nominal pembayaran minimal %', price; end if;
+    line := custom_amount * q;
+  else
+    custom_amount := price;
+    line := price * q;
+  end if;
 
   evid := coalesce(nullif(t->>'eventId',''), new.payload->>'eventId');
   select payload into ev from public.aksatix_records
@@ -90,6 +98,7 @@ begin
   new.payload := (new.payload - 'proofStatus' - 'cashExpiresAt' - 'cashNote' - 'paidAt' - 'paidBy' - 'rejectReason' - 'cancelReason')
     || jsonb_build_object(
       'qty', q,
+      'customAmount', custom_amount,
       'total', line,
       'organizer_id', coalesce(t->>'organizer_id', new.payload->>'organizer_id', ''),
       'status', case when line = 0 then 'Paid' else 'Pending' end,
