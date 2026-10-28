@@ -81,20 +81,30 @@ main.wrap{width:100%;overflow-x:hidden}
 .ok-wrap h1{margin:0 0 6px!important;font-size:clamp(24px,4vw,30px)}.ok-ord{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:999px;background:#F0FFF8;border:1px solid #CDEFDD;font-size:13px}
 .ok-sec{margin-top:26px}.ok-sec h3{margin:0 0 4px;font-size:17px}
 @media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{position:static}.step{padding:18px}}
+
+dialog#okDlg{border:0;padding:0;border-radius:24px;width:min(92vw,400px);box-shadow:0 24px 70px rgba(22,33,29,.35);color:var(--ink)}
+dialog#okDlg::backdrop{background:rgba(13,25,20,.6);backdrop-filter:blur(3px)}
+.ok-pop{display:grid;gap:10px;text-align:center;padding:30px 24px 24px;justify-items:center}
+.ok-ico{width:68px;height:68px;border-radius:50%;background:#00FF96;color:#10271c;display:grid;place-items:center;font-size:34px;font-weight:800}
+.ok-pop h2{margin:6px 0 0;font-size:22px;letter-spacing:-.5px}.ok-pop p{margin:0;color:var(--muted)}.ok-pop .ok-thanks{color:var(--ink);font-weight:700}
+.ok-order{font-size:12px;color:var(--muted);background:#F8FAF9;border:1px solid var(--line);border-radius:999px;padding:6px 12px;margin-bottom:6px;overflow-wrap:anywhere}
+.ok-pop .btn{width:100%;min-height:48px}
+body:has(#checkoutView[hidden]){background:#F8FAF9}
 </style></head><body><header><div class="w">
   <a href="/" class="logo" aria-label="Aksatix"><img src="assets/logo.png" alt="Aksatix"></a>
   <nav class="pills"><a href="/">Beranda</a><a href="/#terdekat">Temukan Acara</a><a href="/#bantuan">Bantuan</a></nav>
   <div class="hr"><a class="ib c" href="/#terdekat" aria-label="Cari acara" title="Cari acara"><svg viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L21 21"/></svg></a><a class="ib c" href="/login?next=/checkout" aria-label="Keranjang" title="Keranjang"><svg viewBox="0 0 24 24"><path d="M3 4h2l2.4 11h10.2L20 8H6.5"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg></a><a class="ib c" href="/login?next=/" aria-label="Profil" title="Masuk / Daftar"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg></a></div>
 </div></header><main class="wrap" style="padding-top:24px;max-width:1040px"><div class="crumb"><a href="/">Beranda</a> / <a id="backEvent" href="/">Event</a> / Checkout</div>
-<div id="checkoutView"><h1 class="pg-title">Checkout</h1><p class="muted pg-sub">Selesaikan 3 langkah singkat untuk mendapatkan e-tiket.</p>
+<div id="checkoutView"><h1 class="pg-title">Checkout</h1><p class="muted pg-sub" id="pgSub">Selesaikan langkah singkat berikut untuk mendapatkan e-tiket.</p>
 <div class="co-layout"><div class="co-main">
 <section class="step"><h2><span class="n">1</span>Tiket yang dipesan</h2><div id="items"></div></section>
 <section class="step"><h2><span class="n">2</span>Data pemesan</h2><p class="muted step-note">E-tiket dan kode QR akan dikaitkan dengan data ini.</p><div class="field"><label for="name"><b>Nama lengkap</b></label><input id="name" autocomplete="name" required placeholder="Nama sesuai identitas"></div><div class="field"><label for="email"><b>Email e-tiket</b></label><input id="email" type="email" autocomplete="email" required placeholder="nama@email.com"></div><div class="field"><label for="phone"><b>Nomor WhatsApp <span class="muted">(opsional)</span></b></label><input id="phone" type="tel" autocomplete="tel" placeholder="08xxxxxxxxxx"></div></section>
-<section class="step"><h2><span class="n">3</span>Metode pembayaran</h2><div class="paygrid"><div class="pay active"><b>QRIS</b><small>Aktif sementara</small></div><div class="pay disabled"><b>Virtual Account</b><small>Segera hadir</small></div><div class="pay disabled"><b>Transfer Bank</b><small>Segera hadir</small></div><div class="pay disabled"><b>E-Wallet</b><small>Segera hadir</small></div></div><div id="payinfo" class="notice"></div></section>
+<section class="step" id="payStep" hidden><h2><span class="n">3</span>Metode pembayaran</h2><div class="paygrid"><div class="pay active"><b>QRIS</b><small>Aktif sementara</small></div><div class="pay disabled"><b>Virtual Account</b><small>Segera hadir</small></div><div class="pay disabled"><b>Transfer Bank</b><small>Segera hadir</small></div><div class="pay disabled"><b>E-Wallet</b><small>Segera hadir</small></div></div><div id="payinfo" class="notice"></div></section>
 </div>
 <aside class="co-side"><div class="sum"><h2>Ringkasan pesanan</h2><div id="sumLines"></div><div class="sum-total"><span>Total</span><b id="total">—</b></div><div id="err" class="error"></div><button id="submit" class="btn full" type="button">Buat pesanan</button><p class="muted sum-note">Dengan melanjutkan, kamu menyetujui syarat &amp; ketentuan event. Tiket berbayar baru aktif setelah pembayaran diverifikasi.</p></div></aside>
 </div></div>
-<div id="successView" hidden><div id="result"></div></div></main><footer id="bantuan"><div class="w">
+</main>
+<dialog id="okDlg" aria-labelledby="okTitle"><div class="ok-pop"><div class="ok-ico">✓</div><h2 id="okTitle"></h2><p id="okText"></p><p class="ok-thanks">Terima kasih sudah memesan di Aksatix 💚</p><div class="ok-order" id="okOrder"></div><a class="btn full" href="/tiket-saya">Lihat Tiket Saya</a><a class="btn outline full" href="/">Kembali ke beranda</a></div></dialog><footer id="bantuan"><div class="w">
   <div class="fg"><div><div class="logo"><img src="assets/logo.png" alt=""></div><p>Tiket acara dari Solo Raya untuk semua orang.</p><form class="nl" onsubmit="event.preventDefault();alert('Terima kasih! Fitur newsletter akan segera tersedia.');"><b>Tetap Terupdate</b><small>Berlangganan newsletter untuk acara dan update terbaru.</small><span><input type="email" required placeholder="Email Anda" aria-label="Email"><button class="bt" type="submit">Berlangganan</button></span></form></div>
   <div class="fc"><div><b>Aksatix</b><a href="/about-aksatix">Tentang Aksatix</a><a href="/jual-tiket">Jual Tiket</a><a href="/tarif-layanan">Tarif Layanan</a><a href="/hubungi-kami">Hubungi Kami</a></div>
   <div><b>Bantuan &amp; Legal</b><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/syarat-ketentuan">Syarat &amp; Ketentuan</a><a href="/kebijakan-privasi">Kebijakan Privasi</a><a href="/gelang-tiket">Gelang Tiket</a><a href="/cek-keaslian-tiket">Cek Keaslian Tiket</a></div>
@@ -188,14 +198,15 @@ function clearError(){$('err').style.display='none'}
     $('items').innerHTML=cart.map(c=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket</small></span><b>${money((Number(c.price)||0)*lineQty(c))}</b></div>`).join('');
     $('sumLines').innerHTML=cart.map(c=>`<div class="sum-line"><span>${esc(c.ticketName||'Tiket')} × ${lineQty(c)}</span><b>${money((Number(c.price)||0)*lineQty(c))}</b></div>`).join('');
     $('total').textContent=money(total);
+    $('payStep').hidden=total===0;
+    $('pgSub').textContent=total===0?'Tiket gratis: cukup lengkapi data pemesan, tanpa pembayaran.':'Selesaikan 3 langkah singkat untuk mendapatkan e-tiket.';
+    $('submit').textContent=total===0?'Daftar sekarang':'Buat pesanan';
     const md=session.user.user_metadata||{};
     $('name').value=md.full_name||md.name||'';
     $('email').value=session.user.email||'';
-    $('payinfo').innerHTML=total===0
-      ?'Tiket gratis tidak memerlukan pembayaran. Setelah pesanan dibuat, e-tiket dan kode QR langsung terbit.'
-      :(window.AKSATIX_QRIS_IMAGE_URL
-        ?`Scan QRIS resmi di bawah ini:<div style="text-align:center;margin-top:12px"><img src="${esc(window.AKSATIX_QRIS_IMAGE_URL)}" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>`
-        :'QRIS merupakan metode pembayaran aktif sementara. QRIS merchant belum dikonfigurasi; jangan transfer sebelum QRIS resmi tersedia.');
+    if(total>0)$('payinfo').innerHTML=window.AKSATIX_QRIS_IMAGE_URL
+      ?`Scan QRIS resmi di bawah ini:<div style="text-align:center;margin-top:12px"><img src="${esc(window.AKSATIX_QRIS_IMAGE_URL)}" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>`
+      :'QRIS merupakan metode pembayaran aktif sementara. QRIS merchant belum dikonfigurasi; jangan transfer sebelum QRIS resmi tersedia.';
   }catch(e){showError(e.message||'Gagal memuat checkout.')}
 })();
 
@@ -258,16 +269,12 @@ $('submit').onclick=async()=>{
     const {error}=await sb.from('aksatix_records').insert(rows);
     if(error)throw error;
     try{sessionStorage.removeItem('aksatix_pending_cart');sessionStorage.removeItem('aksatix_after_login_checkout')}catch(_){}
-    const free=total===0;
-    $('checkoutView').hidden=true;$('successView').hidden=false;
-    $('result').innerHTML=`<div class="ok-wrap"><div class="ok-ico">✓</div><h1>${free?'Pendaftaran berhasil':'Pesanan berhasil dibuat'}</h1><p class="muted" style="margin:0">${free?'Tiketmu sudah dikonfirmasi. Simpan atau tunjukkan QR di bawah saat masuk.':'Menunggu pembayaran QRIS dan verifikasi admin. E-tiket dan QR terbit otomatis setelah pembayaran terverifikasi.'}</p><span class="ok-ord">Nomor pesanan <b>${esc(orderNo)}</b></span></div><div id="issued" class="ok-sec"></div><div class="actions"><a class="btn" href="/tiket-saya">Buka Tiket Saya</a><a class="btn outline" href="/">Kembali ke beranda</a></div>`;
-    window.scrollTo({top:0,behavior:'smooth'});
-    if(free){
-      $('issued').innerHTML='<p class="muted">Menerbitkan e-tiket…</p>';
-      const issued=await fetchIssuedTickets(orderNo);
-      if(issued.length){$('issued').innerHTML='<h3>E-Tiket &amp; Kode QR ('+issued.length+' tiket)</h3><p class="muted" style="margin:0 0 6px">Detail lengkap tiap tiket bisa dibuka di menu Tiket Saya.</p>'+ticketCards(issued);renderQRs($('issued'))}
-      else $('issued').innerHTML='<p class="muted">E-tiket sedang diproses. Cek menu <a href="/tiket-saya"><u>Tiket Saya</u></a> beberapa saat lagi. Jika tetap kosong, pastikan supabase-tickets.sql sudah dijalankan di Supabase.</p>';
-    }
-  }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent='Buat pesanan'}
+    const free=total===0,n=cart.reduce((x,c)=>x+lineQty(c),0);
+    $('checkoutView').hidden=true;
+    $('okTitle').textContent=free?'Pembelian tiket berhasil!':'Pesanan berhasil dibuat!';
+    $('okText').textContent=free?'Silakan cek tiket Anda di menu Tiket Saya.':'Selesaikan pembayaran QRIS. Tiket akan muncul di Tiket Saya setelah pembayaran terverifikasi.';
+    $('okOrder').innerHTML='Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket';
+    const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
+  }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };
 </script><script src="storefront-shell.js?v=11"></script></body></html>
