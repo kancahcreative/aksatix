@@ -185,14 +185,14 @@ function renderPay(){
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
     const minimum=cart.some(c=>String(c.priceMode||'fixed').toLowerCase()==='minimum');
     const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
-    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>Minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
+    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
     box.hidden=false;
     const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
     const fallbackBanks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
     const shownBanks=banks.length?banks:fallbackBanks;
     info.innerHTML='<b>Transfer sebesar '+money(total)+'</b> (sesuai nominal, jangan dibulatkan)'+(window.AKSATIX_QRIS_IMAGE_URL?'<div style="text-align:center;margin-top:12px"><img src="'+esc(window.AKSATIX_QRIS_IMAGE_URL)+'" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>':'')+shownBanks.map(b=>'<div class="pay-bank"><span>'+esc(b.bank||'Bank')+'<br><small>a.n. '+esc(b.name||'')+'</small></span><b>'+esc(b.number||'')+'</b></div>').join('')+'<ol class="pay-steps"><li>Bayar lewat QRIS / transfer di atas.</li><li>Screenshot bukti pembayaran, lalu upload di bawah.</li><li>Klik <b>Buat pesanan</b>. Admin memverifikasi, lalu e-tiket terbit.</li></ol>';
-  }else{box.hidden=true;info.textContent='Belum ada metode pembayaran yang tersedia untuk pesanan ini. Hubungi penyelenggara / Aksatix.'}
+  }else{box.hidden=true;info.textContent='Pilih metode pembayaran di atas untuk melihat petunjuk pembayaran.'}
 }
 async function setupPay(){
   if(cartTotal()<=0)return;
@@ -354,8 +354,7 @@ $('submit').onclick=async()=>{
     // QR nomor pesanan langsung tersedia setelah submit. Untuk cash, admin scan QR ini
     // lalu mengonfirmasi penerimaan uang. Untuk transfer, QR tampil setelah bukti berhasil
     // diunggah dan pesanan tersimpan; admin scan untuk membuka verifikasi bukti.
-    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><div class="qr-holder" data-code="'+esc(orderNo)+'" style="width:176px;min-width:176px;min-height:176px;margin:12px auto" aria-label="QR nomor pesanan"></div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">QR pesanan · satu QR untuk verifikasi pesanan; status pembayaran menentukan langkah berikutnya</small>';
-    renderQRs($('okOrder'));
+    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">Simpan nomor pesanan ini untuk keperluan verifikasi pembayaran. QR e-tiket untuk check-in tersedia di menu Tiket Saya setelah pembayaran disetujui.</small>'; 
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };
