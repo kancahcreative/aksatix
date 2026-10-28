@@ -185,7 +185,7 @@ function renderPay(){
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
     const minimum=cart.some(c=>String(c.priceMode||'fixed').toLowerCase()==='minimum');
     const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
-    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
+    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>'+(minimum?'Bayar minimal <b>'+money(minimumTotal)+'</b> tunai ke petugas.':'Bayar <b>'+money(total)+'</b> tunai ke petugas.')+' E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
     box.hidden=false;
     const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
@@ -310,7 +310,7 @@ $('submit').onclick=async()=>{
     resolved.forEach(({c,ticket,event})=>{
       c.ticketId=ticket._recordId||ticket.id;
       c.ticketName=ticket.name||ticket.ticketName||ticket.type||c.ticketName||'Tiket';
-      c.price=Number(ticket.price??c.price)||0;c.priceMode=String(ticket.priceMode||'fixed').toLowerCase()==='minimum'?'minimum':'fixed';c.minimumPrice=c.price;if(c.priceMode==='minimum'){const chosen=Number(c.customAmount);c.customAmount=Number.isFinite(chosen)&&chosen>=c.minimumPrice?chosen:c.minimumPrice;}else{c.customAmount=c.price;}
+      c.price=Number(ticket.price??c.price)||0;c.priceMode=String(ticket.priceMode??c.priceMode??'fixed').toLowerCase()==='minimum'?'minimum':'fixed';c.minimumPrice=Number(ticket.minimumPrice??ticket.price??c.minimumPrice??c.price)||0;if(c.priceMode==='minimum'){const chosen=Number(c.customAmount??c.price);c.customAmount=Number.isFinite(chosen)&&chosen>=c.minimumPrice?chosen:c.minimumPrice;}else{c.customAmount=c.price;}
       c.eventName=c.eventName&&c.eventName!=='Event'?c.eventName:(event&&(event.name||event.title))||'Event';
       c.organizer_id=c.organizer_id||ticket.organizer_id||(event&&(event.organizer_id||event.organizerId))||'';
       c.eventKey=event?(event.id||event._recordId):(c.eventId||c.id);
