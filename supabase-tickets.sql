@@ -107,7 +107,7 @@ begin
     'total', line,
     'organizer_id', coalesce(t->>'organizer_id', new.payload->>'organizer_id', ''),
     'status', case when line = 0 then 'Paid' else 'Pending' end,
-    'paymentMethod', case when line = 0 then 'Free' else 'QRIS' end,
+    'paymentMethod', case when line = 0 then 'Free' when new.payload->>'paymentMethod' = 'Cash' then 'Cash' else 'QRIS' end,
     'userId', uid_::text
   );
   return new;
@@ -131,7 +131,10 @@ declare
   old_status text := case when tg_op = 'UPDATE' then coalesce(old.payload->>'status','') else '' end;
   qty int; i int; mail text; phone text;
 begin
-  if coalesce(p->>'status','') = 'Paid' and old_status <> 'Paid' then
+  -- Cash di lokasi menerbitkan e-tiket sejak checkout (status Pending). Tiket belum bisa check-in
+  -- sampai pesanan berubah menjadi Paid. Saat transisi Pending -> Paid, INSERT tiket aman karena ON CONFLICT.
+  if (coalesce(p->>'status','') = 'Paid' and old_status <> 'Paid')
+     or (tg_op = 'INSERT' and coalesce(p->>'status','') = 'Pending' and coalesce(p->>'paymentMethod','') = 'Cash') then
     qty := greatest(1, least(coalesce(nullif(p->>'qty','')::int, 1), 20));
     for i in 1..qty loop
       insert into public.aksatix_records (kind, record_id, payload)

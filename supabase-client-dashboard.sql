@@ -36,7 +36,7 @@ as $$
 declare
   uid_ uuid := auth.uid();
   is_admin boolean;
-  a jsonb; rid text; ev jsonb; t jsonb; evid text; tid text;
+  a jsonb; rid text; ev jsonb; t jsonb; ord jsonb; evid text; tid text;
   raw text; compact text; c2 text; manual boolean; st text;
 begin
   if uid_ is null then return jsonb_build_object('ok', false, 'message', 'Silakan login terlebih dahulu.'); end if;
@@ -106,6 +106,21 @@ begin
   if p_action = 'checkin' then
     if st = 'Void' then
       return jsonb_build_object('ok', false, 'code', 'void', 'message', 'Tiket dibatalkan / tidak berlaku.', 'name', a->>'name');
+    end if;
+    -- Tiket dari pesanan berbayar hanya boleh check-in setelah pesanan benar-benar Paid.
+    -- Peserta manual dan tiket gratis tidak membutuhkan verifikasi pembayaran pesanan.
+    if not manual and coalesce(a->>'paymentMethod', '') <> 'Free' then
+      select payload into ord from public.aksatix_records
+       where kind = 'orders'
+         and (record_id = coalesce(a->>'orderId', '')
+              or payload->>'id' = coalesce(a->>'orderId', '')
+              or (coalesce(a->>'orderNumber', '') <> '' and payload->>'orderNumber' = a->>'orderNumber'))
+       order by updated_at desc limit 1;
+      if ord is not null and coalesce(ord->>'status', 'Pending') <> 'Paid' then
+        return jsonb_build_object('ok', false, 'code', 'unpaid',
+          'message', 'Pembayaran belum diterima. Silakan bayar kepada petugas sebelum melakukan check-in.',
+          'name', a->>'name');
+      end if;
     end if;
     if coalesce((a->>'checkedIn')::boolean, false) then
       return jsonb_build_object('ok', false, 'code', 'used', 'message', 'Tiket sudah digunakan.',

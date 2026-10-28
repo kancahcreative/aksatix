@@ -69,7 +69,8 @@ main.wrap{width:100%;overflow-x:hidden}
 .step .ticket{margin:0 0 10px}.step .ticket:last-child{margin-bottom:0}.step .field:first-of-type{margin-top:0}.step .field:last-child{margin-bottom:0}
 .step .notice{margin:14px 0 0}
 .pay{display:flex;flex-direction:column;gap:2px;cursor:pointer}.pay.disabled{cursor:not-allowed;opacity:.55}.pay-steps{margin:10px 0 0;padding-left:18px;font-size:13px}.pay-bank{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-top:8px}.pay-bank b{overflow-wrap:anywhere}#proofPrev img{max-width:180px;max-height:180px;margin-top:8px;border-radius:12px;border:1px solid var(--line)}
-.co-side{position:sticky;top:calc(88px + env(safe-area-inset-top,0px))}
+.co-side{position:sticky;top:calc(88px + env(safe-area-inset-top,0px));z-index:20}
+.sum{box-shadow:0 8px 28px rgba(22,33,29,.07)}
 .sum{border:1px solid var(--line);border-radius:20px;padding:22px;background:#F8FAF9}
 .sum h2{font-size:18px;margin:0 0 12px}
 .sum-line{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:13px;border-bottom:1px dashed #D5E4DC}.sum-line span{min-width:0;overflow-wrap:anywhere}.sum-line b{white-space:nowrap}
@@ -80,7 +81,7 @@ main.wrap{width:100%;overflow-x:hidden}
 .ok-wrap{text-align:center;padding:12px 0 8px}.ok-ico{width:68px;height:68px;border-radius:50%;background:#00FF96;color:#10271c;display:grid;place-items:center;font-size:34px;font-weight:800;margin:0 auto 14px}
 .ok-wrap h1{margin:0 0 6px!important;font-size:clamp(24px,4vw,30px)}.ok-ord{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:999px;background:#F0FFF8;border:1px solid #CDEFDD;font-size:13px}
 .ok-sec{margin-top:26px}.ok-sec h3{margin:0 0 4px;font-size:17px}
-@media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{position:static}.step{padding:18px}}
+@media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{position:fixed;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom,0px));top:auto;z-index:100}.sum{padding:12px 14px;border-radius:16px;box-shadow:0 8px 34px rgba(22,33,29,.22)}.sum h2{font-size:14px;margin:0 0 4px}.sum-line{padding:4px 0;font-size:12px}.sum-total{padding:6px 0 8px;font-size:13px}.sum-total b{font-size:20px}.sum-note{display:none}.sum .btn{min-height:44px}.co-layout{padding-bottom:185px}.step{padding:18px}}
 
 dialog#okDlg{border:0;padding:0;border-radius:24px;width:min(92vw,400px);box-shadow:0 24px 70px rgba(22,33,29,.35);color:var(--ink)}
 dialog#okDlg::backdrop{background:rgba(13,25,20,.6);backdrop-filter:blur(3px)}
@@ -105,7 +106,7 @@ body:has(#checkoutView[hidden]){background:#F8FAF9}
 <aside class="co-side"><div class="sum"><h2>Ringkasan pesanan</h2><div id="sumLines"></div><div class="sum-total"><span>Total</span><b id="total">—</b></div><div id="err" class="error"></div><button id="submit" class="btn full" type="button">Buat pesanan</button><p class="muted sum-note">Dengan melanjutkan, kamu menyetujui syarat &amp; ketentuan event. Tiket berbayar baru aktif setelah pembayaran diverifikasi.</p></div></aside>
 </div></div>
 </main>
-<dialog id="okDlg" aria-labelledby="okTitle"><div class="ok-pop"><div class="ok-ico">✓</div><h2 id="okTitle"></h2><p id="okText"></p><p class="ok-thanks">Terima kasih sudah memesan di Aksatix 💚</p><div class="ok-order" id="okOrder"></div><a class="btn full" href="/tiket-saya">Lihat Tiket Saya</a><a class="btn outline full" href="/">Kembali ke beranda</a></div></dialog><footer id="bantuan"><div class="w">
+<dialog id="okDlg" aria-labelledby="okTitle"><div class="ok-pop"><div class="ok-ico">✓</div><h2 id="okTitle"></h2><p id="okText"></p><p class="ok-thanks">Terima kasih sudah memesan di Aksatix 💚</p><div class="ok-order" id="okOrder"></div><div id="orderQr" class="qr-holder" style="margin:0 auto 8px;min-width:176px;min-height:176px" aria-label="QR nomor pesanan"></div><a class="btn full" href="/tiket-saya">Lihat Tiket Saya</a><a class="btn outline full" href="/">Kembali ke beranda</a></div></dialog><footer id="bantuan"><div class="w">
   <div class="fg"><div><div class="logo"><img src="assets/logo.png" alt=""></div><p>Tiket acara dari Solo Raya untuk semua orang.</p><form class="nl" onsubmit="event.preventDefault();alert('Terima kasih! Fitur newsletter akan segera tersedia.');"><b>Tetap Terupdate</b><small>Berlangganan newsletter untuk acara dan update terbaru.</small><span><input type="email" required placeholder="Email Anda" aria-label="Email"><button class="bt" type="submit">Berlangganan</button></span></form></div>
   <div class="fc"><div><b>Aksatix</b><a href="/about-aksatix">Tentang Aksatix</a><a href="/jual-tiket">Jual Tiket</a><a href="/tarif-layanan">Tarif Layanan</a><a href="/hubungi-kami">Hubungi Kami</a></div>
   <div><b>Bantuan &amp; Legal</b><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/syarat-ketentuan">Syarat &amp; Ketentuan</a><a href="/kebijakan-privasi">Kebijakan Privasi</a><a href="/gelang-tiket">Gelang Tiket</a><a href="/cek-keaslian-tiket">Cek Keaslian Tiket</a></div>
@@ -183,9 +184,7 @@ function renderPay(){
   if(payMethod==='Cash'){
     box.hidden=true;
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
-    const minimum=cart.some(c=>String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum');
-    const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||c.price_mode||c.pricingMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
-    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
+    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>QR atau nomor pesanan</b>.</li><li>Bayar tunai sesuai <b>total pada Ringkasan pesanan '+money(total)+'</b> (nominal tiket minimal Rp 10.000 per tiket) kepada petugas. E-tiket langsung aktif setelah pembayaran diterima dan dikonfirmasi.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
     box.hidden=false;
     const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
@@ -354,7 +353,8 @@ $('submit').onclick=async()=>{
     // QR nomor pesanan langsung tersedia setelah submit. Untuk cash, admin scan QR ini
     // lalu mengonfirmasi penerimaan uang. Untuk transfer, QR tampil setelah bukti berhasil
     // diunggah dan pesanan tersimpan; admin scan untuk membuka verifikasi bukti.
-    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">Simpan nomor pesanan ini untuk keperluan verifikasi pembayaran. QR e-tiket untuk check-in tersedia di menu Tiket Saya setelah pembayaran disetujui.</small>'; 
+    $('okOrder').innerHTML='<div style="margin-bottom:8px">Nomor pesanan <b>'+esc(orderNo)+'</b> · '+n+' tiket</div><small style="display:block;text-align:center;color:var(--muted);font-weight:500">Tunjukkan QR/nomor pesanan kepada petugas. Untuk cash, QR ini tidak bisa digunakan untuk check-in sebelum pembayaran diterima dan dikonfirmasi. Setelah status pembayaran Paid, e-tiket aktif di menu Tiket Saya.</small>';
+    $('orderQr').innerHTML='';$('orderQr').dataset.done='';$('orderQr').dataset.code=orderNo;renderQRs($('orderQr').parentElement);
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };

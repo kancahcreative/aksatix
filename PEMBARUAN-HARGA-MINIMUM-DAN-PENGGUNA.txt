@@ -7,7 +7,7 @@ PEMBARUAN AKSATIX
 
 2. Metode pembayaran
    - Metode transfer/QRIS tetap menggunakan upload bukti pembayaran dan status Pending sampai diverifikasi.
-   - Cash tetap dibayar langsung di lokasi; status menjadi Paid dan e-tiket diterbitkan setelah admin/penyelenggara memverifikasi penerimaan uang melalui dashboard.
+   - Cash tidak memerlukan upload bukti. Setelah pesanan dibuat, pembeli mendapat QR/nomor pesanan untuk ditunjukkan di meja registrasi. Petugas menerima uang sesuai total pada Ringkasan pesanan (harga tiket skema bayar sesuai kemampuan minimal Rp 10.000 per tiket), lalu mengonfirmasi penerimaan di dashboard. Sebelum status Paid, QR pesanan tidak berlaku sebagai e-tiket/check-in; setelah pembayaran dikonfirmasi, e-tiket aktif di menu Tiket Saya. Ringkasan pesanan dibuat sticky di desktop dan mengambang di bagian bawah layar pada perangkat mobile.
 
 3. Direktori pengguna admin
    - Jalankan supabase-user-directory.sql di Supabase SQL Editor.
@@ -18,3 +18,11 @@ Catatan penerapan
 - Backup database sebelum menjalankan migrasi.
 - Jalankan ulang supabase-payments.sql untuk menerapkan validasi harga minimum pada guard pesanan.
 - Fitur direktori pengguna membutuhkan izin admin yang sudah tercatat di public.aksatix_admins.
+
+
+PEMBARUAN CHECK-IN CASH + NOTIFIKASI (v5)
+- Pesanan Cash berstatus Pending tetap menerbitkan e-tiket/QR unik sejak checkout.
+- QR belum bisa dipakai check-in sebelum status pesanan Paid. Server RPC aksatix_org_attendee menolak status belum lunas.
+- Scanner admin menampilkan hasil warna berbeda dan memainkan bunyi sukses/peringatan/kesalahan setelah respons server.
+- Halaman Tiket Saya memantau perubahan status check-in dan menampilkan notifikasi sukses pada perangkat pemilik tiket.
+- Setelah deploy file, jalankan ulang supabase-tickets.sql lalu supabase-client-dashboard.sql di Supabase SQL Editor agar perubahan trigger dan validasi server aktif. Pastikan akun scanner memiliki hak admin/penyelenggara sesuai event.
