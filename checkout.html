@@ -41,8 +41,9 @@ footer#bantuan .bt{display:inline-block;padding:0 18px;white-space:nowrap;border
 @media (max-width:600px){footer#bantuan .logo img{height:48px}footer#bantuan .fc{grid-template-columns:1fr;gap:24px}footer#bantuan .fg{gap:28px}footer#bantuan{padding:44px 0 20px}}
 
 /* Checkout: responsif + kartu QR per tiket */
+[hidden]{display:none!important}
 html{-webkit-text-size-adjust:100%}img{max-width:100%}
-main.wrap{width:100%;overflow-x:hidden}
+main.wrap{width:100%;overflow-x:clip}
 .grid>*{min-width:0}
 .ticket>span{min-width:0;overflow-wrap:anywhere}
 .field input{font-size:16px}
@@ -69,7 +70,7 @@ main.wrap{width:100%;overflow-x:hidden}
 .step .ticket{margin:0 0 10px}.step .ticket:last-child{margin-bottom:0}.step .field:first-of-type{margin-top:0}.step .field:last-child{margin-bottom:0}
 .step .notice{margin:14px 0 0}
 .pay{display:flex;flex-direction:column;gap:2px;cursor:pointer}.pay.disabled{cursor:not-allowed;opacity:.55}.pay-steps{margin:10px 0 0;padding-left:18px;font-size:13px}.pay-bank{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:10px 12px;background:#fff;border:1px solid var(--line);border-radius:12px;margin-top:8px}.pay-bank b{overflow-wrap:anywhere}#proofPrev img{max-width:180px;max-height:180px;margin-top:8px;border-radius:12px;border:1px solid var(--line)}
-.co-side{position:sticky;top:calc(88px + env(safe-area-inset-top,0px));z-index:20}
+.co-side{position:sticky;align-self:start;top:calc(88px + env(safe-area-inset-top,0px));z-index:20;max-height:calc(100vh - 104px);overflow:auto;overscroll-behavior:contain}
 .sum{box-shadow:0 8px 28px rgba(22,33,29,.07)}
 .sum{border:1px solid var(--line);border-radius:20px;padding:22px;background:#F8FAF9}
 .sum h2{font-size:18px;margin:0 0 12px}
@@ -81,7 +82,7 @@ main.wrap{width:100%;overflow-x:hidden}
 .ok-wrap{text-align:center;padding:12px 0 8px}.ok-ico{width:68px;height:68px;border-radius:50%;background:#00FF96;color:#10271c;display:grid;place-items:center;font-size:34px;font-weight:800;margin:0 auto 14px}
 .ok-wrap h1{margin:0 0 6px!important;font-size:clamp(24px,4vw,30px)}.ok-ord{display:inline-block;margin-top:10px;padding:8px 14px;border-radius:999px;background:#F0FFF8;border:1px solid #CDEFDD;font-size:13px}
 .ok-sec{margin-top:26px}.ok-sec h3{margin:0 0 4px;font-size:17px}
-@media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{position:fixed;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom,0px));top:auto;z-index:100}.sum{padding:12px 14px;border-radius:16px;box-shadow:0 8px 34px rgba(22,33,29,.22)}.sum h2{font-size:14px;margin:0 0 4px}.sum-line{padding:4px 0;font-size:12px}.sum-total{padding:6px 0 8px;font-size:13px}.sum-total b{font-size:20px}.sum-note{display:none}.sum .btn{min-height:44px}.co-layout{padding-bottom:185px}.step{padding:18px}}
+@media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{max-height:none;overflow:visible;position:fixed;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom,0px));top:auto;z-index:100}.sum{padding:12px 14px;border-radius:16px;box-shadow:0 8px 34px rgba(22,33,29,.22)}.sum h2{font-size:14px;margin:0 0 4px}.sum-line{padding:4px 0;font-size:12px}.sum-total{padding:6px 0 8px;font-size:13px}.sum-total b{font-size:20px}.sum-note{display:none}.sum .btn{min-height:44px}.co-layout{padding-bottom:185px}.step{padding:18px}}
 
 dialog#okDlg{border:0;padding:0;border-radius:24px;width:min(92vw,400px);box-shadow:0 24px 70px rgba(22,33,29,.35);color:var(--ink)}
 dialog#okDlg::backdrop{background:rgba(13,25,20,.6);backdrop-filter:blur(3px)}
@@ -182,11 +183,11 @@ function renderPay(){
   const total=cartTotal(),info=$('payinfo'),box=$('proofBox');
   document.querySelectorAll('#payGrid .pay').forEach(el=>el.classList.toggle('active',el.dataset.m===payMethod));
   if(payMethod==='Cash'){
-    box.hidden=true;
+    box.hidden=true;box.style.display='none';
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
     info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>QR atau nomor pesanan</b>.</li><li>Bayar tunai sesuai <b>total pada Ringkasan pesanan '+money(total)+'</b> (nominal tiket minimal Rp 10.000 per tiket) kepada petugas. E-tiket langsung aktif setelah pembayaran diterima dan dikonfirmasi.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
-    box.hidden=false;
+    box.hidden=false;box.style.display='grid';
     const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
     const fallbackBanks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
     const shownBanks=banks.length?banks:fallbackBanks;
@@ -349,7 +350,7 @@ $('submit').onclick=async()=>{
     const free=total===0,n=cart.reduce((x,c)=>x+lineQty(c),0);
     $('checkoutView').hidden=true;
     $('okTitle').textContent=free?'Pembelian tiket berhasil!':payMethod==='Cash'?'Pesanan cash berhasil dibuat!':'Bukti pembayaran terkirim!';
-    $('okText').textContent=free?'Silakan cek tiket Anda di menu Tiket Saya.':(payMethod==='Cash'?'Tunjukkan QR pesanan ini ke petugas di lokasi, lalu bayar tunai'+(cashInfo.exp?' sebelum '+new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'')+'. E-tiket terbit setelah uang diterima.':'QR pesanan sudah tersedia. Admin akan memverifikasi bukti transfer (maks. 1×24 jam). Barcode e-tiket untuk check-in muncul di Tiket Saya setelah pembayaran disetujui.');
+    $('okText').textContent=free?'Silakan cek tiket Anda di menu Tiket Saya.':(payMethod==='Cash'?'E-tiket langsung terbit dengan status menunggu pembayaran. Tunjukkan QR/nomor pesanan kepada petugas dan bayar tunai'+(cashInfo.exp?' sebelum '+new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):'')+'. QR baru dapat digunakan untuk check-in setelah petugas mengonfirmasi pembayaran.':'QR pesanan sudah tersedia. Admin akan memverifikasi bukti transfer (maks. 1×24 jam). Barcode e-tiket untuk check-in muncul di Tiket Saya setelah pembayaran disetujui.');
     // QR nomor pesanan langsung tersedia setelah submit. Untuk cash, admin scan QR ini
     // lalu mengonfirmasi penerimaan uang. Untuk transfer, QR tampil setelah bukti berhasil
     // diunggah dan pesanan tersimpan; admin scan untuk membuka verifikasi bukti.
