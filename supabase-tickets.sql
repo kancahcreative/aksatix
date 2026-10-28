@@ -1,6 +1,7 @@
 -- AKSATIX: penerbitan e-tiket otomatis + antrean email/WA + cek keaslian tiket
 -- Jalankan SETELAH supabase-setup.sql, supabase-client-setup.sql, supabase-fix-connection.sql.
 -- Aman dijalankan berulang.
+-- PENTING: setelah file ini, jalankan supabase-quota-patch.sql (reservasi kuota saat checkout) agar guard order versi terbaru dipakai.
 
 create extension if not exists pgcrypto with schema extensions;
 

@@ -36,3 +36,21 @@ DATABASE CONNECTION FIX (IMPORTANT)
 5. Keep supabase-config.js beside index.html, admin.html, login.html, and client-dashboard.html on the same deployed origin. Do not open pages using file://.
 6. The client dashboard now waits for Supabase write success before showing a successful CRUD message. If a write is denied, it shows the database error and reloads persisted records.
 7. Never put a service_role key in a browser file. Only use the public anon/publishable key.
+
+==================== UPDATE: DASHBOARD CLIENT = ADMIN (SCOPE EVENT SENDIRI) ====================
+client-dashboard.html dibangun ulang dari admin.html (CSS/tampilan identik). Bedanya hanya data: client hanya melihat & mengelola
+event miliknya. Admin tetap mengontrol semuanya.
+Fitur client: Event (poster upload, syarat & ketentuan, link Maps, slug, kuota event, duplikasi, lihat halaman publik),
+Jenis tiket & kuota, Pesanan (baca saja + detail + ekspor), Peserta & Check-in (scanner QR kamera, input kode manual,
+tambah tamu manual, edit, nonaktifkan, hapus tamu manual, ekspor), Promo & Kupon, Laporan & Analitik, Pengaturan (profil + rekening).
+
+URUTAN SQL (jalankan di Supabase SQL Editor, semuanya aman diulang):
+ 1. supabase-setup.sql  2. supabase-client-setup.sql  3. supabase-fix-connection.sql  4. supabase-tickets.sql
+ 5. supabase-quota-patch.sql      <- BARU: kuota berkurang saat checkout (lihat di bawah)
+ 6. supabase-client-dashboard.sql <- BARU: upload poster client, check-in & tamu manual lewat fungsi server
+
+KUOTA (supabase-quota-patch.sql)
+ - Kuota ("sold") bertambah saat pesanan DIBUAT (Pending/Paid). Cancelled/Refunded/dihapus -> kuota kembali otomatis.
+ - Dihitung atomik di database, jadi 2 pembeli bersamaan tidak bisa melewati kuota. Field "sold" tidak bisa diubah dari browser.
+ - Langkah 4 di file itu menghitung ulang "sold" dari pesanan aktif yang ada (angka "sold" manual lama akan diganti hasil hitung).
+ - Opsional: aksatix_expire_pending(24) membatalkan pesanan Pending > 24 jam agar kuota kembali (jadwalkan dengan pg_cron).

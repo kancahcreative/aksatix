@@ -22,8 +22,8 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-ib{height:42px;width:42px;min-width:42px;border-radius:99px;background:none;color:#16211D;display:flex;align-items:center;justify-content:center;padding:0;border:0;cursor:pointer;transition:background .15s}
 .sx-ib:hover{color:#008F55}.sx-ib:hover svg{stroke:#008F55}
 .sx-header .sx-account-trigger{display:flex!important;align-items:center;justify-content:center;gap:9px;width:auto!important;min-width:0!important;max-width:none;height:48px;min-height:48px;padding:5px 14px 5px 7px!important;border:0!important;border-radius:999px!important;background:#00FF96!important;color:#10271c!important;cursor:pointer;flex:0 0 auto;white-space:nowrap;position:relative;z-index:121;pointer-events:auto;font:700 14px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:none!important}
-.sx-header .sx-account-trigger:hover{background:#00E88A!important;color:#10271c!important}
-.sx-account-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#00F090;color:#10271c;font-size:14px;font-weight:800}
+.sx-header .sx-account-trigger:hover{background:#00FF96!important;color:#10271c!important}
+.sx-account-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#00FF96;color:#10271c;font-size:14px;font-weight:800}
 .sx-account-name{display:inline-block;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#10271c}
 .sx-header .sx-account-trigger svg{width:18px;height:18px;flex:0 0 18px;stroke:#10271c!important;stroke-width:2;pointer-events:none}
 .sx-account-menu{pointer-events:auto}
