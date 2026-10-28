@@ -39,6 +39,24 @@ footer#bantuan .nl input:focus{border-color:#16211D}
 footer#bantuan .bt{display:inline-block;padding:0 18px;white-space:nowrap;border-radius:99px;font:inherit;font-weight:700;background:#16211D;color:#fff;border:0;cursor:pointer}
 @media (max-width:900px){footer#bantuan .w{padding:0 16px}footer#bantuan .fc{grid-template-columns:repeat(2,auto);gap:32px}footer#bantuan .logo{font-size:24px}}
 @media (max-width:600px){footer#bantuan .logo img{height:48px}footer#bantuan .fc{grid-template-columns:1fr;gap:24px}footer#bantuan .fg{gap:28px}footer#bantuan{padding:44px 0 20px}}
+
+/* Checkout: responsif + kartu QR per tiket */
+html{-webkit-text-size-adjust:100%}img{max-width:100%}
+main.wrap{width:100%;overflow-x:hidden}
+.grid>*{min-width:0}
+.ticket>span{min-width:0;overflow-wrap:anywhere}
+.field input{font-size:16px}
+.btn{min-height:46px}
+.notice.done h2{margin:0 0 6px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}.actions .btn{flex:1 1 160px}
+.qrgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:12px}
+.qrcard{display:flex;flex-direction:column-reverse;align-items:center;gap:12px;border:1px solid var(--line);border-radius:16px;padding:16px;background:#fff;text-align:center;min-width:0}
+.qrinfo{display:grid;gap:3px;min-width:0;width:100%}.qrinfo b{overflow-wrap:anywhere}.qrinfo small{color:var(--muted)}
+.qrcode-text{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--gt);overflow-wrap:anywhere}
+.qr-holder{display:grid;place-items:center;min-width:168px;min-height:168px;padding:8px;background:#fff;border:1px solid var(--line);border-radius:12px}
+.qr-holder canvas,.qr-holder img{max-width:100%;height:auto!important}
+@media(max-width:760px){main.wrap{padding-top:16px!important}h1{font-size:26px!important}.panel{padding:16px;border-radius:18px}.qrgrid{grid-template-columns:1fr}}
+@media(max-width:380px){.paygrid{grid-template-columns:1fr}}
 </style></head><body><header><div class="w">
   <a href="/" class="logo" aria-label="Aksatix"><img src="assets/logo.png" alt="Aksatix"></a>
   <nav class="pills"><a href="/">Beranda</a><a href="/#terdekat">Temukan Acara</a><a href="/#bantuan">Bantuan</a></nav>
@@ -49,8 +67,169 @@ footer#bantuan .bt{display:inline-block;padding:0 18px;white-space:nowrap;border
   <div><b>Bantuan &amp; Legal</b><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/syarat-ketentuan">Syarat &amp; Ketentuan</a><a href="/kebijakan-privasi">Kebijakan Privasi</a><a href="/gelang-tiket">Gelang Tiket</a><a href="/cek-keaslian-tiket">Cek Keaslian Tiket</a></div>
   <div><b>Kategori</b><a href="/#terdekat">Musik</a><a href="/#terdekat">Pameran</a><a href="/#terdekat">Olahraga</a><a href="/#terdekat">Workshop</a><a href="/#terdekat">Semua Kategori</a></div></div></div>
   <div class="fb"><span>Copyright © 2026 Aksatix. Developed by <a href="https://kancah.com/" target="_blank" rel="noopener" style="text-decoration:underline">Kancah</a></span></div>
-</div></footer><script src="./supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
-const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=n=>Number(n)===0?'Gratis':new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);const sb=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY,{auth:{storageKey:'aksatix-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});let session=null,cart=[];
-(async()=>{try{const {data,error}=await sb.auth.getSession();if(error)throw error;session=data.session;if(!session){location.replace('/login?next=/checkout');return}const raw=sessionStorage.getItem('aksatix_pending_cart');cart=raw?JSON.parse(raw):[];if(!cart.length){$('items').innerHTML='<p>Keranjang kosong. <a href="/"><u>Pilih event</u></a></p>';$('submit').disabled=true;return}const total=cart.reduce((a,c)=>a+(Number(c.price)||0)*(Number(c.q)||1),0);$('items').innerHTML=cart.map(c=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${Number(c.q)||1} tiket</small></span><b>${money((Number(c.price)||0)*(Number(c.q)||1))}</b></div>`).join('');$('total').textContent=money(total);$('name').value=session.user.user_metadata?.full_name||session.user.user_metadata?.name||'';$('email').value=session.user.email||'';$('payinfo').innerHTML=total===0?'Tiket gratis tidak memerlukan pembayaran. Pesanan akan langsung dikonfirmasi.':(window.AKSATIX_QRIS_IMAGE_URL?`Scan QRIS resmi di bawah ini:<div style="text-align:center;margin-top:12px"><img src="${esc(window.AKSATIX_QRIS_IMAGE_URL)}" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>`:'QRIS merupakan metode pembayaran aktif sementara. QRIS merchant belum dikonfigurasi; jangan transfer sebelum QRIS resmi tersedia.');}catch(e){showError(e.message)}})();function showError(m){$('err').style.display='block';$('err').textContent=m}
-$('submit').onclick=async()=>{if(!session){location.href='/login?next=/checkout';return}if(!$('name').value.trim()||!$('email').value.trim()){showError('Nama dan email wajib diisi.');return}const btn=$('submit');btn.disabled=true;btn.textContent='Menyimpan pesanan…';try{const total=cart.reduce((a,c)=>a+(Number(c.price)||0)*(Number(c.q)||1),0);const {data:activeTickets,error:ticketCheckError}=await sb.from('aksatix_records').select('record_id,payload').eq('kind','tickets');if(ticketCheckError)throw ticketCheckError;const validTickets=(activeTickets||[]).map(r=>({...((r&&r.payload)||{}),_recordId:r.record_id})).filter(t=>['active','aktif','available','tersedia'].includes(String(t.status||'Active').trim().toLowerCase()));const {data:evRows,error:evErr}=await sb.from('aksatix_records').select('record_id,payload').eq('kind','events');if(evErr)throw evErr;for(const c of cart){let t=validTickets.find(r=>String(r._recordId)===String(c.ticketId||'')||String(r.id||'')===String(c.ticketId||''));if(!t){const linkedEvent=(evRows||[]).find(r=>[String(c.id??''),String(c.eventId??''),String(c.event_id??'')].includes(String(r.record_id))||[String(c.id??''),String(c.eventId??''),String(c.event_id??'')].includes(String((r.payload||{}).id||'')));const evKeys=[c.id,c.eventId,c.event_id,linkedEvent&&linkedEvent.record_id,linkedEvent&&(linkedEvent.payload||{}).id].filter(v=>v!==undefined&&v!==null).map(String);const candidates=validTickets.filter(r=>evKeys.includes(String(r.eventId??r.event_id??r.event_id_ref??r.eventRecordId??r.event_record_id??'')));if(c.ticketName){const named=candidates.find(r=>String(r.name||r.ticketName||r.type||'').trim().toLowerCase()===String(c.ticketName).trim().toLowerCase());if(named)t=named;}if(!t&&candidates.length===1)t=candidates[0];}if(!t)throw Error('Tiket belum terhubung ke ID database yang aktif. Buka detail event, pilih jenis tiket yang tersedia, lalu klik Beli Tiket. Periksa hubungan eventId pada data tickets di Supabase jika masih gagal.');c.ticketId=t._recordId||t.id;c.ticketName=c.ticketName||t.name||t.ticketName||t.type||'Tiket';c.price=Number(c.price??t.price)||0;const evKeys=[c.id,c.eventId,c.event_id].filter(v=>v!==undefined&&v!==null).map(String);const event= (evRows||[]).find(r=>evKeys.includes(String(r.record_id))||evKeys.includes(String((r.payload||{}).id||'')));const ticketEvent=String(t.eventId??t.event_id??t.event_id_ref??t.eventRecordId??t.event_record_id??'');if(event&&ticketEvent&&![String(event.record_id),String((event.payload||{}).id||'')].includes(ticketEvent))throw Error('Jenis tiket yang dipilih terhubung ke event lain. Periksa eventId pada data tickets di Supabase.');}if(total>0&&!window.AKSATIX_QRIS_IMAGE_URL)throw Error('QRIS merchant belum dikonfigurasi. Pesanan berbayar belum dapat dibuat.');const orderNo='AX-'+Date.now().toString(36).toUpperCase(),now=new Date().toISOString();const rows=cart.map((c,i)=>{const eventId=c.id,qty=Math.max(1,Number(c.q)||1),line=qty*(Number(c.price)||0),id=orderNo+'-'+(i+1);return {kind:'orders',record_id:id,updated_at:now,payload:{id,orderNumber:orderNo,userId:session.user.id,organizer_id:c.organizer_id||'',buyer:$('name').value.trim(),email:$('email').value.trim(),phone:$('phone').value.trim(),buyerName:$('name').value.trim(),buyerEmail:$('email').value.trim(),buyerPhone:$('phone').value.trim(),eventId,eventName:c.eventName||c.name||'Event',ticketId:c.ticketId||null,ticketName:c.ticketName||'Tiket',qty,total:line,date:now.slice(0,10),status:total===0?'Paid':'Pending',paymentMethod:total===0?'Free':'QRIS',createdAt:now}}});const {error}=await sb.from('aksatix_records').insert(rows);if(error)throw error;$('submit').hidden=true;$('result').innerHTML=`<div class="notice"><h2>${total===0?'Pendaftaran berhasil':'Pesanan berhasil dibuat'}</h2>Nomor pesanan <b>${esc(orderNo)}</b><br>${total===0?'Tiket gratis sudah dikonfirmasi. E-tiket dikirim ke email'+($('phone').value.trim()?' dan WhatsApp':'')+' kamu dalam beberapa menit.':'Status menunggu pembayaran QRIS dan verifikasi admin. E-tiket dikirim otomatis ke email'+($('phone').value.trim()?' dan WhatsApp':'')+' setelah pembayaran terverifikasi.'}<p><a class="btn full" href="/">Kembali ke beranda</a></p></div>`;sessionStorage.removeItem('aksatix_pending_cart');sessionStorage.removeItem('aksatix_after_login_checkout')}catch(e){showError(e.message||'Pesanan gagal disimpan.');}finally{btn.disabled=false;btn.textContent='Buat pesanan'}};
-</script><script src="storefront-shell.js?v=10"></script></body></html>
+</div></footer><script src="./supabase-config.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script>
+const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=n=>Number(n)===0?'Gratis':new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
+const sb=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY,{auth:{storageKey:'aksatix-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
+let session=null,cart=[],catalog=null;
+try{sessionStorage.removeItem('aksatix_after_login_checkout')}catch(_){}
+
+const ACTIVE=['active','aktif','available','tersedia'];
+const norm=v=>String(v??'').trim(),low=v=>norm(v).toLowerCase();
+const isActive=t=>{const s=low(t.status);return !s||ACTIVE.includes(s)};
+const tKeys=t=>[t._recordId,t.id,t.ticketId,t.ticket_id].map(norm).filter(Boolean);
+const tEventRefs=t=>[t.eventId,t.event_id,t.event_id_ref,t.eventRecordId,t.event_record_id,t.event].map(norm).filter(Boolean);
+const eKeys=e=>[e._recordId,e.id,e.eventId,e.event_id,e.slug].map(norm).filter(Boolean);
+const lineQty=c=>Math.max(1,Math.min(10,Number(c.q)||1));
+const cartTotal=()=>cart.reduce((a,c)=>a+(Number(c.price)||0)*lineQty(c),0);
+
+async function loadCatalog(){
+  if(catalog)return catalog;
+  const [er,tr]=await Promise.all([
+    sb.from('aksatix_records').select('record_id,payload').eq('kind','events'),
+    sb.from('aksatix_records').select('record_id,payload').eq('kind','tickets')
+  ]);
+  if(er.error)throw er.error;if(tr.error)throw tr.error;
+  catalog={
+    events:(er.data||[]).map(r=>({...(r.payload||{}),_recordId:r.record_id})),
+    tickets:(tr.data||[]).map(r=>({...(r.payload||{}),_recordId:r.record_id}))
+  };
+  return catalog;
+}
+
+// Cari tiket + event di database untuk satu item keranjang. Toleran terhadap beda format ID
+// (record_id vs payload.id vs slug) supaya tidak gagal hanya karena penamaan field.
+function resolveItem(c,cat){
+  const cartKeys=[c.id,c.eventId,c.event_id,c.eventRecordId,c.eventSlug].map(norm).filter(Boolean);
+  const event=cat.events.find(e=>eKeys(e).some(k=>cartKeys.includes(k)))||null;
+  const evKeys=[...new Set([...cartKeys,...(event?eKeys(event):[])])];
+  const wanted=norm(c.ticketId);
+  let ticket=null;
+  if(wanted){
+    ticket=cat.tickets.find(t=>tKeys(t).includes(wanted))||null;
+    if(ticket&&!isActive(ticket))throw Error('Tiket "'+(ticket.name||ticket.ticketName||'ini')+'" sudah tidak aktif. Silakan pilih jenis tiket lain di halaman event.');
+  }
+  if(!ticket){
+    const cands=cat.tickets.filter(t=>isActive(t)&&tEventRefs(t).some(k=>evKeys.includes(k)));
+    const nm=low(c.ticketName);
+    ticket=(nm&&cands.find(t=>low(t.name||t.ticketName||t.type)===nm))||null;
+    if(!ticket&&cands.length===1)ticket=cands[0];
+    if(!ticket&&cands.length>1){
+      const byPrice=cands.filter(t=>Number(t.price)===Number(c.price));
+      if(byPrice.length===1)ticket=byPrice[0];
+      else throw Error('Event ini punya beberapa jenis tiket. Kembali ke halaman event, pilih jenis tiketnya, lalu klik Beli Tiket.');
+    }
+  }
+  if(!ticket){
+    console.warn('[Aksatix] tiket tidak ketemu',{cartItem:c,eventsLoaded:cat.events.length,ticketsLoaded:cat.tickets.length,sampleTicket:cat.tickets[0]});
+    if(!cat.tickets.length)throw Error('Data tiket tidak bisa dibaca dari database. Pastikan ada tiket berstatus Active dan policy "public read active tickets" sudah dijalankan (supabase-fix-connection.sql).');
+    throw Error('Tiket untuk event ini tidak ditemukan. Kembali ke halaman event lalu pilih tiket lagi. Jika tetap gagal, pastikan field eventId pada tiket di admin sama dengan ID event.');
+  }
+  return {ticket,event};
+}
+
+function showError(m){const e=$('err');e.style.display='block';e.textContent=m;e.scrollIntoView({behavior:'smooth',block:'nearest'})}
+function clearError(){$('err').style.display='none'}
+
+(async()=>{
+  try{
+    const {data,error}=await sb.auth.getSession();if(error)throw error;
+    session=data.session;
+    if(!session){location.replace('/login?next=/checkout');return}
+    const raw=sessionStorage.getItem('aksatix_pending_cart');
+    cart=raw?JSON.parse(raw):[];
+    if(!Array.isArray(cart)||!cart.length){
+      $('items').innerHTML='<p>Keranjang kosong. <a href="/"><u>Pilih event</u></a></p>';
+      $('submit').disabled=true;$('total').textContent='';$('payinfo').hidden=true;return;
+    }
+    // Lengkapi nama event & link kembali dari database (non-fatal jika gagal).
+    try{
+      const cat=await loadCatalog();
+      cart.forEach(c=>{
+        const ev=cat.events.find(e=>eKeys(e).some(k=>[c.id,c.eventId,c.eventRecordId,c.eventSlug].map(norm).includes(k)));
+        if(ev){c.eventName=c.eventName&&c.eventName!=='Event'?c.eventName:(ev.name||ev.title||'Event');c.organizer_id=c.organizer_id||ev.organizer_id||ev.organizerId||''}
+      });
+      const first=cart[0],ev0=cat.events.find(e=>eKeys(e).some(k=>[first.id,first.eventId,first.eventRecordId].map(norm).includes(k)));
+      if(ev0){const slugs=window.aksatixSlugs?window.aksatixSlugs(cat.events):[];const i=cat.events.indexOf(ev0);$('backEvent').href='/'+encodeURIComponent(ev0.slug||slugs[i]||ev0.id);$('backEvent').textContent=ev0.name||ev0.title||'Event'}
+    }catch(e){console.warn('[Aksatix] katalog belum termuat',e)}
+    const total=cartTotal();
+    $('items').innerHTML=cart.map(c=>`<div class="ticket"><span><b>${esc(c.eventName||'Event')}</b><small>${esc(c.ticketName||'Tiket')} · ${lineQty(c)} tiket</small></span><b>${money((Number(c.price)||0)*lineQty(c))}</b></div>`).join('');
+    $('total').textContent='Total: '+money(total);
+    const md=session.user.user_metadata||{};
+    $('name').value=md.full_name||md.name||'';
+    $('email').value=session.user.email||'';
+    $('payinfo').innerHTML=total===0
+      ?'Tiket gratis tidak memerlukan pembayaran. Setelah pesanan dibuat, e-tiket dan kode QR langsung terbit.'
+      :(window.AKSATIX_QRIS_IMAGE_URL
+        ?`Scan QRIS resmi di bawah ini:<div style="text-align:center;margin-top:12px"><img src="${esc(window.AKSATIX_QRIS_IMAGE_URL)}" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>`
+        :'QRIS merupakan metode pembayaran aktif sementara. QRIS merchant belum dikonfigurasi; jangan transfer sebelum QRIS resmi tersedia.');
+  }catch(e){showError(e.message||'Gagal memuat checkout.')}
+})();
+
+function renderQRs(root){
+  root.querySelectorAll('.qr-holder[data-code]').forEach(el=>{
+    if(el.dataset.done)return;el.dataset.done='1';
+    try{
+      if(!window.QRCode)throw Error('QR library belum termuat');
+      new QRCode(el,{text:el.dataset.code,width:152,height:152,colorDark:'#16211D',colorLight:'#FFFFFF',correctLevel:QRCode.CorrectLevel.M});
+    }catch(e){el.innerHTML='<small class="muted">QR belum bisa ditampilkan. Buka menu Tiket Saya.</small>'}
+  });
+}
+
+async function fetchIssuedTickets(orderNo){
+  // E-tiket diterbitkan oleh trigger database (supabase-tickets.sql) saat order berstatus Paid.
+  for(let i=0;i<3;i++){
+    const {data,error}=await sb.from('aksatix_records').select('record_id,payload').eq('kind','attendees').like('record_id',orderNo+'-%');
+    if(!error&&data&&data.length)return data.map(r=>({...(r.payload||{}),_recordId:r.record_id}));
+    await new Promise(r=>setTimeout(r,700));
+  }
+  return [];
+}
+
+function ticketCards(list){
+  return '<div class="qrgrid">'+list.map((t,i)=>{
+    const code=t.code||t.id||t._recordId||'';
+    return `<article class="qrcard"><div class="qrinfo"><b>${esc(t.eventName||'E-Tiket Aksatix')}</b><small>${esc(t.ticketName||'Tiket')}</small><span class="qrcode-text">${esc(code)}</span></div><div class="qr-holder" data-code="${esc(code)}" aria-label="Kode QR tiket ${i+1}"></div></article>`;
+  }).join('')+'</div>';
+}
+
+$('submit').onclick=async()=>{
+  clearError();
+  if(!session){location.href='/login?next=/checkout';return}
+  const name=$('name').value.trim(),email=$('email').value.trim(),phone=$('phone').value.trim();
+  if(!name||!email){showError('Nama dan email wajib diisi.');return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showError('Format email belum benar.');return}
+  const btn=$('submit');btn.disabled=true;btn.textContent='Menyimpan pesanan…';
+  try{
+    const cat=await loadCatalog();
+    const resolved=cart.map(c=>({c,...resolveItem(c,cat)}));
+    resolved.forEach(({c,ticket,event})=>{
+      c.ticketId=ticket._recordId||ticket.id;
+      c.ticketName=ticket.name||ticket.ticketName||ticket.type||c.ticketName||'Tiket';
+      c.price=Number(ticket.price??c.price)||0;
+      c.eventName=c.eventName&&c.eventName!=='Event'?c.eventName:(event&&(event.name||event.title))||'Event';
+      c.organizer_id=c.organizer_id||ticket.organizer_id||(event&&(event.organizer_id||event.organizerId))||'';
+      c.eventKey=event?(event.id||event._recordId):(c.eventId||c.id);
+    });
+    const total=cartTotal();
+    if(total>0&&!window.AKSATIX_QRIS_IMAGE_URL)throw Error('QRIS merchant belum dikonfigurasi. Pesanan berbayar belum dapat dibuat.');
+    const orderNo='AX-'+Date.now().toString(36).toUpperCase(),now=new Date().toISOString();
+    const rows=cart.map((c,i)=>{
+      const qty=lineQty(c),line=qty*(Number(c.price)||0),id=orderNo+'-'+(i+1);
+      return {kind:'orders',record_id:id,updated_at:now,payload:{id,orderNumber:orderNo,userId:session.user.id,organizer_id:c.organizer_id||'',buyer:name,email,phone,buyerName:name,buyerEmail:email,buyerPhone:phone,eventId:c.eventKey,eventName:c.eventName||'Event',ticketId:c.ticketId,ticketName:c.ticketName||'Tiket',qty,total:line,date:now.slice(0,10),status:total===0?'Paid':'Pending',paymentMethod:total===0?'Free':'QRIS',createdAt:now}};
+    });
+    const {error}=await sb.from('aksatix_records').insert(rows);
+    if(error)throw error;
+    try{sessionStorage.removeItem('aksatix_pending_cart');sessionStorage.removeItem('aksatix_after_login_checkout')}catch(_){}
+    btn.hidden=true;$('items').style.display='none';
+    const free=total===0;
+    $('result').innerHTML=`<div class="notice done"><h2>${free?'Pendaftaran berhasil':'Pesanan berhasil dibuat'}</h2>Nomor pesanan <b>${esc(orderNo)}</b><br>${free?'Tiket gratis sudah dikonfirmasi.':'Status menunggu pembayaran QRIS dan verifikasi admin. E-tiket dan QR terbit otomatis setelah pembayaran terverifikasi.'}</div><div id="issued"></div><div class="actions"><a class="btn" href="/tiket-saya">Buka Tiket Saya</a><a class="btn outline" href="/">Kembali ke beranda</a></div>`;
+    $('result').scrollIntoView({behavior:'smooth',block:'start'});
+    if(free){
+      $('issued').innerHTML='<p class="muted">Menerbitkan e-tiket…</p>';
+      const issued=await fetchIssuedTickets(orderNo);
+      if(issued.length){$('issued').innerHTML='<h3 style="margin:18px 0 4px">E-Tiket &amp; Kode QR</h3><p class="muted" style="margin:0 0 6px">Tunjukkan QR ini ke petugas saat masuk. Semua tiket juga tersimpan di menu Tiket Saya.</p>'+ticketCards(issued);renderQRs($('issued'))}
+      else $('issued').innerHTML='<p class="muted">E-tiket sedang diproses. Cek menu <a href="/tiket-saya"><u>Tiket Saya</u></a> beberapa saat lagi. Jika tetap kosong, pastikan supabase-tickets.sql sudah dijalankan di Supabase.</p>';
+    }
+  }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent='Buat pesanan'}
+};
+</script><script src="storefront-shell.js?v=11"></script></body></html>

@@ -45,3 +45,10 @@ Pembaruan fitur (Oktober 2026)
 - Setiap e-tiket yang sudah diterbitkan menampilkan QR berdasarkan kode unik tiket di menu Tiket Saya.
 - Dashboard admin > Peserta & Check-in memiliki scanner QR berbasis kamera dan input kode manual. Scanner kamera membutuhkan HTTPS (atau localhost) dan izin kamera. Check-in disimpan ke data admin yang terhubung ke Supabase.
 - QR hanya diterbitkan setelah tiket muncul sebagai peserta/e-tiket. Pesanan berbayar yang masih Pending belum memiliki e-tiket aktif.
+
+Perbaikan 28 Okt 2026 (auth-checkout-profile fix)
+- Checkout sekarang satu halaman: /checkout. Dialog checkout di index.html dihapus (penyebab "×" muncul saat kembali dari detail event: flag aksatix_after_login_checkout sisa membuka dialog otomatis).
+- Pencocokan tiket di checkout lebih toleran (record_id / payload.id / eventId / slug / nama tiket / harga) + pesan error yang spesifik.
+- Setelah pesanan dibuat (tiket gratis), kode QR per tiket langsung tampil di halaman checkout. Butuh supabase-tickets.sql sudah dijalankan.
+- Menu profil di index.html disamakan dengan storefront-shell.js (detail event dll).
+- 404.html disalin ulang dari detail-event.html. storefront-shell.js?v=11.

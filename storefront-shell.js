@@ -24,7 +24,7 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-header .sx-account-trigger{display:flex!important;align-items:center;justify-content:center;gap:9px;width:auto!important;min-width:0!important;max-width:none;height:48px;min-height:48px;padding:5px 14px 5px 7px!important;border:0!important;border-radius:999px!important;background:#00FF96!important;color:#10271c!important;cursor:pointer;flex:0 0 auto;white-space:nowrap;position:relative;z-index:121;pointer-events:auto;font:700 14px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:none!important}
 .sx-header .sx-account-trigger:hover{background:#00E88A!important;color:#10271c!important}
 .sx-account-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#00F090;color:#10271c;font-size:14px;font-weight:800}
-.sx-account-name{display:inline-block;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#fff}
+.sx-account-name{display:inline-block;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#10271c}
 .sx-header .sx-account-trigger svg{width:18px;height:18px;flex:0 0 18px;stroke:#10271c!important;stroke-width:2;pointer-events:none}
 .sx-account-menu{pointer-events:auto}
 .sx-account{position:relative;display:flex;align-items:center;flex:0 0 auto;z-index:120}.sx-account-menu{position:absolute;right:0;top:calc(100% + 10px);width:min(340px,calc(100vw - 24px));padding:10px;background:#fff;border:1px solid #E2EBE7;border-radius:18px;box-shadow:0 16px 44px rgba(22,33,29,.16);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;z-index:100}.sx-account-menu[hidden]{display:none}.sx-account-head{padding:12px 12px 14px;border-bottom:1px solid #edf1ef;margin-bottom:5px}.sx-account-head b{display:block;font-size:15px}.sx-account-head span{display:block;overflow-wrap:anywhere;color:#64746d;font-size:12px;margin-top:4px}.sx-account-menu a,.sx-account-menu button{display:flex;width:100%;align-items:center;gap:12px;padding:12px;border:0;border-radius:10px;background:#fff;color:#16211D;text-decoration:none;font:600 14px "Plus Jakarta Sans",system-ui,sans-serif;text-align:left;cursor:pointer}.sx-account-menu a:hover,.sx-account-menu button:hover{background:#f2fbf6}.sx-account-menu .sx-logout{color:#e11d48}.sx-account-menu .sx-logout:hover{background:#fff1f2}.sx-ib svg{width:20px;height:20px;fill:none;stroke:#16211D;stroke-width:2;stroke-linecap:round}
@@ -46,7 +46,7 @@ body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
 dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28px 0 0;padding:20px 24px calc(24px + env(safe-area-inset-bottom,0px))}
 }
 @media (max-width:900px){.sx-w{padding:0 16px}}
-@media (max-width:600px){.sx-logo img{height:42px}}
+@media (max-width:600px){.sx-logo img{height:42px}.sx-header .sx-account-name{display:none}.sx-header .sx-account-trigger{gap:4px;padding:5px 9px 5px 6px!important}.sx-hr{gap:4px}}
 `;
 
   var HEADER = `
