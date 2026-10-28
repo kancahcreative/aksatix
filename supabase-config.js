@@ -5,6 +5,10 @@ window.AKSATIX_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3M
 // Optional public URL for the official static QRIS image. Configure only with the merchant's real QRIS.
 window.AKSATIX_QRIS_IMAGE_URL = '';
 
+// Rekening untuk pembayaran transfer (opsional, boleh dikombinasi dengan QRIS). Contoh:
+// window.AKSATIX_BANK_ACCOUNTS = [{ bank: 'BCA', number: '1234567890', name: 'PT Aksatix' }];
+window.AKSATIX_BANK_ACCOUNTS = [];
+
 // Clean event URLs: aksatix.kancah.com/<slug>
 window.AKSATIX_RESERVED_SLUGS = ['index','login','checkout','tiket-saya','riwayat-transaksi','admin','client-dashboard','auth-callback','about-aksatix','gelang-tiket','jual-tiket','tarif-layanan','hubungi-kami','pusat-bantuan','syarat-ketentuan','kebijakan-privasi','cek-keaslian-tiket','detail-event','solo-speak-up','solo-speak-up-admin','assets','404'];
 window.aksatixMakeSlug = function (v) {

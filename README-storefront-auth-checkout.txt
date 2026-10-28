@@ -61,3 +61,19 @@ Pembaruan lanjutan
 Perbaikan 28 Okt 2026 (v6)
 - "Sisa kuota: N tiket" tidak lagi tampil di index.html & detail event (404.html disalin ulang). Hanya tersisa label "Habis terjual"; angka kuota tetap ada di admin & client dashboard.
 - Menu profil di semua halaman (storefront-shell.js?v=12) disamakan dengan index: saat login hanya tombol "Keluar dari akun" yang tampil, saat belum login hanya "Masuk / Daftar" (sebelumnya keduanya tampil karena aturan [hidden] tertimpa CSS). Logout kini juga jalan di halaman statis tanpa Supabase.
+
+FORM PENDAFTARAN EVENT (seperti Google Form)
+- Admin & Client Dashboard > Event: tombol 📝 (Form pendaftaran) untuk membuat/ubah form, 📋 (Jawaban form) untuk melihat jawaban + unduh CSV.
+- Jenis pertanyaan: jawaban singkat, paragraf, angka, email, telepon, URL, tanggal, jam, dropdown, pilihan ganda, kotak centang (min/maks pilih), persetujuan, skala linear, upload file/gambar (jenis, ukuran maks 10 MB, jumlah file), judul bagian. Opsi "Lainnya", wajib diisi, validasi panjang/rentang, logika tampil (muncul jika jawaban lain = X), urutkan/duplikat/hapus, pratinjau.
+- Form bisa diisi sekali per pesanan atau untuk setiap tiket (data tiap peserta).
+- Checkout menampilkan form setelah "Data pemesan"; pembeli tidak bisa lanjut sebelum pertanyaan wajib terisi. Jawaban disimpan di order (payload.formResponses), file di bucket privat event-form-uploads.
+- WAJIB: jalankan supabase-event-forms.sql (bucket privat + policy + validasi server). Deploy form-builder.js bersama file lain.
+
+PEMBAYARAN: TRANSFER (BUKTI) + CASH DI LOKASI
+- Checkout langkah 3 menawarkan dua metode:
+  * Transfer / QRIS: tampil QRIS (AKSATIX_QRIS_IMAGE_URL) dan/atau rekening (AKSATIX_BANK_ACCOUNTS di supabase-config.js). Pembeli WAJIB upload screenshot bukti (JPG/PNG/PDF, maks 5 MB). Status Pending sampai ADMIN menyetujui (dialog 💳 di tabel Pesanan) atau menolak bukti dengan alasan; pembeli bisa upload ulang dari Riwayat Transaksi.
+  * Cash di lokasi: hanya muncul jika event mengaktifkan "Pembayaran cash di lokasi" (form Edit event). Pesanan Pending, kuota ditahan, pembeli dapat nomor pesanan + QR + instruksi + batas bayar. Petugas (admin ATAU client pemilik event) klik 💳 pada pesanan atau scan/ketik nomor pesanan di kolom scanner Check-in -> "Terima cash" -> Paid -> e-tiket terbit otomatis.
+- Pengaturan cash per event: batas tiket per pesanan (default 4), batas bayar (jam sebelum event mulai; 0 = sampai mulai), instruksi lokasi bayar. Batas anti-iseng server: maks 3 pesanan cash Pending per akun per event.
+- Pesanan cash yang lewat batas bayar batal otomatis (kuota kembali) lewat aksatix_expire_pending - aktifkan pg_cron (baris cron.schedule di supabase-payments.sql).
+- Keamanan: status pembayaran hanya bisa diubah lewat fungsi server aksatix_order_action; client hanya boleh memproses pesanan CASH miliknya, transfer hanya admin. Bukti transfer di bucket privat (hanya pembeli & admin; client pemilik event tidak bisa melihat).
+- WAJIB: jalankan supabase-payments.sql (setelah supabase-event-forms.sql). Deploy payment-ops.js bersama file lain.
