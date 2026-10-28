@@ -183,19 +183,24 @@ function renderPay(){
   if(payMethod==='Cash'){
     box.hidden=true;
     const exp=cashInfo.exp?new Date(cashInfo.exp).toLocaleString('id-ID',{dateStyle:'medium',timeStyle:'short'}):null;
-    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar <b>'+money(total)+'</b> tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
+    const minimum=cart.some(c=>String(c.priceMode||'fixed').toLowerCase()==='minimum');
+    const minimumTotal=cart.reduce((sum,c)=>sum+(String(c.priceMode||'fixed').toLowerCase()==='minimum'?Math.max(0,Number(c.minimumPrice??c.price)||0)*lineQty(c):unitAmount(c)*lineQty(c)),0);
+    info.innerHTML='<b>Bayar tunai di lokasi</b><ol class="pay-steps"><li>Klik <b>Buat pesanan</b>. Tiketmu dipesan dan kuota ditahan.</li><li>Datang ke meja registrasi dan tunjukkan <b>nomor pesanan</b>.</li><li>Bayar '+(minimum?'<b>Minimal '+money(minimumTotal)+'</b>':'<b>'+money(total)+'</b>')+' tunai ke petugas. E-tiket langsung terbit setelah uang diterima.</li></ol>'+(exp?'<p style="margin:10px 0 0"><b>Batas pembayaran: '+esc(exp)+'.</b> Lewat batas ini pesanan batal otomatis.</p>':'')+cashInfo.notes.map(n=>'<p style="margin:8px 0 0;white-space:pre-line">'+esc(n)+'</p>').join('');
   }else if(payMethod==='Transfer'){
     box.hidden=false;
-    const banks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
-    info.innerHTML='<b>Transfer sebesar '+money(total)+'</b> (sesuai nominal, jangan dibulatkan)'+(window.AKSATIX_QRIS_IMAGE_URL?'<div style="text-align:center;margin-top:12px"><img src="'+esc(window.AKSATIX_QRIS_IMAGE_URL)+'" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>':'')+banks.map(b=>'<div class="pay-bank"><span>'+esc(b.bank||'Bank')+'<br><small>a.n. '+esc(b.name||'')+'</small></span><b>'+esc(b.number||'')+'</b></div>').join('')+'<ol class="pay-steps"><li>Bayar lewat QRIS / transfer di atas.</li><li>Screenshot bukti pembayaran, lalu upload di bawah.</li><li>Klik <b>Buat pesanan</b>. Admin memverifikasi, lalu e-tiket terbit.</li></ol>';
+    const banks=cart.map(c=>evOfLine(catalog||{events:[],tickets:[]},c)).filter(Boolean).map(e=>({bank:e.bankName,number:e.bankNumber,name:e.bankHolder})).filter(b=>b.number);
+    const fallbackBanks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
+    const shownBanks=banks.length?banks:fallbackBanks;
+    info.innerHTML='<b>Transfer sebesar '+money(total)+'</b> (sesuai nominal, jangan dibulatkan)'+(window.AKSATIX_QRIS_IMAGE_URL?'<div style="text-align:center;margin-top:12px"><img src="'+esc(window.AKSATIX_QRIS_IMAGE_URL)+'" alt="QRIS Aksatix" style="width:min(100%,250px);background:white;padding:8px;border-radius:12px"></div>':'')+shownBanks.map(b=>'<div class="pay-bank"><span>'+esc(b.bank||'Bank')+'<br><small>a.n. '+esc(b.name||'')+'</small></span><b>'+esc(b.number||'')+'</b></div>').join('')+'<ol class="pay-steps"><li>Bayar lewat QRIS / transfer di atas.</li><li>Screenshot bukti pembayaran, lalu upload di bawah.</li><li>Klik <b>Buat pesanan</b>. Admin memverifikasi, lalu e-tiket terbit.</li></ol>';
   }else{box.hidden=true;info.textContent='Belum ada metode pembayaran yang tersedia untuk pesanan ini. Hubungi penyelenggara / Aksatix.'}
 }
 async function setupPay(){
   if(cartTotal()<=0)return;
   let cat;try{cat=await loadCatalog()}catch(_){cat={events:[],tickets:[]}}
   const paid=cart.filter(c=>(Number(c.price)||0)>0),evs=paid.map(c=>evOfLine(cat,c));
-  const banks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
-  payAvail.Transfer=!!(window.AKSATIX_QRIS_IMAGE_URL||banks.length);
+  const globalBanks=Array.isArray(window.AKSATIX_BANK_ACCOUNTS)?window.AKSATIX_BANK_ACCOUNTS:[];
+  const eventBanks=evs.map(e=>e?e.bankNumber:'').filter(Boolean);
+  payAvail.Transfer=paid.length>0&&evs.every(e=>e&&e.payTransfer!=='off')&&!!(window.AKSATIX_QRIS_IMAGE_URL||eventBanks.length||globalBanks.length);
   const now=Date.now(),exps=evs.map(e=>e?cashExpOf(e):null);
   payAvail.Cash=paid.length>0&&evs.every((e,i)=>e&&e.payCash==='on'&&(exps[i]===null||exps[i]>now)&&lineQty(paid[i])<=Math.min(10,Math.max(1,Number(e.cashMaxQty)||4)));
   if(payAvail.Cash){const v=exps.filter(x=>x!==null);cashInfo.exp=v.length?Math.min(...v):null;cashInfo.notes=[...new Set(evs.map(e=>String(e.cashNote||'').trim()).filter(Boolean))]}
