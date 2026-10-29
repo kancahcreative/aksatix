@@ -10,7 +10,7 @@ window.AKSATIX_QRIS_IMAGE_URL = '';
 window.AKSATIX_BANK_ACCOUNTS = [];
 
 // Clean event URLs: aksatix.kancah.com/<slug>
-window.AKSATIX_RESERVED_SLUGS = ['index','login','checkout','tiket-saya','riwayat-transaksi','admin','client-dashboard','auth-callback','about-aksatix','gelang-tiket','jual-tiket','tarif-layanan','hubungi-kami','pusat-bantuan','syarat-ketentuan','kebijakan-privasi','cek-keaslian-tiket','detail-event','solo-speak-up','solo-speak-up-admin','assets','404'];
+window.AKSATIX_RESERVED_SLUGS = ['index','login','checkout','tiket-saya','riwayat-transaksi','pengaturan-akun','admin','client-dashboard','auth-callback','about-aksatix','gelang-tiket','jual-tiket','tarif-layanan','hubungi-kami','pusat-bantuan','syarat-ketentuan','kebijakan-privasi','cek-keaslian-tiket','detail-event','solo-speak-up','solo-speak-up-admin','assets','404'];
 window.aksatixMakeSlug = function (v) {
   return String(v || 'event').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '') || 'event';
 };
