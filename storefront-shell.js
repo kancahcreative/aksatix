@@ -55,7 +55,7 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-mobile-menu-btn .sx-ico-x{display:none}
 .sx-mobile-menu-btn[aria-expanded="true"] .sx-ico-x{display:block}
 .sx-mobile-menu-btn[aria-expanded="true"] .sx-ico-bars{display:none}
-.sx-mobile-menu-btn:hover,.sx-mobile-menu-btn:active{background:#00FF96!important;color:#16211D!important}
+.sx-mobile-menu-btn:hover,.sx-mobile-menu-btn:active,.sx-mobile-menu-btn:focus-visible{background:transparent!important;color:#16211D!important;box-shadow:none!important}
 
 /* ===== Menu hamburger mobile (panel penuh di bawah header) ===== */
 .sx-mp{display:none}
@@ -87,7 +87,7 @@ body.sx-nonav{padding-bottom:0!important}
 .sx-mp-tools{display:flex;gap:10px;padding:10px 0 10px}
 .sx-mp-tools button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #E2E7E5;border-radius:12px;padding:12px 8px;background:#fff;font:600 14px "Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;cursor:pointer}
 .sx-mp-tools button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.sx-mp-tools button:hover,.sx-mp-tools button:active{background:#00FF96;color:#16211D}
+.sx-mp-tools button:hover,.sx-mp-tools button:active,.sx-mp-tools button:focus-visible{background:#fff;color:#16211D}
 .sx-mp-bottom{margin-top:0;padding-top:0}
 .sx-mp-div{height:1px;background:#E5E7EB;margin:0 -24px}
 .sx-mp-prof{border-top:0}
@@ -112,15 +112,17 @@ body.sx-nonav{padding-bottom:0!important}
 /* ===== Bottom nav mobile (ikon Flaticon Uicons) ===== */
 .sx-bn{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:56;background:#fff;border-top:1px solid #E5E7EB;box-shadow:0 -6px 20px rgba(22,33,29,.06);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));font-family:"Plus Jakarta Sans",system-ui,sans-serif}
 .sx-bn[hidden]{display:none}
-.sx-bn a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:14px;color:#6B7280;font-size:11px;font-weight:600;line-height:1.2;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.sx-bn a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:14px;background:transparent!important;color:#6B7280;font-size:11px;font-weight:600;line-height:1.2;text-decoration:none;-webkit-tap-highlight-color:transparent;transition:color .15s}
 .sx-bn i{display:block;height:20px;font-size:19px;line-height:20px}
 .sx-bn i:before{display:block;line-height:20px}
 .sx-bn .sx-i-on{display:none}
-.sx-bn a.on{color:#16211D;font-weight:700}.sx-bn a.on .sx-i-on{display:block}.sx-bn a.on .sx-i-off{display:none}
-.sx-bn a.sx-bn-ticket{color:#16211D;font-weight:800}
-.sx-bn a.sx-bn-ticket i{display:grid;place-items:center;width:46px;height:30px;border-radius:99px;background:#00FF96;color:#16211D;font-size:18px}.sx-bn a.sx-bn-ticket .sx-i-off{display:grid}.sx-bn a.sx-bn-ticket .sx-i-on{display:none}.sx-bn a.sx-bn-ticket.on .sx-i-off{display:grid}.sx-bn a.sx-bn-ticket.on .sx-i-on{display:none}
-.sx-bn a.sx-bn-ticket.on{color:#16211D}
-.sx-bn a:hover,.sx-bn a:active{background:#00FF96}
+.sx-bn a.on{color:#00FF96;font-weight:700}.sx-bn a.on .sx-i-on{display:block}.sx-bn a.on .sx-i-off{display:none}
+.sx-bn a.sx-bn-ticket{position:relative;z-index:1;gap:4px;margin-top:-20px;padding-top:0;color:#6B7280;font-weight:700;overflow:visible}
+.sx-bn a.sx-bn-ticket i{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#fff!important;color:#6B7280;font-size:25px;line-height:1;box-shadow:0 2px 10px rgba(22,33,29,.13);border:1px solid #E5E7EB}
+.sx-bn a.sx-bn-ticket .sx-i-off{display:grid}.sx-bn a.sx-bn-ticket .sx-i-on{display:none}
+.sx-bn a.sx-bn-ticket.on{color:#00FF96}.sx-bn a.sx-bn-ticket.on i{color:#00FF96;background:#fff!important;border-color:#00FF96}
+.sx-bn a:hover,.sx-bn a:active,.sx-bn a:focus-visible{background:transparent!important;box-shadow:none!important}
+.sx-bn a:hover,.sx-bn a:active{color:#00FF96}
 body.sx-nonav .sx-bn{display:none}
 }
 @media (min-width:1024px){.sx-bn,.sx-mp-backdrop{display:none!important}}
