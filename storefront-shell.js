@@ -118,9 +118,9 @@ body.sx-nonav{padding-bottom:0!important}
 .sx-bn .sx-i-on{display:none}
 .sx-bn a.on{color:#000;font-weight:700}.sx-bn a.on .sx-i-on{display:block}.sx-bn a.on .sx-i-off{display:none}
 .sx-bn a.sx-bn-ticket{position:relative;z-index:1;gap:4px;margin-top:-20px;padding-top:0;color:#6B7280;font-weight:700;overflow:visible}
-.sx-bn a.sx-bn-ticket i{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#000!important;color:#00FF96!important;font-size:25px;line-height:1;box-shadow:0 2px 10px rgba(22,33,29,.13);border:1px solid #000}
+.sx-bn a.sx-bn-ticket i{display:grid;place-items:center;width:54px;height:54px;border-radius:50%;background:#00FF96!important;color:#000!important;font-size:25px;line-height:1;box-shadow:0 2px 10px rgba(22,33,29,.13);border:1px solid #00FF96}
 .sx-bn a.sx-bn-ticket .sx-i-off{display:grid}.sx-bn a.sx-bn-ticket .sx-i-on{display:none}
-.sx-bn a.sx-bn-ticket.on{color:#000}.sx-bn a.sx-bn-ticket.on i{color:#00FF96!important;background:#000!important;border-color:#000}
+.sx-bn a.sx-bn-ticket.on{color:#000}.sx-bn a.sx-bn-ticket.on i{color:#000!important;background:#00FF96!important;border-color:#00FF96}
 .sx-bn a:hover,.sx-bn a:active,.sx-bn a:focus-visible{background:transparent!important;box-shadow:none!important}
 .sx-bn a:hover,.sx-bn a:active{color:#000}
 body.sx-nonav .sx-bn{display:none}
