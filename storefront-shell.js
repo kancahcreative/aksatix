@@ -36,11 +36,13 @@ dialog#sxmnu::backdrop{background:rgba(13,25,20,.58);backdrop-filter:blur(3px)}
 dialog#sxmnu h3{margin:0;font-size:20px;font-weight:800;letter-spacing:-.03em}
 #sxmnu .sx-ml{display:flex;flex-direction:column;margin-top:8px}
 #sxmnu .sx-ml a{padding:14px 0;font-weight:600;border-bottom:1px solid #E2EBE7;color:#16211D;text-decoration:none}
+#sxmnu .sx-menu-tools{display:flex;gap:10px;padding:14px 0;border-bottom:1px solid #E2EBE7}#sxmnu .sx-menu-tools a{flex:1;text-align:center;border:1px solid #DCE8E2;border-radius:12px;padding:12px 8px}#sxmnu .sx-menu-profile{display:flex;flex-direction:column;margin-top:16px;padding-top:4px}#sxmnu .sx-menu-profile>b{font-size:15px;margin-bottom:4px;color:#008F55}
 @media (max-width:1023px){
 .sx-pills{display:none}
 .sx-mobile-menu-btn{display:flex!important}
-.sx-bn{display:grid;grid-template-columns:repeat(5,1fr);align-items:end;position:fixed;left:0;right:0;bottom:0;z-index:40;background:#fff;border-top:1px solid #E2EBE7;padding:8px 4px calc(8px + env(safe-area-inset-bottom,0px));box-shadow:0 -6px 20px rgba(22,33,29,.07);font-family:"Plus Jakarta Sans",system-ui,sans-serif}
-body{padding-bottom:calc(78px + env(safe-area-inset-bottom,0px))}
+.sx-header .sx-hr>a.sx-ib,.sx-header .sx-account{display:none!important}
+.sx-bn{display:none!important}
+body{padding-bottom:0!important}
 .sx-bn a,.sx-bn button{display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:#5E6F68;padding:2px 0;background:none;border:0;cursor:pointer;font-family:inherit;text-decoration:none;line-height:1.55}
 .sx-bn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .sx-bn .on{color:#16211D;font-weight:800}
@@ -71,7 +73,7 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
 <a data-n="faq" href="/#faq"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.6 2.6 0 1 1 4.4 1.9c-1.1 1-1.9 1.3-1.9 2.6M12 17h.01"/></svg>FAQ</a>
 <button type="button" data-n="menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>`;
 
-  var MENU = `<h3>Menu</h3><nav class="sx-ml"><a href="/">Beranda</a><a href="/about-aksatix">Tentang Aksatix</a><a href="/jual-tiket">Membuat Event</a><a href="/tarif-layanan">Layanan Kerja Sama</a><a href="/hubungi-kami">Partnership &amp; Collaboration</a><a href="/client-dashboard.html">Dashboard Penyelenggara</a><a href="/tiket-saya">Tiket Saya</a><a href="/riwayat-transaksi">Riwayat Transaksi</a><span class="sx-navlabel">Temukan Acara</span><a href="/?kategori=Musik#terdekat">Musik</a><a href="/?kategori=Festival#terdekat">Festival</a><a href="/?kategori=Workshop#terdekat">Workshop</a><a href="/?kategori=Olahraga#terdekat">Olahraga</a><a href="/?kategori=Pameran#terdekat">Pameran &amp; Seni</a><a href="/?kategori=Seminar#terdekat">Seminar &amp; Edukasi</a><a href="/?kategori=Komunitas#terdekat">Komunitas</a><a href="/?kategori=Kuliner#terdekat">Kuliner</a><a href="/?kategori=Keluarga#terdekat">Keluarga</a><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/#faq">FAQ</a><a href="/#bantuan">Bantuan</a><a href="https://wa.me/628924687866" target="_blank" rel="noopener">Kontak Kami ↗</a></nav>`;
+  var MENU = `<h3>Menu</h3><nav class="sx-ml"><a href="/">Beranda</a><a href="/#terdekat">Temukan Acara</a><a href="/jual-tiket">Membuat Event</a><a href="/pusat-bantuan">Bantuan</a><a href="https://wa.me/628924687866" target="_blank" rel="noopener">Kontak Kami ↗</a><div class="sx-menu-tools"><a href="/#terdekat">Cari Acara</a><a href="/login?next=/checkout">Keranjang</a></div><div class="sx-menu-profile"><b>Profil</b><a href="/tiket-saya">Tiket Saya</a><a href="/riwayat-transaksi">Riwayat Transaksi</a><a href="/pengaturan-akun">Pengaturan Akun</a><a href="/login?next=/">Masuk / Daftar</a></div></nav>`;
 
   function mount() {
     var st = document.createElement('style');
@@ -98,7 +100,6 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
     nav.className = 'sx-bn';
     nav.setAttribute('aria-label', 'Navigasi utama');
     nav.innerHTML = NAV;
-    document.body.appendChild(nav);
 
     var dlg = document.createElement('dialog');
     dlg.id = 'sxmnu';
@@ -106,7 +107,7 @@ dialog#sxmnu{margin:auto auto 0;width:100%;max-width:none;border-radius:28px 28p
     dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.closest('a')) dlg.close(); });
     document.body.appendChild(dlg);
 
-    nav.querySelector('[data-n="menu"]').addEventListener('click', function () { dlg.showModal(); });
+    // Navigasi mobile dipusatkan pada satu hamburger di header.
     var mobileMenuTrigger=h.querySelector('#sxMobileMenuTrigger'); if(mobileMenuTrigger) mobileMenuTrigger.addEventListener('click',function(){dlg.showModal();});
 
     // Shared account menu: reads the same persisted Supabase session as index/detail/checkout.
