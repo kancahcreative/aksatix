@@ -376,7 +376,7 @@ $('submit').onclick=async()=>{
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };
-</script><script src="storefront-shell.js?v=13"></script><script>(function(){var sum=document.querySelector('.sum'),r=document.documentElement,mq=window.matchMedia('(max-width:860px)'),t;
+</script><script src="storefront-shell.js?v=14"></script><script>(function(){var sum=document.querySelector('.sum'),r=document.documentElement,mq=window.matchMedia('(max-width:860px)'),t;
 function h(){if(!sum)return;r.style.setProperty('--sum-h',(mq.matches?Math.ceil(sum.getBoundingClientRect().height):185)+'px')}
 if(window.ResizeObserver&&sum)new ResizeObserver(h).observe(sum);window.addEventListener('resize',h);h();
 function isF(el){return el&&/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)&&!/^(checkbox|radio|button|submit|file)$/i.test(el.type||'')&&!el.closest('.co-side')}

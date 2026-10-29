@@ -21,4 +21,4 @@ fi.onchange=async()=>{const f=fi.files[0];if(!f)return;if(f.size>5*1048576){Aksa
  const r=await sb.rpc('aksatix_submit_proof',{p_order:target,p_proof:{path,name:f.name,size:f.size,type:f.type||''}});if(r.error||!r.data||!r.data.ok)throw new Error((r.error&&r.error.message)||(r.data&&r.data.message)||'Gagal menyimpan bukti');
  location.reload()}catch(e){AksatixUI.alert('Upload gagal: '+(e.message||e))}};
 }}catch(e){$('content').innerHTML='<div class="error">Data belum dapat dimuat. '+esc(e.message||'Periksa koneksi lalu coba lagi.')+'</div>'}})();
-</script><script src="storefront-shell.js?v=13"></script></body></html>
+</script><script src="storefront-shell.js?v=14"></script></body></html>
