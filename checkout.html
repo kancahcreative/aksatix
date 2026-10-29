@@ -90,8 +90,15 @@ main.wrap{width:100%;overflow-x:clip}
 .co-main,.step,.step .fhost{min-width:0;max-width:100%}
 .step .fhost{overflow-wrap:anywhere}
 .step input,.step select,.step textarea{scroll-margin-bottom:calc(var(--sum-h,185px) + 90px);scroll-margin-top:90px}
-.co-side{max-height:60vh;overflow:auto;transition:transform .18s ease,opacity .18s ease}
-body.is-typing .co-side{transform:translateY(130%);opacity:0;pointer-events:none}
+.co-side{max-height:60vh;overflow:auto;bottom:calc(max(10px,env(safe-area-inset-bottom,0px)) + var(--kb,0px));transition:bottom .15s ease}
+/* saat ngetik: ringkasan dipadatkan tapi TETAP tampil (di atas keyboard) */
+body.is-typing .sum{padding:8px 12px}
+body.is-typing .sum h2{font-size:12px;margin:0 0 2px}
+body.is-typing #sumLines{max-height:40px;overflow:auto}
+body.is-typing .sum-line{padding:2px 0;font-size:11px}
+body.is-typing .sum-total{padding:3px 0 6px;font-size:12px}
+body.is-typing .sum-total b{font-size:17px}
+body.is-typing .sum .btn{min-height:40px}
 }
 
 dialog#okDlg{border:0;padding:0;border-radius:24px;width:min(92vw,400px);box-shadow:0 24px 70px rgba(22,33,29,.35);color:var(--ink)}
@@ -374,5 +381,8 @@ function h(){if(!sum)return;r.style.setProperty('--sum-h',(mq.matches?Math.ceil(
 if(window.ResizeObserver&&sum)new ResizeObserver(h).observe(sum);window.addEventListener('resize',h);h();
 function isF(el){return el&&/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)&&!/^(checkbox|radio|button|submit|file)$/i.test(el.type||'')&&!el.closest('.co-side')}
 document.addEventListener('focusin',function(e){if(!mq.matches||!isF(e.target))return;clearTimeout(t);document.body.classList.add('is-typing');setTimeout(function(){try{e.target.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}},250)});
-document.addEventListener('focusout',function(){clearTimeout(t);t=setTimeout(function(){if(!isF(document.activeElement))document.body.classList.remove('is-typing')},120)});})();</script>
+document.addEventListener('focusout',function(){clearTimeout(t);t=setTimeout(function(){if(!isF(document.activeElement))document.body.classList.remove('is-typing')},120)});
+/* angkat bar ringkasan di atas keyboard (iOS & Chrome Android baru) */
+var vv=window.visualViewport;function kb(){var k=0;if(vv&&mq.matches&&vv.scale<=1.01)k=Math.max(0,Math.round(window.innerHeight-vv.height-vv.offsetTop));r.style.setProperty('--kb',k+'px')}
+if(vv){vv.addEventListener('resize',kb);vv.addEventListener('scroll',kb)}window.addEventListener('orientationchange',function(){setTimeout(kb,300)});kb();})();</script>
 </body></html>
