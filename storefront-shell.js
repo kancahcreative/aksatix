@@ -25,7 +25,7 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-navmenu{display:none;position:absolute;top:100%;left:0;padding:12px;min-width:230px;background:#fff;border:1px solid #E2EBE7;border-radius:16px;box-shadow:0 16px 38px #16211d1a;z-index:150}
 .sx-navdrop:hover .sx-navmenu,.sx-navdrop:focus-within .sx-navmenu{display:grid}
 .sx-navmenu a{display:block;padding:10px 12px;border-radius:9px;font-size:13px!important}
-.sx-navmenu a:hover{background:#effbf5;color:#008F55}
+.sx-navmenu a:hover{background:#E0FFF1;color:#008F55}
 .sx-navmenu .sx-navlabel{padding:8px 12px 4px;font-size:10px;font-weight:800;letter-spacing:.1em;color:#008F55;text-transform:uppercase}
 .sx-hr{display:flex;gap:10px;align-items:center}
 .sx-ib{position:relative;height:42px;width:42px;min-width:42px;border-radius:99px;background:none;color:#16211D;display:flex;align-items:center;justify-content:center;padding:0;border:0;cursor:pointer;transition:background .15s}
@@ -33,11 +33,11 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-ib svg{width:20px;height:20px;fill:none;stroke:#16211D;stroke-width:2;stroke-linecap:round}
 .sx-bdg{position:absolute;top:3px;right:1px;min-width:17px;height:17px;padding:0 4px;border-radius:99px;background:#00FF96;color:#16211D;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center}
 .sx-bdg[hidden]{display:none}
-.sx-header .sx-account-trigger{display:flex!important;align-items:center;justify-content:center;gap:9px;width:auto!important;min-width:0!important;max-width:none;height:48px;min-height:48px;padding:5px 14px 5px 7px!important;border:0!important;border-radius:999px!important;background:#00FF96!important;color:#10271c!important;cursor:pointer;flex:0 0 auto;white-space:nowrap;position:relative;z-index:121;pointer-events:auto;font:700 14px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:none!important}
-.sx-header .sx-account-trigger:hover{background:#00FF96!important;color:#10271c!important}
-.sx-account-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#00FF96;color:#10271c;font-size:14px;font-weight:800}
-.sx-account-name{display:inline-block;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#10271c}
-.sx-header .sx-account-trigger svg{width:18px;height:18px;flex:0 0 18px;stroke:#10271c!important;stroke-width:2;pointer-events:none}
+.sx-header .sx-account-trigger{display:flex!important;align-items:center;justify-content:center;gap:9px;width:auto!important;min-width:0!important;max-width:none;height:48px;min-height:48px;padding:5px 14px 5px 7px!important;border:0!important;border-radius:999px!important;background:#00FF96!important;color:#16211D!important;cursor:pointer;flex:0 0 auto;white-space:nowrap;position:relative;z-index:121;pointer-events:auto;font:700 14px/1.2 "Plus Jakarta Sans",system-ui,sans-serif;box-shadow:none!important}
+.sx-header .sx-account-trigger:hover{background:#00FF96!important;color:#16211D!important}
+.sx-account-avatar{width:36px;height:36px;flex:0 0 36px;display:grid;place-items:center;border-radius:50%;background:#00FF96;color:#16211D;font-size:14px;font-weight:800}
+.sx-account-name{display:inline-block;max-width:110px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#16211D}
+.sx-header .sx-account-trigger svg{width:18px;height:18px;flex:0 0 18px;stroke:#16211D!important;stroke-width:2;pointer-events:none}
 .sx-account{position:relative;display:flex;align-items:center;flex:0 0 auto;z-index:120}
 .sx-account-menu{position:absolute;right:0;top:calc(100% + 10px);width:min(340px,calc(100vw - 24px));padding:10px;background:#fff;border:1px solid #E2EBE7;border-radius:18px;box-shadow:0 16px 44px rgba(22,33,29,.16);font-family:"Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;z-index:100;pointer-events:auto}
 .sx-account-menu[hidden]{display:none}
@@ -45,8 +45,8 @@ h1,h2,h3{overflow-wrap:anywhere}
 .sx-account-head b{display:block;font-size:17px;line-height:1.35}
 .sx-account-head span{display:block;overflow-wrap:anywhere;color:#64746d;font-size:12px;margin-top:4px}
 .sx-account-menu a,.sx-account-menu button{display:flex;width:100%;align-items:center;gap:12px;padding:12px;border:0;border-radius:10px;background:#fff;color:#16211D;text-decoration:none;font:600 14px "Plus Jakarta Sans",system-ui,sans-serif;text-align:left;cursor:pointer}
-.sx-account-menu a:hover,.sx-account-menu button:hover{background:#f2fbf6}
-.sx-account-menu .sx-account-item>svg{width:21px;height:21px;flex:0 0 21px;fill:none;stroke:#00A866;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.sx-account-menu a:hover,.sx-account-menu button:hover{background:#E0FFF1}
+.sx-account-menu .sx-account-item>svg{width:21px;height:21px;flex:0 0 21px;fill:none;stroke:#008F55;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .sx-account-menu .sx-account-item>span{display:block;min-width:0}
 .sx-account-menu .sx-account-item small{display:block;font-size:11px;color:#64746d;font-weight:500;margin-top:2px}
 .sx-account-menu a[hidden],.sx-account-menu button[hidden]{display:none!important}
@@ -59,12 +59,14 @@ h1,h2,h3{overflow-wrap:anywhere}
 /* ===== Menu hamburger mobile (panel penuh di bawah header) ===== */
 .sx-mp{display:none}
 .sx-mp-backdrop{display:none}
+.sx-bn{display:none}
 @media (max-width:1023px){
 .sx-pills{display:none}
 .sx-mobile-menu-btn{display:flex!important}
 .sx-header .sx-hr>a.sx-ib,.sx-header .sx-account{display:none!important}
-body{padding-bottom:0!important}
-.sx-mp{position:fixed;left:0;right:0;top:var(--sx-mt,64px);bottom:0;z-index:55;display:none;flex-direction:column;background:#fff;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;line-height:1.5;color:#16211D;border-top:1px solid #E2EBE7;padding:4px 24px calc(16px + env(safe-area-inset-bottom,0px))}
+body{padding-bottom:64px!important}
+body.sx-nonav{padding-bottom:0!important}
+.sx-mp{position:fixed;left:0;right:0;top:var(--sx-mt,64px);bottom:auto;height:auto;max-height:calc(100vh - var(--sx-mt,64px) - 84px);max-height:calc(100dvh - var(--sx-mt,64px) - 84px - env(safe-area-inset-bottom,0px));z-index:55;display:none;flex-direction:column;background:#fff;border-radius:0 0 22px 22px;box-shadow:0 18px 40px rgba(22,33,29,.14);overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;font-family:"Plus Jakarta Sans",system-ui,sans-serif;font-size:15px;line-height:1.5;color:#16211D;border-top:1px solid #E2EBE7;padding:4px 24px 6px}
 .sx-mp.open{display:flex;animation:sxMpIn .18s ease-out}
 @keyframes sxMpIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
 .sx-mp *{box-sizing:border-box}
@@ -81,31 +83,46 @@ body{padding-bottom:0!important}
 .sx-acc-in a:first-child{margin-top:0}
 .sx-acc-in a:active{color:#008F55;border-left-color:#00FF96}
 .sx-acc.open>.sx-acc-body .sx-acc-in{padding-bottom:8px}
-.sx-mp-tools{display:flex;gap:10px;padding:16px 0 4px}
+.sx-mp-tools{display:flex;gap:10px;padding:10px 0 10px}
 .sx-mp-tools button{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #DCE8E2;border-radius:12px;padding:12px 8px;background:#fff;font:600 14px "Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;cursor:pointer}
 .sx-mp-tools button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
-.sx-mp-tools button:active{background:#effbf5;color:#008F55}
-.sx-mp-bottom{margin-top:auto;padding-top:16px}
+.sx-mp-tools button:active{background:#E0FFF1;color:#008F55}
+.sx-mp-bottom{margin-top:0;padding-top:0}
 .sx-mp-div{height:1px;background:#E2EBE7;margin:0 -24px}
 .sx-mp-prof{border-top:0}
 .sx-prof-btn{display:flex;align-items:center;gap:12px;width:100%;padding:14px 0;border:0;background:none;font:600 15px/1.3 "Plus Jakarta Sans",system-ui,sans-serif;color:#16211D;text-align:left;cursor:pointer;-webkit-tap-highlight-color:transparent}
 .sx-prof-btn[hidden]{display:none}
 .sx-prof-btn .sx-prof-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .sx-prof-btn .sx-chev{margin-left:auto}
-.sx-prof-av{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:50%;background:#00FF96;color:#10271c;font-size:14px;font-weight:800}
+.sx-prof-av{width:40px;height:40px;flex:0 0 40px;display:grid;place-items:center;border-radius:50%;background:#00FF96;color:#16211D;font-size:14px;font-weight:800}
 .sx-prof-btn[aria-expanded="true"] .sx-chev{transform:rotate(180deg)}
 .sx-prof-btn[aria-expanded="true"]{color:#008F55}
 .sx-prof-info{padding:2px 0 8px}
 .sx-prof-info b{display:block;font-size:17px;line-height:1.35;font-weight:800;letter-spacing:-.01em;overflow-wrap:anywhere}
 .sx-prof-row{display:flex;align-items:flex-start;gap:10px;margin-top:8px;color:#5E6F68;font-size:13.5px;font-weight:500;overflow-wrap:anywhere}
-.sx-prof-row svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;fill:none;stroke:#00A866;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.sx-prof-row svg{width:17px;height:17px;flex:0 0 17px;margin-top:2px;fill:none;stroke:#008F55;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
 .sx-prof-links{display:flex;flex-direction:column;margin-top:8px}
 .sx-prof-links a,.sx-prof-links button{display:block;width:100%;margin:0;border:0;padding:12px 0;border:0;background:none;text-align:left;font:600 14.5px "Plus Jakarta Sans",system-ui,sans-serif;color:#3A4A44;cursor:pointer}
 .sx-prof-links a:active,.sx-prof-links button:active{color:#008F55}
 .sx-prof-links .sx-logout{color:#e11d48}
 .sx-prof-links [hidden]{display:none!important}
-.sx-mp-backdrop{display:none}
+.sx-mp-backdrop.open{display:block;position:fixed;left:0;right:0;bottom:0;top:var(--sx-mt,64px);z-index:54;background:rgba(22,33,29,.22)}
+#toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}.checkin-toast{bottom:calc(80px + env(safe-area-inset-bottom,0px))!important}
+/* ===== Bottom nav mobile (ikon Flaticon Uicons) ===== */
+.sx-bn{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:56;background:#fff;border-top:1px solid #E2EBE7;box-shadow:0 -6px 20px rgba(22,33,29,.06);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));font-family:"Plus Jakarta Sans",system-ui,sans-serif}
+.sx-bn[hidden]{display:none}
+.sx-bn a{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;min-height:52px;border-radius:14px;color:#5E6F68;font-size:11px;font-weight:600;line-height:1.2;text-decoration:none;-webkit-tap-highlight-color:transparent}
+.sx-bn i{display:block;height:20px;font-size:19px;line-height:20px}
+.sx-bn i:before{display:block;line-height:20px}
+.sx-bn .sx-i-on{display:none}
+.sx-bn a.on{color:#008F55;font-weight:700}.sx-bn a.on .sx-i-on{display:block}.sx-bn a.on .sx-i-off{display:none}
+.sx-bn a.sx-bn-ticket{color:#16211D;font-weight:800}
+.sx-bn a.sx-bn-ticket i{display:grid;place-items:center;width:46px;height:30px;border-radius:99px;background:#00FF96;color:#16211D;font-size:18px}
+.sx-bn a.sx-bn-ticket.on{color:#008F55}
+.sx-bn a:active{background:#E0FFF1}
+body.sx-nonav .sx-bn{display:none}
 }
+@media (min-width:1024px){.sx-bn,.sx-mp-backdrop{display:none!important}}
 @media (max-width:900px){.sx-w{padding:0 16px}}
 @media (max-width:600px){.sx-logo img{height:42px}.sx-header .sx-account-name{display:none}.sx-header .sx-account-trigger{gap:4px;padding:5px 9px 5px 6px!important}.sx-hr{gap:4px}}
 `;
@@ -155,6 +172,15 @@ body{padding-bottom:0!important}
   </div>
 </div>`;
 
+  function bnItem(key, href, label, ico, cls) {
+    return '<a data-p="' + key + '" href="' + href + '"' + (cls ? ' class="' + cls + '"' : '') + '><i class="fi fi-rr-' + ico + ' sx-i-off" aria-hidden="true"></i><i class="fi fi-sr-' + ico + ' sx-i-on" aria-hidden="true"></i><span>' + label + '</span></a>';
+  }
+  var BN = bnItem('home', '/', 'Home', 'home') +
+    bnItem('find', '/#terdekat', 'Event', 'calendar') +
+    bnItem('ticket', '/tiket-saya', 'Tiket Saya', 'ticket', 'sx-bn-ticket') +
+    bnItem('help', '/pusat-bantuan', 'FAQ', 'interrogation') +
+    bnItem('contact', '/hubungi-kami', 'Kontak', 'headset');
+
   var cartCount = +window.__sxCartCount || 0;
   var state = {};
 
@@ -171,6 +197,14 @@ body{padding-bottom:0!important}
       document.head.appendChild(f);
     }
 
+    ['uicons-regular-rounded', 'uicons-solid-rounded'].forEach(function (n) {
+      if (document.querySelector('link[href*="' + n + '"]')) return;
+      var l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = 'https://cdn-uicons.flaticon.com/' + n + '/css/' + n + '.css';
+      document.head.appendChild(l);
+    });
+
     var old = document.querySelector('body > header, body > div > header');
     if (old) old.remove();
     var h = document.createElement('div');
@@ -186,6 +220,19 @@ body{padding-bottom:0!important}
     panel.innerHTML = MENU;
     document.body.appendChild(panel);
 
+    var backdrop = document.createElement('div');
+    backdrop.className = 'sx-mp-backdrop';
+    document.body.appendChild(backdrop);
+
+    var bn = document.createElement('nav');
+    bn.className = 'sx-bn';
+    bn.id = 'sxBottomNav';
+    bn.setAttribute('aria-label', 'Navigasi bawah');
+    bn.innerHTML = BN;
+    document.body.appendChild(bn);
+    var bnPage = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
+    if (bnPage === 'checkout') document.body.classList.add('sx-nonav');
+
     var $ = function (id) { return document.getElementById(id); };
     var menuBtn = $('sxMobileMenuTrigger');
 
@@ -194,17 +241,21 @@ body{padding-bottom:0!important}
       var r = h.getBoundingClientRect();
       panel.style.setProperty('--sx-mt', Math.max(0, Math.round(r.bottom)) + 'px');
       panel.classList.add('open');
+      backdrop.style.setProperty('--sx-mt', Math.max(0, Math.round(r.bottom)) + 'px');
+      backdrop.classList.add('open');
       menuBtn.setAttribute('aria-expanded', 'true');
       menuBtn.setAttribute('aria-label', 'Tutup menu');
       document.body.classList.add('sx-lock');
     }
     function closeMenu() {
       panel.classList.remove('open');
+      backdrop.classList.remove('open');
       menuBtn.setAttribute('aria-expanded', 'false');
       menuBtn.setAttribute('aria-label', 'Buka menu');
       document.body.classList.remove('sx-lock');
     }
     menuBtn.addEventListener('click', function () { panel.classList.contains('open') ? closeMenu() : openMenu(); });
+    backdrop.addEventListener('click', closeMenu);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeMenu(); });
     window.addEventListener('resize', function () { if (window.innerWidth >= 1024) closeMenu(); });
 
@@ -220,7 +271,7 @@ body{padding-bottom:0!important}
         var willOpen = !el.classList.contains('open');
         panel.querySelectorAll('[data-acc]').forEach(function (o) { setAcc(o, false); });
         setAcc(el, willOpen);
-        if (willOpen) setTimeout(function () { b.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); if (el.id === 'sxMpProf') panel.scrollTo({ top: panel.scrollHeight, behavior: 'smooth' }); }, 260);
+        if (willOpen) setTimeout(function () { b.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); }, 260);
       });
     });
     panel.addEventListener('click', function (e) {
@@ -312,11 +363,13 @@ body{padding-bottom:0!important}
 
     /* ---------- penanda halaman aktif ---------- */
     function setActive(k) {
-      document.querySelectorAll('#sxPills [data-p]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-p') === k); });
+      document.querySelectorAll('#sxPills [data-p], .sx-bn [data-p]').forEach(function (a) { a.classList.toggle('on', a.getAttribute('data-p') === k); });
     }
     var page = (location.pathname.split('/').pop() || '').replace(/\.html$/, '');
-    var map = { 'index': 'home', '': 'home', 'detail-event': 'find', 'jual-tiket': 'make', 'tarif-layanan': 'make', 'hubungi-kami': 'contact', 'pusat-bantuan': 'help' };
-    setActive(map[page] || '');
+    var map = { 'index': 'home', '': 'home', 'detail-event': 'find', 'jual-tiket': 'make', 'tarif-layanan': 'make', 'hubungi-kami': 'contact', 'pusat-bantuan': 'help', 'tiket-saya': 'ticket', 'riwayat-transaksi': 'ticket' };
+    function syncActive() { setActive((map[page] === 'home' && location.hash === '#terdekat') ? 'find' : (map[page] || '')); }
+    syncActive();
+    window.addEventListener('hashchange', syncActive);
 
     window.sxShell = { setCartCount: setCartCount, refreshAccount: refreshAccount, setActive: setActive, openMenu: openMenu, closeMenu: closeMenu };
   }
