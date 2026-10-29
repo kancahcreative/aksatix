@@ -35,6 +35,10 @@ function css(){
   var s=document.createElement('style');s.id='axf-css';
   s.textContent=
 '.axf{font-family:inherit;color:#16211D}.axf *{box-sizing:border-box}'+
+'.axf{max-width:100%;min-width:0;overflow-wrap:anywhere}.axf input,.axf select,.axf textarea{max-width:100%;min-width:0}'+
+'.axf input[type=date],.axf input[type=time],.axf select{-webkit-appearance:none;appearance:none;display:block;text-align:left;line-height:1.3}.axf select{padding-right:34px;text-overflow:ellipsis;background:#fff url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'12\' height=\'8\' viewBox=\'0 0 12 8\'%3E%3Cpath d=\'M1 1l5 5 5-5\' fill=\'none\' stroke=\'%2316211D\' stroke-width=\'2\' stroke-linecap=\'round\'/%3E%3C/svg%3E") no-repeat right 12px center}'+
+'.axf-o span{min-width:0}.axf-o .axf-oth{flex:1 1 0;width:auto!important;min-width:0}.axf input[type=file]{max-width:100%;overflow:hidden}'+
+'@media(max-width:600px){.axf-q{margin-bottom:18px}.axf-o{padding:10px 0;font-size:15px}.axf-sc{justify-content:space-between;gap:6px}.axf-sc label{flex:1 1 0;min-width:0}.axf-sc small{flex:1 0 100%;text-align:left}.axf textarea{min-height:110px}}'+
 '.axf-q{margin:0 0 16px}.axf-q[hidden]{display:none}.axf-l{display:block;font-weight:700;font-size:14px;margin-bottom:6px}.axf-l i{color:#e11d48;font-style:normal}'+
 '.axf-h{display:block;font-size:12px;color:#64746d;margin:-2px 0 6px}'+
 '.axf input[type=text],.axf input[type=number],.axf input[type=email],.axf input[type=tel],.axf input[type=url],.axf input[type=date],.axf input[type=time],.axf select,.axf textarea{width:100%;min-height:44px;border:1px solid #cfdcd6;border-radius:12px;padding:10px 12px;font:inherit;font-size:16px;background:#fff;color:#16211D}'+

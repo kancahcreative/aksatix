@@ -84,6 +84,16 @@ main.wrap{width:100%;overflow-x:clip}
 .ok-sec{margin-top:26px}.ok-sec h3{margin:0 0 4px;font-size:17px}
 @media(max-width:860px){.co-layout{grid-template-columns:1fr}.co-side{max-height:none;overflow:visible;position:fixed;left:12px;right:12px;bottom:max(10px,env(safe-area-inset-bottom,0px));top:auto;z-index:100}.sum{padding:12px 14px;border-radius:16px;box-shadow:0 8px 34px rgba(22,33,29,.22)}.sum h2{font-size:14px;margin:0 0 4px}.sum-line{padding:4px 0;font-size:12px}.sum-total{padding:6px 0 8px;font-size:13px}.sum-total b{font-size:20px}.sum-note{display:none}.sum .btn{min-height:44px}.co-layout{padding-bottom:185px}.step{padding:18px}}
 
+/* Fix mobile: form isian tidak ketutup ringkasan fixed & keyboard */
+@media(max-width:860px){
+.co-layout{padding-bottom:calc(var(--sum-h,185px) + 28px)}
+.co-main,.step,.step .fhost{min-width:0;max-width:100%}
+.step .fhost{overflow-wrap:anywhere}
+.step input,.step select,.step textarea{scroll-margin-bottom:calc(var(--sum-h,185px) + 90px);scroll-margin-top:90px}
+.co-side{max-height:60vh;overflow:auto;transition:transform .18s ease,opacity .18s ease}
+body.is-typing .co-side{transform:translateY(130%);opacity:0;pointer-events:none}
+}
+
 dialog#okDlg{border:0;padding:0;border-radius:24px;width:min(92vw,400px);box-shadow:0 24px 70px rgba(22,33,29,.35);color:var(--ink)}
 dialog#okDlg::backdrop{background:rgba(13,25,20,.6);backdrop-filter:blur(3px)}
 .ok-pop{display:grid;gap:10px;text-align:center;padding:30px 24px 24px;justify-items:center}
@@ -113,7 +123,7 @@ body:has(#checkoutView[hidden]){background:#F8FAF9}
   <div><b>Bantuan &amp; Legal</b><a href="/pusat-bantuan">Pusat Bantuan</a><a href="/syarat-ketentuan">Syarat &amp; Ketentuan</a><a href="/kebijakan-privasi">Kebijakan Privasi</a><a href="/gelang-tiket">Gelang Tiket</a><a href="/cek-keaslian-tiket">Cek Keaslian Tiket</a></div>
   <div><b>Kategori</b><a href="/#terdekat">Musik</a><a href="/#terdekat">Pameran</a><a href="/#terdekat">Olahraga</a><a href="/#terdekat">Workshop</a><a href="/#terdekat">Semua Kategori</a></div></div></div>
   <div class="fb"><span>Copyright © 2026 Aksatix. Developed by <a href="https://kancah.com/" target="_blank" rel="noopener" style="text-decoration:underline">Kancah</a></span></div>
-</div></footer><script src="./supabase-config.js"></script><script src="form-builder.js?v=1"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script>
+</div></footer><script src="./supabase-config.js"></script><script src="form-builder.js?v=3"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script><script>
 const $=id=>document.getElementById(id),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])),money=n=>Number(n)===0?'Gratis':new Intl.NumberFormat('id-ID',{style:'currency',currency:'IDR',maximumFractionDigits:0}).format(Number(n)||0);
 const sb=window.supabase.createClient(window.AKSATIX_SUPABASE_URL,window.AKSATIX_SUPABASE_ANON_KEY,{auth:{storageKey:'aksatix-auth-v1',persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,flowType:'pkce'}});
 let session=null,cart=[],catalog=null;
@@ -359,4 +369,10 @@ $('submit').onclick=async()=>{
     const dlg=$('okDlg');dlg.addEventListener('cancel',e=>e.preventDefault());dlg.showModal();
   }catch(e){console.error(e);showError(e.message||'Pesanan gagal disimpan.');btn.disabled=false;btn.textContent=cartTotal()===0?'Daftar sekarang':'Buat pesanan'}
 };
-</script><script src="storefront-shell.js?v=12"></script></body></html>
+</script><script src="storefront-shell.js?v=12"></script><script>(function(){var sum=document.querySelector('.sum'),r=document.documentElement,mq=window.matchMedia('(max-width:860px)'),t;
+function h(){if(!sum)return;r.style.setProperty('--sum-h',(mq.matches?Math.ceil(sum.getBoundingClientRect().height):185)+'px')}
+if(window.ResizeObserver&&sum)new ResizeObserver(h).observe(sum);window.addEventListener('resize',h);h();
+function isF(el){return el&&/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)&&!/^(checkbox|radio|button|submit|file)$/i.test(el.type||'')&&!el.closest('.co-side')}
+document.addEventListener('focusin',function(e){if(!mq.matches||!isF(e.target))return;clearTimeout(t);document.body.classList.add('is-typing');setTimeout(function(){try{e.target.scrollIntoView({block:'center',behavior:'smooth'})}catch(_){}},250)});
+document.addEventListener('focusout',function(){clearTimeout(t);t=setTimeout(function(){if(!isF(document.activeElement))document.body.classList.remove('is-typing')},120)});})();</script>
+</body></html>
