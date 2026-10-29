@@ -54,11 +54,11 @@ function open(id,role){
     if(k==='x')return ov.remove();
     if(k==='approve'){
       var msg=isCash?'Konfirmasi: uang tunai '+money(total)+' sudah diterima dari '+(o.buyer||o.buyerName||'pembeli')+'? E-tiket akan langsung terbit.':'Setujui pembayaran ini? E-tiket akan langsung terbit.';
-      if(isTf&&!proof&&!confirm('Pembeli belum mengunggah bukti. Tetap setujui?'))return;
-      if(confirm(msg))act(ov,b,'approve','',isCash?'Cash diterima, e-tiket terbit':'Pembayaran disetujui, e-tiket terbit');
+      if(isTf&&!proof&&!(await AksatixUI.confirm('Pembeli belum mengunggah bukti. Tetap setujui?',{okText:'Tetap setujui',title:'Bukti belum ada',type:'warning'})))return;
+      if(await AksatixUI.confirm(msg,{okText:isCash?'Cash diterima':'Setujui',title:isCash?'Terima pembayaran cash':'Setujui pembayaran'}))act(ov,b,'approve','',isCash?'Cash diterima, e-tiket terbit':'Pembayaran disetujui, e-tiket terbit');
     }
-    if(k==='reject'){var n=prompt('Alasan penolakan (dilihat pembeli):','Bukti tidak jelas / nominal tidak sesuai');if(n!==null)act(ov,b,'reject',n,'Bukti ditolak, pembeli diminta upload ulang')}
-    if(k==='cancel'){var m=prompt('Alasan pembatalan (opsional):','');if(m!==null&&confirm('Batalkan pesanan ini? Kuota tiket dikembalikan.'))act(ov,b,'cancel',m,'Pesanan dibatalkan')}
+    if(k==='reject'){var n=await AksatixUI.prompt('Alasan penolakan (dilihat pembeli):','Bukti tidak jelas / nominal tidak sesuai',{title:'Tolak bukti',okText:'Tolak bukti',danger:true,multiline:true,required:true});if(n!==null)act(ov,b,'reject',n,'Bukti ditolak, pembeli diminta upload ulang')}
+    if(k==='cancel'){var m=await AksatixUI.prompt('Batalkan pesanan ini? Kuota tiket dikembalikan.\nAlasan pembatalan (opsional):','',{title:'Batalkan pesanan',okText:'Batalkan pesanan',cancelText:'Kembali',danger:true,multiline:true});if(m!==null)act(ov,b,'cancel',m,'Pesanan dibatalkan')}
   });
 }
 /* Dipanggil scanner/pencarian: kode = nomor pesanan yang masih Pending -> buka dialog pembayaran. */

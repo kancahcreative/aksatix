@@ -18,6 +18,19 @@
 #authGate{position:fixed;inset:0;z-index:9999;background:#f8faf9;display:flex;align-items:center;justify-content:center;padding:20px}
 #authGate[hidden]{display:none!important}.auth-card{width:min(430px,100%);background:#fff;border:1px solid var(--line);border-radius:22px;padding:30px;box-shadow:0 18px 70px #16211d12}.auth-brand{display:flex;align-items:center;gap:10px;font-size:24px;font-weight:800;letter-spacing:-1px;margin-bottom:24px}.auth-brand .brand-mark{display:grid;place-items:center;width:38px;height:38px;border-radius:12px;background:var(--g)}.auth-card h1{font-size:25px;letter-spacing:-.8px;margin:0 0 6px}.auth-card p{color:var(--muted);font-size:12px;margin:0 0 20px}.auth-card label{display:block;font-weight:700;font-size:12px;margin:14px 0 6px}.auth-card input{width:100%;padding:12px 13px;border:1px solid var(--line);border-radius:10px;outline:none}.auth-card input:focus{border-color:var(--gd)}.auth-card button{width:100%;margin-top:18px}.auth-error{color:#b42318;background:#fff0ef;padding:10px 12px;border-radius:9px;font-size:12px;margin-top:12px;display:none}.connection-pill{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:99px;background:#eafff5;color:#007c4b;font-size:11px;font-weight:800}.connection-pill:before{content:'';width:7px;height:7px;border-radius:50%;background:#00FF96}.logout-btn{margin-left:8px;border:1px solid var(--line);padding:7px 10px;border-radius:9px;background:#fff;font-weight:700;font-size:11px}
 </style>
+<style id="axd-fix">
+/* tombol teks di kolom Aksi tidak lagi dipaksa 30x30 (penyebab teks numpuk) */
+.rowactions{align-items:center;flex-wrap:nowrap}
+.rowactions button.btn{width:auto;height:auto;min-width:0;flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:7px 14px;border-radius:99px;border:1.5px solid var(--ink);background:#fff;color:var(--ink);font-size:12px;font-weight:800;line-height:1.2;white-space:nowrap}
+.rowactions button.btn.green{background:var(--g);border-color:var(--g);color:var(--ink)}
+.rowactions button.btn:hover{transform:translateY(-1px)}
+td small{white-space:normal}
+.btn:disabled,.btn[disabled]{opacity:.45;cursor:not-allowed;transform:none}
+.hist{display:inline-flex;gap:6px;align-items:center;flex:none}
+.hist .btn{padding:8px 13px;font-size:12px;gap:6px}
+.hist svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:760px){.hist{width:100%}.hist .btn{flex:1}}
+</style>
 </head>
 <body>
 <div id="authGate"><form class="auth-card" id="authForm"><div class="auth-brand"><img class="admin-logo" src="assets/logo.png" alt="Aksatix"><span class="brand-sub">CLIENT CONSOLE</span></div><h1>Masuk ke dashboard</h1><p>Kelola event, tiket, kuota, peserta, dan check-in event Anda dari satu tempat.</p><label for="authEmail">Email</label><input id="authEmail" type="email" autocomplete="username" required placeholder="email@domain.com"><label for="authPassword">Password</label><input id="authPassword" type="password" autocomplete="current-password" required placeholder="Password akun Aksatix"><button class="btn green" id="authSubmit" type="submit">Masuk ke dashboard</button><a href="/login?next=/client-dashboard" style="display:block;text-align:center;margin-top:12px;font-size:13px;font-weight:700;color:#008F55">Masuk dengan Google / buat akun baru</a><button type="button" id="authSwitch" style="display:block;margin:8px auto 0;background:none;border:0;font-size:12px;color:#5E6F68;cursor:pointer;text-decoration:underline">Ganti akun / keluar</button><div class="auth-error" id="authError"></div></form></div>
@@ -66,7 +79,7 @@
 <h1>Peserta, pembayaran & check-in</h1><p class="sub">Cek kode tiket, nama, bukti bayar, dan check-in langsung dari satu tabel, nggak perlu pindah menu.</p></div><div class="actions"><button class="btn light" onclick="downloadCSV('attendees')">↓ Ekspor peserta</button><button class="btn green" onclick="openAttendee()">＋ Tambah peserta</button></div></div>
 
  <div class="panel" id="ticketScannerPanel" style="margin-bottom:18px"><div class="panelhead"><div><h3>Scanner QR tiket</h3><p>Gunakan kamera perangkat untuk memindai QR e-tiket dan memproses check-in satu kali.</p></div><div class="actions"><button class="btn green" id="startScannerBtn" type="button">Buka scanner</button><button class="btn light" id="stopScannerBtn" type="button" hidden>Hentikan kamera</button></div></div><div id="ticketScanner" style="width:min(100%,480px);margin:0 auto" hidden></div><div id="scanFeedback" class="info" style="margin-top:12px" aria-live="polite">Scanner belum aktif. Pastikan situs dibuka melalui HTTPS agar kamera dapat digunakan.</div><div class="filters" style="margin-top:12px"><input class="fieldsearch" id="manualTicketCode" placeholder="Atau masukkan kode tiket secara manual"><button class="btn light" id="verifyTicketCode" type="button">Validasi kode</button></div></div>
- <div class="grid stats" id="attendeeStats"></div><div class="panel tablepanel"><div class="panelhead"><div><h3>Peserta, pembayaran & check-in</h3><p>Satu daftar untuk cek kode tiket, nama, bukti bayar, dan check-in langsung. Pesanan yang belum lunas tampil paling atas buat diverifikasi.</p></div><div class="filters"><input class="fieldsearch" id="attendeeSearch" placeholder="Cari nama, email, kode, no. pesanan…"><select class="select" id="attendeeEventFilter"><option value="">Semua event</option></select><select class="select" id="attendeeFilter"><option value="">Semua status</option><option>Menunggu pembayaran</option><option>Belum hadir</option><option>Checked-in</option><option>Dibatalkan</option></select></div></div><div class="tablewrap"><table><thead><tr><th>Kode tiket</th><th>Peserta</th><th>Event / tiket</th><th>Pembayaran</th><th>Bukti bayar</th><th>Check-in</th><th>Aksi</th></tr></thead><tbody id="attendeesTable"></tbody></table></div></div>
+ <div class="grid stats" id="attendeeStats"></div><div class="panel tablepanel"><div class="panelhead"><div><h3>Peserta, pembayaran & check-in</h3><p>Satu daftar untuk cek kode tiket, nama, bukti bayar, dan check-in langsung. Pesanan yang belum lunas tampil paling atas buat diverifikasi.</p></div><div class="filters"><input class="fieldsearch" id="attendeeSearch" placeholder="Cari nama, email, kode, no. pesanan…"><select class="select" id="attendeeEventFilter"><option value="">Semua event</option></select><select class="select" id="attendeeFilter"><option value="">Semua status</option><option>Menunggu pembayaran</option><option>Belum hadir</option><option>Checked-in</option><option>Dibatalkan</option></select><span class="hist" role="group" aria-label="Undo dan redo"><button class="btn light" id="attUndo" type="button" disabled title="Belum ada aksi untuk diurungkan" onclick="attUndo()"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg>Undo</button><button class="btn light" id="attRedo" type="button" disabled title="Belum ada aksi untuk diulang" onclick="attRedo()">Redo<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 14l5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h3"/></svg></button></span></div></div><div class="tablewrap"><table><thead><tr><th>Kode tiket</th><th>Peserta</th><th>Event / tiket</th><th>Pembayaran</th><th>Bukti bayar</th><th>Check-in</th><th>Aksi</th></tr></thead><tbody id="attendeesTable"></tbody></table></div></div>
 </section>
 <section class="section" id="page-promos">
  <div class="pagehead"><div><div class="eyebrow">Marketing</div><h1>Promo & kupon</h1><p class="sub">Kelola kode diskon untuk event Anda: batas penggunaan dan masa berlaku.</p></div><div class="actions"><button class="btn green" onclick="openPromo()">＋ Buat kupon</button></div></div>
@@ -86,7 +99,7 @@
 </div></div>
 <div class="modal" id="modal"><div class="modalbox" id="modalbox"><div class="modalhead"><div><h2 id="modalTitle">Form</h2><p id="modalDesc">Isi informasi berikut.</p></div><button class="close" onclick="closeModal()" aria-label="Tutup">×</button></div><form id="modalForm"><div id="modalFields" class="formgrid"></div><div class="modalfoot"><button type="button" class="btn light" onclick="closeModal()">Batal</button><button class="btn green" type="submit">Simpan perubahan</button></div></form></div></div>
 <div class="toast" id="toast"></div>
-<script src="./supabase-config.js"></script><script src="./form-builder.js?v=2"></script><script src="./payment-ops.js?v=1"></script>
+<script src="./supabase-config.js"></script><script src="./aksatix-dialog.js?v=1"></script><script src="./form-builder.js?v=2"></script><script src="./payment-ops.js?v=2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
 const $=id=>document.getElementById(id), STORAGE='aksatix_admin_v1';
@@ -203,19 +216,19 @@ const fields=[{name:'name',label:'Nama peserta',value:a?.name||'',required:true}
 if(!a){fields.push({name:'eventId',label:'Event',value:db.events[0].id,options:eventOptions(),required:true,full:true},{name:'ticketId',label:'Jenis tiket',value:'',options:[{value:'',label:'Tanpa jenis tiket (tamu undangan, tidak memakai kuota)'},...db.tickets.map(t=>({value:t.id,label:(eventBy(t.eventId)?.name||'')+' — '+t.name+' (sisa '+Math.max(0,(+t.quota||0)-(+t.sold||0))+')'}))],full:true,help:'Jika memilih jenis tiket, peserta memakai 1 kuota. Kode tiket dibuat otomatis oleh sistem.'})}
 openModal(a?'Edit peserta':'Tambah peserta',a?'Ubah data kontak peserta. Kode tiket tidak dapat diubah.':'Tambahkan tamu / peserta manual. Kode e-tiket dibuat otomatis.',fields,async(d,old)=>{if(old){const r=await rpcAttendee('update',old,{name:d.name,email:d.email,phone:d.phone});if(!r||!r.ok)throw new Error(r?.message||'Gagal memperbarui');toast(r.message)}else{let evId=d.eventId;if(d.ticketId){const t=ticketBy(d.ticketId);if(t)evId=t.eventId}const r=await rpcAttendee('add',null,{name:d.name,email:d.email,phone:d.phone,eventId:evId,ticketId:d.ticketId||''});if(!r||!r.ok)throw new Error(r?.message||'Gagal menambah peserta');toast(r.message)}await afterAttendeeChange()},id)}
 async function toggleCheckin(id){const a=db.attendees.find(x=>x.id===id);if(!a)return;const r=await rpcAttendee(a.checkedIn?'undo':'checkin',a.id);if(!r)return;toast(r.message);await afterAttendeeChange()}
-async function voidAttendee(id){const a=db.attendees.find(x=>x.id===id);if(!a)return;const v=a.status==='Void';if(!confirm(v?'Aktifkan kembali tiket peserta ini?':'Nonaktifkan tiket peserta ini? Tiket tidak akan bisa dipakai check-in.'))return;const r=await rpcAttendee(v?'restore':'void',a.id);if(!r)return;toast(r.message);await afterAttendeeChange()}
-async function deleteAttendee(id){const a=db.attendees.find(x=>x.id===id);if(!a||!confirm('Hapus peserta manual ini? Kuota yang dipakai akan dikembalikan.'))return;const r=await rpcAttendee('delete',a.id);if(!r)return;toast(r.message);await afterAttendeeChange()}
+async function voidAttendee(id,skipConfirm){const a=db.attendees.find(x=>x.id===id);if(!a)return;const v=a.status==='Void';if(!skipConfirm&&!(await AksatixUI.confirm(v?'Aktifkan kembali tiket peserta ini?':'Nonaktifkan tiket peserta ini? Tiket tidak akan bisa dipakai check-in.',{danger:!v,okText:v?'Aktifkan':'Nonaktifkan',title:v?'Aktifkan tiket':'Nonaktifkan tiket'})))return;const r=await rpcAttendee(v?'restore':'void',a.id);if(!r)return;toast(r.message);await afterAttendeeChange()}
+async function deleteAttendee(id){const a=db.attendees.find(x=>x.id===id);if(!a||!(await AksatixUI.confirm('Hapus peserta manual ini? Kuota yang dipakai akan dikembalikan.',{danger:true,okText:'Hapus',title:'Hapus peserta'})))return;const r=await rpcAttendee('delete',a.id);if(!r)return;toast(r.message);await afterAttendeeChange()}
 function openPromo(id){let p=id?db.promos.find(x=>x.id===id):null;openModal(p?'Edit kupon':'Buat kupon promo','Kode promo milik event Anda.',[
 {name:'code',label:'Kode kupon',value:p?.code||'',required:true,full:true},{name:'type',label:'Jenis diskon',value:p?.type||'percent',options:[{value:'percent',label:'Persentase (%)'},{value:'fixed',label:'Nominal (Rp)'}]},
 {name:'value',label:'Nilai diskon',type:'number',value:p?.value??10,min:1,required:true},{name:'limit',label:'Batas pemakaian (0 = tanpa batas)',type:'number',value:p?.limit??100,min:0,required:true},
 {name:'used',label:'Telah digunakan',type:'number',value:p?.used??0,min:0,required:true},{name:'end',label:'Berlaku sampai',type:'date',value:p?.end||datePlus(30),required:true},
 {name:'status',label:'Status',value:p?.status||'Active',options:['Active','Inactive'].map(x=>({value:x,label:x}))}
 ],(d,old)=>{d.code=d.code.trim().toUpperCase();d.value=+d.value;d.limit=+d.limit;d.used=+d.used;if(old)Object.assign(p,d);else db.promos.push({id:uid('CP'),...d});save();toast('Kupon disimpan')},id)}
-function deleteRecord(type,id){const labels={events:'event',tickets:'jenis tiket',promos:'kupon'};
+async function deleteRecord(type,id){const labels={events:'event',tickets:'jenis tiket',promos:'kupon'};
 if(type==='events'&&(db.orders.some(o=>String(o.eventId)===String(id)&&isActiveOrder(o))||db.attendees.some(a=>String(a.eventId)===String(id)))){toast('Event ini sudah punya pesanan/peserta, tidak bisa dihapus. Ubah statusnya menjadi Archived.');return}
 if(type==='tickets'&&db.orders.some(o=>String(o.ticketId)===String(id)&&isActiveOrder(o))){toast('Jenis tiket ini sudah punya pesanan aktif. Ubah statusnya menjadi Inactive.');return}
-if(!confirm(`Hapus ${labels[type]} ini? Tindakan ini tidak dapat dibatalkan.`))return;
-if(type==='events'){let linked=db.tickets.filter(t=>t.eventId===id).length;if(linked&&!confirm(`Event ini memiliki ${linked} jenis tiket. Hapus event beserta jenis tiket terkait?`))return;db.tickets=db.tickets.filter(t=>t.eventId!==id)}
+if(!(await AksatixUI.confirm(`Hapus ${labels[type]} ini? Tindakan ini tidak dapat dibatalkan.`,{danger:true,okText:'Hapus',title:'Hapus data'})))return;
+if(type==='events'){let linked=db.tickets.filter(t=>t.eventId===id).length;if(linked&&!(await AksatixUI.confirm(`Event ini memiliki ${linked} jenis tiket. Hapus event beserta jenis tiket terkait?`,{danger:true,okText:'Hapus semua',title:'Hapus event'})))return;db.tickets=db.tickets.filter(t=>t.eventId!==id)}
 db[type]=db[type].filter(x=>x.id!==id);save();toast('Data berhasil dihapus')}
 function duplicateEvent(id){let e=eventBy(id);if(!e)return;let n={...e,id:uid('EV'),name:e.name+' (Salinan)',slug:uniqueEventSlug(e.name+' (Salinan)'),status:'Draft',created:today()};db.events.unshift(n);save();toast('Event diduplikasi sebagai draft')}
 const renderIdentity=()=>{const nm=orgProfile.name||me?.user_metadata?.full_name||me?.email||'Penyelenggara',ini=nm.split(/\s+/).map(x=>x[0]).slice(0,2).join('').toUpperCase()||'OR';['meName','meNameTop'].forEach(k=>$(k)&&($(k).textContent=nm));['meAvatar','meAvatarTop'].forEach(k=>$(k)&&($(k).textContent=ini));if($('meSub'))$('meSub').textContent=me?.email||'Client Aksatix'};
@@ -265,5 +278,40 @@ $('authSwitch').addEventListener('click',async()=>{if(sb)await sb.auth.signOut({
 $('logoutBtn').addEventListener('click',async()=>{if(sb)await sb.auth.signOut({scope:'local'});resetState()});
 let ticketQrScanner=null,scannerBusy=false;function scanFeedback(message,kind='info'){const el=$('scanFeedback');if(!el)return;el.textContent=message;el.style.borderLeft='4px solid '+(kind==='ok'?'#00FF96':kind==='bad'?'#d92d20':'#98a2b3')}async function validateScannedTicket(raw){const code=String(raw||'').trim();if(!code){scanFeedback('Masukkan atau pindai kode QR tiket terlebih dahulu.','bad');return}if(window.AksatixPay&&AksatixPay.scan(code,'client'))return;scanFeedback('Memeriksa tiket…');const r=await rpcAttendee('checkin',code);if(!r){scanFeedback('Gagal terhubung ke database. Coba lagi.','bad');return}if(r.ok){try{navigator.vibrate&&navigator.vibrate(120)}catch(_){}scanFeedback('✓ Check-in berhasil: '+(r.name||'Peserta')+' — '+(r.eventName||'Event')+' ('+(r.ticketName||'Tiket')+').','ok');$('manualTicketCode').value='';await afterAttendeeChange()}else if(r.code==='used'){scanFeedback('✗ SUDAH DIGUNAKAN: '+(r.name||'Peserta')+(r.checkinAt?' — check-in pada '+new Date(r.checkinAt).toLocaleString('id-ID'):'')+'.','bad')}else{scanFeedback('✗ '+(r.message||'Tiket tidak valid.'),'bad')}}$('verifyTicketCode').addEventListener('click',()=>validateScannedTicket($('manualTicketCode').value));$('manualTicketCode').addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();validateScannedTicket(e.target.value)}});$('startScannerBtn').addEventListener('click',async()=>{if(!window.Html5Qrcode){scanFeedback('Library scanner belum termuat. Periksa koneksi internet lalu muat ulang halaman.','bad');return}try{$('ticketScanner').hidden=false;$('startScannerBtn').hidden=true;$('stopScannerBtn').hidden=false;ticketQrScanner=new Html5Qrcode('ticketScanner');const cams=await Html5Qrcode.getCameras();if(!cams.length)throw Error('Kamera tidak ditemukan.');const cam=cams.find(c=>/back|rear|environment/i.test(c.label))||cams[0];await ticketQrScanner.start(cam.id,{fps:10,qrbox:{width:250,height:250}},async decoded=>{if(scannerBusy)return;scannerBusy=true;await validateScannedTicket(decoded);setTimeout(()=>{scannerBusy=false},1800)},()=>{});scanFeedback('Kamera aktif. Arahkan QR e-tiket ke kotak pemindaian.')}catch(e){scanFeedback('Scanner gagal dibuka: '+(e.message||e)+' Pastikan izin kamera diberikan dan situs memakai HTTPS.','bad');$('ticketScanner').hidden=true;$('startScannerBtn').hidden=false;$('stopScannerBtn').hidden=true}});$('stopScannerBtn').addEventListener('click',async()=>{try{if(ticketQrScanner){await ticketQrScanner.stop();await ticketQrScanner.clear()}}catch(_){}ticketQrScanner=null;$('ticketScanner').hidden=true;$('startScannerBtn').hidden=false;$('stopScannerBtn').hidden=true;scanFeedback('Scanner dihentikan.')});
 initRemote().catch(e=>{console.error(e);gateError(e.message||'Tidak dapat menghubungi Supabase');setConnection('Koneksi gagal')});
+</script>
+<script>
+/* Undo / Redo untuk aksi cepat di tabel Peserta (check-in & nonaktifkan tiket) */
+(function(){
+const H={u:[],r:[],busy:false},O={};
+const find=id=>db.attendees.find(x=>String(x.id)===String(id));
+const stateOf=(k,a)=>k==='void'?a.status==='Void':!!a.checkedIn;
+const desc=(e,st)=>e.kind==='void'?(st?'Tiket '+e.name+' dinonaktifkan':'Tiket '+e.name+' diaktifkan lagi'):(st?e.name+' check-in':'Check-in '+e.name+' dibatalkan');
+function ui(){
+  const u=document.getElementById('attUndo'),r=document.getElementById('attRedo');
+  if(u){u.disabled=H.busy||!H.u.length;const e=H.u[H.u.length-1];u.title=e?'Urungkan: '+desc(e,e.to):'Belum ada aksi untuk diurungkan'}
+  if(r){r.disabled=H.busy||!H.r.length;const e=H.r[H.r.length-1];r.title=e?'Ulangi: '+desc(e,e.to):'Belum ada aksi untuk diulang'}
+}
+function wrap(name,kind){
+  if(typeof window[name]!=='function')return;
+  O[kind]=window[name];
+  window[name]=async function(id){
+    const a=find(id),before=a?stateOf(kind,a):null,res=await O[kind].apply(this,arguments),b=find(id);
+    if(a&&b&&before!==stateOf(kind,b)){H.u.push({kind,id,from:before,to:stateOf(kind,b),name:b.name||'peserta'});if(H.u.length>50)H.u.shift();H.r=[];ui()}
+    return res;
+  };
+}
+async function run(dir){
+  const st=dir==='undo'?H.u:H.r;if(H.busy||!st.length)return;
+  H.busy=true;ui();const e=st.pop(),want=dir==='undo'?e.from:e.to,a=find(e.id);
+  if(!a){toast('Data peserta sudah tidak ada');H.busy=false;ui();return}
+  try{if(stateOf(e.kind,a)!==want)await O[e.kind](e.id,true)}catch(err){console.warn(err)}
+  const b=find(e.id);
+  if(b&&stateOf(e.kind,b)===want){(dir==='undo'?H.r:H.u).push(e);toast((dir==='undo'?'Undo: ':'Redo: ')+desc(e,want))}
+  else{st.push(e);toast('Gagal '+(dir==='undo'?'mengurungkan':'mengulang')+' aksi, coba lagi')}
+  H.busy=false;ui();
+}
+window.attUndo=()=>run('undo');window.attRedo=()=>run('redo');
+wrap('toggleCheckin','checkin');wrap('voidAttendee','void');ui();
+})();
 </script>
 </body></html>
